@@ -5,16 +5,31 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox prefHeight="400.0" prefWidth="640.0"  xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
   <children>
-    <AnchorPane VBox.vgrow="ALWAYS">
+
+      <AnchorPane VBox.vgrow="ALWAYS">
       <children>
-            <JFXTextField fx:id="LoginTextField" layoutX="245.0" layoutY="172.0" promptText="E-mail" />
-            <JFXTextField fx:id="PasswordTextField" layoutX="245.0" layoutY="230.0" promptText="Password" />
-            <JFXButton fx:id="LoginButton" layoutX="270.0" layoutY="281.0" onAction="#mainButtonClick" prefHeight="40.0" prefWidth="89.0" text="Войти" />
-            <Label fx:id="AppName" layoutX="270.0" layoutY="144.0" text="VK MESSENGER" />
+
+            <JFXTextField fx:id="LoginTextField" layoutX="245.0" layoutY="125.0" promptText="E-mail" />
+            <JFXTextField fx:id="PasswordTextField" layoutX="245.0" layoutY="183.0" promptText="Password" />
+            <JFXButton fx:id="LoginButton" layoutX="244.0" layoutY="234.0" onAction="#mainButtonClick" prefHeight="40.0" prefWidth="143.0" text="Войти" />
+            <Label fx:id="AppName" layoutX="277.0" layoutY="89.0" text="DEMKA CHAT" />
+            <Label layoutX="220.0" layoutY="337.0" text="Регистрация">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Label>
+            <Label layoutX="334.0" layoutY="337.0" text="Забыли пароль?">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Label>
+
       </children>
-    </AnchorPane>
+
+      </AnchorPane>
   </children>
 </VBox>
