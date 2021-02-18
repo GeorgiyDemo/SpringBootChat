@@ -13,10 +13,10 @@
       <AnchorPane VBox.vgrow="ALWAYS">
       <children>
 
-            <JFXTextField fx:id="LoginTextField" layoutX="245.0" layoutY="125.0" promptText="E-mail" />
-            <JFXTextField fx:id="PasswordTextField" layoutX="245.0" layoutY="183.0" promptText="Password" />
-            <JFXButton fx:id="LoginButton" layoutX="244.0" layoutY="234.0" onAction="#mainButtonClick" prefHeight="40.0" prefWidth="143.0" text="Войти" />
-            <Label fx:id="AppName" layoutX="277.0" layoutY="89.0" text="DEMKA CHAT" />
+            <JFXTextField fx:id="LoginTextField" focusColor="WHITE" layoutX="245.0" layoutY="125.0" promptText="E-mail" unFocusColor="WHITE" />
+            <JFXTextField fx:id="PasswordTextField" focusColor="WHITE" layoutX="245.0" layoutY="183.0" promptText="Password" unFocusColor="WHITE" />
+            <JFXButton fx:id="LoginButton" layoutX="244.0" layoutY="234.0" onAction="#mainButtonClick" prefHeight="40.0" prefWidth="143.0" ripplerFill="#c93232" text="Войти" />
+            <Label fx:id="AppName" layoutX="277.0" layoutY="89.0" text="DEMKA CHAT" textFill="WHITE" />
             <Label layoutX="220.0" layoutY="337.0" text="Регистрация">
                <font>
                   <Font size="11.0" />
