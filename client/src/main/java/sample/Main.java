@@ -15,7 +15,6 @@ public class Main extends Application {
         loader.setLocation(getClass().getResource("/login.fxml"));
         Controller controller = loader.getController();
         Parent root = loader.load();
-        root.setStyle("-fx-background-color: #2a2c38;");
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }

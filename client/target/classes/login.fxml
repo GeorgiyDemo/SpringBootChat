@@ -10,19 +10,26 @@
 <VBox prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
   <children>
 
-      <AnchorPane VBox.vgrow="ALWAYS">
+      <AnchorPane style="-fx-background-color: #2a2c38;" VBox.vgrow="ALWAYS">
       <children>
 
-            <JFXTextField fx:id="LoginTextField" focusColor="WHITE" layoutX="245.0" layoutY="125.0" promptText="E-mail" unFocusColor="WHITE" />
-            <JFXTextField fx:id="PasswordTextField" focusColor="WHITE" layoutX="245.0" layoutY="183.0" promptText="Password" unFocusColor="WHITE" />
-            <JFXButton fx:id="LoginButton" layoutX="244.0" layoutY="234.0" onAction="#mainButtonClick" prefHeight="40.0" prefWidth="143.0" ripplerFill="#2491bf" text="Войти" textFill="WHITE" />
-            <Label fx:id="AppName" layoutX="277.0" layoutY="89.0" text="DEMKA CHAT" textFill="WHITE" />
-            <Label layoutX="220.0" layoutY="337.0" text="Регистрация">
+            <JFXTextField fx:id="LoginTextField" focusColor="WHITE" layoutX="245.0" layoutY="125.0" promptText="E-mail" unFocusColor="WHITE" style="-fx-text-inner-color: white; -fx-text-fill: white; -fx-prompt-text-fill: gray;">
+               <font>
+                  <Font name="Helvetica" size="13.0" />
+               </font>
+            </JFXTextField>
+            <JFXTextField fx:id="PasswordTextField" focusColor="WHITE" layoutX="245.0" layoutY="183.0" promptText="Пароль" unFocusColor="WHITE" style="-fx-text-inner-color: white; -fx-text-fill: white; -fx-prompt-text-fill: gray;"/>
+            <JFXButton fx:id="LoginButton" layoutX="245.0" layoutY="248.0" onAction="#mainButtonClick" prefHeight="40.0" prefWidth="143.0" ripplerFill="#2491bf" style="-fx-background-color: #2167e4; -fx-border-radius: 5em; -fx-background-radius: 5em;" text="Войти" textFill="WHITE" />
+            <Label fx:id="AppName" layoutX="240.0" layoutY="59.0" text="DEMKA CHAT" textFill="WHITE">
+               <font>
+                  <Font name="Helvetica" size="24.0" />
+               </font></Label>
+            <Label layoutX="220.0" layoutY="337.0" text="Регистрация" textFill="WHITE">
                <font>
                   <Font size="11.0" />
                </font>
             </Label>
-            <Label layoutX="334.0" layoutY="337.0" text="Забыли пароль?">
+            <Label layoutX="334.0" layoutY="337.0" text="Забыли пароль?" textFill="WHITE">
                <font>
                   <Font size="11.0" />
                </font>
