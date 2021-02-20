@@ -1,3 +1,4 @@
+from Users.demg.Documents.Projects.SpringBootChat.python.server.code.models import LongPoolInstance
 import os
 import time
 import json
@@ -47,9 +48,11 @@ def create_room():
     creator_id = request.args.get("creator_id")
     name = request.args.get("name")
     users = request.args.get("users")
+
     #Фильтрация на поля
     if any([x is None for x in (creator_id, users)]):
         return {"result" : False, "description" : "no enough values"}
+
     #Фильтрация на существование пользователей
     users_list = users.split(",")
     if any([mongo.get_users({"_id" : user}) == 0 for user in users_list]):
@@ -81,11 +84,24 @@ def write_message():
     """
     Отправка сообщения в опеределенную комнату room_id
     """
-    #TODO room_id
+
+    user_from = request.args.get("user_from")
+    text = request.args.get("text")
+    room_id = request.args.get("room_id")
+
+    #Фильтрация на поля
+    if any([x is None for x in (user_from, text, room_id)]):
+        return {"result" : False, "description" : "no enough values"}
+    
+    #TODO Фильтрация на пользователя
+
+    #TODO Фильтрация на комнату
+
+    message = Message(user_from, text, room_id)
+    mongo.set_message(message)
     return {"result" : True}
 
-#TODO LongPollServer
-#TODO server, key, ts
+#TODO ВИНТОВКА ЭТО ПРАЗДНИК
 @app.route("/getLongPollServer", methods=["GET"])
 def get_longpoll_server():
     """
@@ -93,13 +109,29 @@ def get_longpoll_server():
 
     Отдает следующие данные:
     key - ключ пользователя
-    ts - последний полученный объект пользователя
+    ts - время последнего полученного объекта пользователя
     server - URL, куда стучаться
     """
+    user_id = request.form.get("user_id")
+    #Если нет переданного поля
+    if user_id is None:
+        return {"result" : False, "description" : "no enough values"}
 
+    #Если пользователя не существует
+    if mongo.get_users({"_id" : user_id}) == 0:
+        return {"result" : False, "description" : "user does not exist"}
+
+    
+    mongo.get_message({"user_id" : ""})
+    
+    LongPoolInstance()
     #Проверка, что существует такой ключ и последний объект
     return "URL"
 
+#АЛГОРИТМ
+# 1) Получаем в get_longpoll_server UNIX-дату ts последнего сообщения, адресованного пользователю
+# 2) Передаем ts в longpoll. Метод сравнивает даты. Если есть Сообщения с более новой датой - это новые сообщения
+# 3) Метод longpoll возвращает обновленный ts и результат сообщений
 @app.route("/LongPoll/<server>", methods=["GET"])
 def longpoll(server):
     print(f"Перешли по server = {server}")

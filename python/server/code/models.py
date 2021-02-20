@@ -54,35 +54,43 @@ class User(MongoModel):
 
 class Message(MongoModel):
     """Сообщение"""
-    def __init__(self, from : str, text : str, room_id : str, time_created : datetime.datetime = datetime.datetime.now(), _id : str = None) -> None:
-        
+    def __init__(self, user_from : str, text : str, room_id : str, time_created : datetime.datetime = datetime.datetime.now(), _id : str = None) -> None:
+        self.__user_from = user_from
+        self.__text = text
+        self.__room_id = room_id
+        self.__time_created = time_created
+        self.__id = _id
         if self.__id is None:
             self.__id = util.random_string()
 
     def to_mongo(self):
-        return {}
+        return {"_id" : self.__id, "user_from" : self.__user_from, "text" : self.__text, "room_id" : self.__room_id, "time_created" : self.__time_created}
 
 class LongPoolInstance(MongoModel):
     """Экземпляр соединения с лонгпулом"""
     def __init__(self, user_id: int, _id : str = None) -> None:
         """
         key - ключ пользователя
-        ts - id последнего события, которое надо получить
+        ts - время последнего события, которое получил пользователь
         """
         self.__user_id = user_id
-        self.__key = key
-        self.__ts = ts
-        self.__url = self.generate_url() 
+        self.__key = util.random_string()
+        self.__url = "LongPoll/"+util.random_string()
+        self.__ts = 
 
-    def generate_url(self):
-        """Генерация URL"""
-        return "LongPoll/"+util.random_string(32)
-
+    def get_last_message():
+        """Получение последнего отправленного сообщения пользователя"""
+        pass
     def to_mongo(self):
         return {}
+
     @property
     def url(self):
         return self.__url
+
+    @property
+    def user_id(self):
+        return self.__user_id
 
 
 if __name__ == "__main__":
