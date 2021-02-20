@@ -1,0 +1,37 @@
+version: '3.1'
+
+services:
+
+  mongo:
+    image: mongo
+    restart: on-failure
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_LOGIN}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWD}
+    volumes: 
+      - ./database/mongodbdata:/data/db
+  
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_BASICAUTH_USERNAME: ${MONGO_LOGIN}
+      ME_CONFIG_BASICAUTH_PASSWORD: ${MONGO_PASSWD}
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_LOGIN}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_PASSWD}
+    depends_on:
+      - mongo
+      
+  flask:
+    build: server/.
+    depends_on:
+      - mongo
+    ports:
+      - "5000:5000"
+    restart: on-failure
+    environment:
+      CONNECTION_STRING: ${CONNECTION_STRING}
+    volumes:
+      - ./server/code/:/app/code/
