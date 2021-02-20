@@ -1,56 +1,78 @@
-"""
-FLASK REST API для RaspiBox
-"""
-
-#Относится к Websocketам и соединениям
-#TODO СОЗДАНИЕ СОЕДИНЕНИЯ МЕЖДУ ПОЛЬЗОВАТЕЛЯМИ?
-#TODO Добавление метода авторизации клиента в список соединений (?)
-
-import pymongo
 import os
 import time
+import json
 
 from flask import Flask, request
 from flask_restful import Resource, Api
+from mongodb import MongoDB
 
+from models import User, Room
 app = Flask(__name__)
 api = Api(app)
-myclient = pymongo.MongoClient(os.environ.get("CONNECTION_STRING"))
-mongo = myclient["SpringBootChat"]
 
-longpoll_list = []
+mongo = MongoDB("SpringBootChat", os.environ.get("CONNECTION_STRING"))
 
-#TODO
 @app.route("/auth", methods=["GET"])
 def auth():
     """Авторизации пользователя"""
-    return {"result" : True}
+    login = request.args.get("login")
+    password = request.args.get("password")
 
-#TODO
+    #Фильтрация на поля
+    if any([x is None for x in (login, password)]):
+        return {"result" : False, "description" : "no enough values"}
+
+    result = mongo.get_users({"login" : login, "password" : password})
+    return {"result" : True} if len(result) != 0 else {"result" : False}
+
 @app.route("/register", methods=["GET"])
 def register():
     """Регистрация пользователя"""
+    #Получение переданных параметров
+    name = request.args.get("name")
+    login = request.args.get("login")
+    password = request.args.get("password")
+    #Создание нового пользователя
+    new_user = User(name, login, password)
+    #Запись в БД
+    mongo.set_users([new_user])
     return {"result" : True}
 
-#TODO
-@app.route("/search", methods=["GET"])
-def search():
-    """Поиск пользователя в системе (для последующего чата)"""
-    return {"result" : True}
-
-#TODO
-@app.route("/getUserRooms", methods=["GET"])
-def get_user_rooms():
-    """Получение списка комнат пользователя"""
-    return {"result" : True}
-
-#TODO
 @app.route("/createRoom", methods=["GET"])
 def create_room():
     """
     Создание комнаты для общения пользователей
     - Принимает список id пользователей
     """
+    creator_id = request.args.get("creator_id")
+    name = request.args.get("name")
+    users = request.args.get("users")
+    #Фильтрация на поля
+    if any([x is None for x in (creator_id, users)]):
+        return {"result" : False, "description" : "no enough values"}
+    #Фильтрация на существование пользователей
+    users_list = users.split(",")
+    if any([mongo.get_users({"_id" : user}) == 0 for user in users_list]):
+        return {"result" : False, "description" : "some users does not exist"}
+
+    new_room = Room(creator_id, users_list, name)
+    mongo.set_rooms([new_room])
+
+    return {"result" : True}
+
+@app.route("/getUserRooms", methods=["GET"])
+def get_user_rooms():
+    """Получение списка комнат, в которых состоит пользователь"""
+    user_id = request.args.get("user_id")
+    if user_id is None:
+        return {"result" : False, "description" : "no enough values"}
+    result = mongo.get_rooms({"users" : user_id})
+    return json.dumps([room.to_mongo() for room in result],ensure_ascii=False)
+
+#TODO
+@app.route("/search", methods=["GET"])
+def search():
+    """Поиск пользователя в системе (для последующего чата)"""
     return {"result" : True}
 
 #TODO
@@ -66,16 +88,24 @@ def write_message():
 #TODO server, key, ts
 @app.route("/getLongPollServer", methods=["GET"])
 def get_longpoll_server():
-    ts
     """
-    Получение URL для лонгпула по определенному user_id
+    Получение данных для лонгпула по определенному user_id
+
+    Отдает следующие данные:
+    key - ключ пользователя
+    ts - последний полученный объект пользователя
+    server - URL, куда стучаться
     """
 
-    return URL
-    pass
+    #Проверка, что существует такой ключ и последний объект
+    return "URL"
 
-@app.route("/LongPoll/<key>", methods=["GET"])
-def longpoll(key):
+@app.route("/LongPoll/<server>", methods=["GET"])
+def longpoll(server):
+    print(f"Перешли по server = {server}")
+
+    key = request.form.get("key")
+    ts = request.form.get("ts")
 
     request_time = time.time()
     while not self._is_updated(request_time):
