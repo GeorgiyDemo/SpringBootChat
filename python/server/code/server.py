@@ -6,7 +6,7 @@ from flask import Flask, request
 from flask_restful import Resource, Api
 from mongodb import MongoDB
 
-from models import User, Room, Message, LongPoolInstance
+from models import User, Room, Message, LongPoll
 
 app = Flask(__name__)
 api = Api(app)
@@ -61,9 +61,12 @@ def create_room():
     if any([mongo.get_users({"_id": user}) == 0 for user in users_list]):
         return {"result": False, "description": "some users does not exist"}
 
+    #Если создателя нет в списке пользователей комнаты, то добавляем его
+    if creator_id not in users_list:
+        users_list.append(creator_id)
+
     new_room = Room(creator_id, users_list, name)
     mongo.set_rooms([new_room])
-
     return {"result": True}
 
 
@@ -104,11 +107,10 @@ def write_message():
     # TODO Фильтрация на комнату
 
     message = Message(user_from, text, room_id)
-    mongo.set_message(message)
+    mongo.set_messages([message])
     return {"result": True}
 
 
-# TODO ВИНТОВКА ЭТО ПРАЗДНИК
 @app.route("/getLongPollServer", methods=["GET"])
 def get_longpoll_server():
     """
@@ -119,7 +121,7 @@ def get_longpoll_server():
     ts - время последнего полученного объекта пользователя
     server - URL, куда стучаться
     """
-    user_id = request.form.get("user_id")
+    user_id = request.args.get("user_id")
     # Если нет переданного поля
     if user_id is None:
         return {"result": False, "description": "no enough values"}
@@ -128,11 +130,10 @@ def get_longpoll_server():
     if mongo.get_users({"_id": user_id}) == 0:
         return {"result": False, "description": "user does not exist"}
 
-    mongo.get_message({"user_id": ""})
-
-    LongPoolInstance()
-    # Проверка, что существует такой ключ и последний объект
-    return "URL"
+    ts = mongo.get_user_last_message_date(user_id)
+    longpoll = LongPoll(user_id,ts)    
+    mongo.set_longpolls([longpoll])
+    return longpoll.to_mongo()
 
 
 # АЛГОРИТМ

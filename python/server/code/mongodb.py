@@ -1,6 +1,6 @@
 from typing import Dict, List
 import pymongo
-from models import User, Room, Message, LongPoolInstance
+from models import User, Room, Message, LongPoll
 
 
 class MongoDB:
@@ -44,7 +44,18 @@ class MongoDB:
         for message in messages_list:
             table.insert_one(message.to_mongo())
 
-    def get_user_messages(self, user_id: str):
+    def get_longpolls(self, condition: Dict = None) -> List[LongPoll]:
+        """Получение инфы о лонгпуле"""
+        table = self.connection["LongPolls"]
+        return [LongPoll(**item) for item in table.find(condition)]
+
+    def set_longpolls(self, longpolls_list: List[Message]):
+        """Запись инфы о лонгпулах"""
+        table = self.connection["LongPolls"]
+        for poll in longpolls_list:
+            table.insert_one(poll.to_mongo())
+
+    def get_user_messages(self, user_id: str) -> List:
         """Отдает все сообщения, связанные с пользователем"""
         messages_list = []
         # Получаем комнаты, где состоит пользователь
@@ -61,19 +72,17 @@ class MongoDB:
         """Отдает UNIX-дату последнего сообщения, полученного пользователем"""
 
         messages_list = self.get_user_messages(user_id)
-        # Получаем комнаты, где состоит пользователь
-        rooms_table = self.connection["Rooms"]
-        rooms_list = rooms_table.find({"users": user_id})
+        messages_list.sort(key=lambda x: x["time_created"], reverse=True)
+        print("print(messages_list)")
+        print(messages_list)
+        if len(messages_list) == 0:
+            raise ValueError("Невозможно намутить лонгпул без сообщений!")
+        return messages_list[0]["time_created"]
 
-        # По каждой комнате получаем сообщения
-        messages_table = self.connection["Messages"]
-        for room in rooms_list:
-            messages_list.extend(messages_table.find({"room_id": room.id}))
+    def get_new_messages(self, user_id : str, ts : int):
+        """Получает новые сообщения для пользователя"""
+        pass
 
-        return messages_list
-
-        table.find({""})
-
-    mongo.get_message({"user_id": ""})
+    #mongo.get_message({"user_id": ""})
     # def get_messages(self, chat_id, user_id)
     # TODO def get_messages(self )
