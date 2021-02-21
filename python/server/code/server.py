@@ -155,8 +155,8 @@ def get_longpoll_server():
 def longpoll(server):
     print(f"Перешли по server = {server}")
     
-    key = request.form.get("key")
-    ts = request.form.get("ts")
+    key = request.args.get("key")
+    ts = request.args.get("ts")
 
     # Фильтрация на поля
     if any([x is None for x in (key, ts)]):
@@ -172,10 +172,15 @@ def longpoll(server):
     if current_poll.key != key:
         return {"result": False, "description": "invalid key"}
 
-    request_time = time.time()
-    while len(mongo.get_new_messages()) == 0:
+    new_ts = None
+    result = None
+    while True:
+        result = mongo.get_new_messages(current_poll.user_id, ts)
+        if len(result) !=0:
+            new_ts = result[0]["time_created"]
+            break
         time.sleep(0.5)
-    return mongo.get_new_messages()
+    return {"result" : True, "body" : {"messages" : result, "ts" : new_ts}}
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", threaded=True, debug=False)

@@ -77,8 +77,6 @@ class MongoDB:
 
         messages_list = self.get_user_messages(user_id)
         messages_list.sort(key=lambda x: x["time_created"], reverse=True)
-        print("print(messages_list)")
-        print(messages_list)
         if len(messages_list) == 0:
             raise ValueError("Невозможно намутить лонгпул без сообщений!")
         return messages_list[0]["time_created"]
@@ -86,9 +84,14 @@ class MongoDB:
     def get_new_messages(self, user_id : str, ts : int):
         """Получает новые сообщения для пользователя"""
 
+        print("MONGO.get_new_messages")
         # По каждой комнате получаем сообщения
         messages_list = []
         messages_table = self.connection["Messages"]
         for room in self.get_user_rooms(user_id):
-            messages_list.extend(messages_table.find({"room_id": room["_id"], "time_created": { "$gt": ts }}))
+            find_filter = {"room_id": room["_id"], "time_created" : {"$gt" : int(ts)}}
+            print(find_filter)
+            messages_list.extend(messages_table.find(find_filter))
+        
+        messages_list.sort(key=lambda x: x["time_created"], reverse=True)
         return messages_list
