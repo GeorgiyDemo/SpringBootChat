@@ -33,6 +33,13 @@ class Room(MongoModel):
     def to_mongo(self):
         return {"_id" : self.__id, "creator_id" : self.__creator_id, "name" : self.__name, "users" : self.__users, "time_created" : self.__time_created}
 
+    @property
+    def id(self):
+        return self.__id
+
+    @property
+    def name(self):
+        return self.__name
 
 class User(MongoModel):
     """Класс пользователя"""
@@ -59,6 +66,18 @@ class User(MongoModel):
     
     def to_mongo(self):
         return {"_id" : self.__id, "name" : self.__name, "login" : self.__login, "password" : self.__password, "time_created" : self.__time_created, "key" : self.__key}
+
+    @property
+    def name(self):
+        return self.__name
+
+    @property
+    def key(self):
+        return self.__key
+
+    @property
+    def id(self):
+        return self.__id
 
 class Message(MongoModel):
     """Сообщение"""
@@ -103,6 +122,10 @@ class LongPoll(MongoModel):
     @property
     def user_id(self):
         return self.__user_id
+    
+    @property
+    def key(self):
+        return self.__key
 
 
 if __name__ == "__main__":

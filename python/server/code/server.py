@@ -12,7 +12,7 @@ app = Flask(__name__)
 api = Api(app)
 
 mongo = MongoDB("SpringBootChat", os.environ.get("CONNECTION_STRING"))
-
+polls_list = []
 
 @app.route("/auth", methods=["GET"])
 def auth():
@@ -25,7 +25,11 @@ def auth():
         return {"result": False, "description": "no enough values"}
 
     result = mongo.get_users({"login": login, "password": password})
-    return {"result": True} if len(result) != 0 else {"result": False}
+    if len(result) != 1:
+        return {"result": False}
+    
+    current_user = result[0]
+    return {"result": True, "user_id" : current_user.id, "name" : current_user.name, "key" : current_user.key}
 
 
 @app.route("/register", methods=["GET"])
@@ -67,7 +71,7 @@ def create_room():
 
     new_room = Room(creator_id, users_list, name)
     mongo.set_rooms([new_room])
-    return {"result": True}
+    return {"result": True, "room_id" : new_room.id, "name" : new_room.name}
 
 
 @app.route("/getUserRooms", methods=["GET"])
@@ -131,9 +135,16 @@ def get_longpoll_server():
         return {"result": False, "description": "user does not exist"}
 
     ts = mongo.get_user_last_message_date(user_id)
-    longpoll = LongPoll(user_id,ts)    
+    longpoll = LongPoll(user_id,ts)
+    #Добавляем в список пулов
+    polls_list.append(longpoll)
+    #Записываем в БД    
     mongo.set_longpolls([longpoll])
-    return longpoll.to_mongo()
+    
+    return_dict = longpoll.to_mongo()
+    return_dict.update({"result" : True})
+
+    return return_dict
 
 
 # АЛГОРИТМ
@@ -143,18 +154,28 @@ def get_longpoll_server():
 @app.route("/LongPoll/<server>", methods=["GET"])
 def longpoll(server):
     print(f"Перешли по server = {server}")
-
+    
     key = request.form.get("key")
     ts = request.form.get("ts")
 
-    request_time = time.time()
-    while not self._is_updated(request_time):
-        time.sleep(0.5)
-    content = ""
-    with open("data.txt") as data:
-        content = data.read()
-    return {"content": content, "date": datetime.now().strftime("%Y/%m/%d %H:%M:%S")}
+    # Фильтрация на поля
+    if any([x is None for x in (key, ts)]):
+        return {"result": False, "description": "no enough values"}
 
+    #Проверка на существование пула
+    current_polls = [poll for poll in polls_list if poll.url == f"LongPoll/{server}"]
+    if len(current_polls) != 1:
+        return {"result": False, "description": "poll does not exist"}
+    current_poll = current_polls[0]
+
+    #Проверка на корректность ключа
+    if current_poll.key != key:
+        return {"result": False, "description": "invalid key"}
+
+    request_time = time.time()
+    while len(mongo.get_new_messages()) == 0:
+        time.sleep(0.5)
+    return mongo.get_new_messages()
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", threaded=True, debug=False)

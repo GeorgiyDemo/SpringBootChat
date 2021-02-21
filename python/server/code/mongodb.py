@@ -55,13 +55,17 @@ class MongoDB:
         for poll in longpolls_list:
             table.insert_one(poll.to_mongo())
 
-    def get_user_messages(self, user_id: str) -> List:
-        """Отдает все сообщения, связанные с пользователем"""
-        messages_list = []
+    def get_user_rooms(self, user_id : str) -> List:
+        """Отдает список комнат, в которых состоит пользователь"""
         # Получаем комнаты, где состоит пользователь
         rooms_table = self.connection["Rooms"]
-        rooms_list = rooms_table.find({"users": user_id})
+        return rooms_table.find({"users": user_id})
 
+    def get_user_messages(self, user_id: str) -> List:
+        """Отдает все сообщения, связанные с пользователем"""
+       
+        rooms_list = self.get_user_rooms(user_id)
+        messages_list = []
         # По каждой комнате получаем сообщения
         messages_table = self.connection["Messages"]
         for room in rooms_list:
@@ -81,8 +85,10 @@ class MongoDB:
 
     def get_new_messages(self, user_id : str, ts : int):
         """Получает новые сообщения для пользователя"""
-        pass
 
-    #mongo.get_message({"user_id": ""})
-    # def get_messages(self, chat_id, user_id)
-    # TODO def get_messages(self )
+        # По каждой комнате получаем сообщения
+        messages_list = []
+        messages_table = self.connection["Messages"]
+        for room in self.get_user_rooms(user_id):
+            messages_list.extend(messages_table.find({"room_id": room["_id"], "time_created": { "$gt": ts }}))
+        return messages_list

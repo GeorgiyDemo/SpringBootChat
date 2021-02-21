@@ -2,11 +2,10 @@ import requests
 from typing import List
 import time
 from urllib.parse import quote
-from faker import Faker
 
-LOGIN  = "demka@mail.ru"
-PASSWORD = "3845"
-FIREND_ID = "681470287766471aa58b26defd7813a1"
+LOGIN  = "mike@mail.ru"
+PASSWORD = "436436"
+FIREND_ID = "-"
 
 class DEMKACli:
 
@@ -82,14 +81,10 @@ class DEMKACli:
             time.sleep(1)
 
 def main():
-    fake = Faker("ru_RU")
     cli = DEMKACli(LOGIN,PASSWORD)
-    cli.create_room(FIREND_ID)
+    #cli.create_room("681470287766471aa58b26defd7813a1")
 
-    while True:
-        word = fake.word()
-        print(f"Отправили сообщение {word} в комнату {cli.current_room}..")
-        cli.write_message(word)
-        time.sleep(10)
+    cli.get_longpoll_server()
+    cli.longpoll_listener()
 
 main()
