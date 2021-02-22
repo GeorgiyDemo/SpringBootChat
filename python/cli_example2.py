@@ -82,7 +82,7 @@ class DEMKACli:
                 raise ValueError("Что-то не так с лонгпулом")
             
             self.longpoll_ts = long_request["body"]["ts"]
-            new_messages_list = long_request["body"]["messages"]
+            new_messages_list = long_request["body"]["updates"]
             for message in new_messages_list:
                 print(f"[USER #{message['user_from']}] -> {message['text']}")
             time.sleep(3)

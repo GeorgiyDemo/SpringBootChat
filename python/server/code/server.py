@@ -180,7 +180,7 @@ def longpoll(server):
             new_ts = result[0]["time_created"]
             break
         time.sleep(0.5)
-    return {"result" : True, "body" : {"messages" : result, "ts" : new_ts}}
+    return {"result" : True, "body" : {"updates" : result, "ts" : new_ts}}
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", threaded=True, debug=False)

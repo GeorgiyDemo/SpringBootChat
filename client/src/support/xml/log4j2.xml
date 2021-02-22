@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+From: https://logging.apache.org/log4j/2.0/manual/customloglevels.html
+The standard log levels built into Log4J2 are:
+OFF (0), FATAL(100), ERROR(200), WARN(300), INFO(400), DEBUG(500), TRACE(600), ALL(Integer.MAX_VALUE)
+
+Great example here: https://gist.github.com/fclairamb/5298705
+Do this Google Search: can log4j2.xml read an environment variable
+According to: https://stackoverflow.com/questions/13066042/how-to-give-environmental-variable-path-for-file-appender-in-configuration-file
+According to: http://logging.apache.org/log4j/2.x/manual/lookups.html#EnvironmentLookup
+On CAN use an environment variable
+I think that this config can also honor System Properties too.
+http://logging.apache.org/log4j/2.x/manual/lookups.html#SystemPropertiesLookup
+-->
+
+<Configuration status="INFO">
+
+    <Appenders>
+
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="&#91;%-5level&#93; %d{yyyy-MM-dd HH:mm:ss.SSS} &#91;%t&#93; %c{1} - %msg%n" />
+        </Console>
+
+        <RollingFile name="RollingFile" fileName="${sys:log4j.uniqueRunDirectory}/framework.log"
+                     filePattern="${sys:log4j.uniqueRunDirectory}/framework.%i.log">
+            <PatternLayout pattern="&#91;%-5level&#93; %d{yyyy-MM-dd HH:mm:ss.SSS} &#91;%t&#93; %c{1} - %msg%n" />
+            <SizeBasedTriggeringPolicy size="200000" />
+            <DefaultRolloverStrategy max="10" />
+        </RollingFile>
+
+    </Appenders>
+
+    <Loggers>
+
+        <Root level="info" additivity="false">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="RollingFile" />
+        </Root>
+
+    </Loggers>
+
+</Configuration>
