@@ -23,12 +23,14 @@ public class Main extends Application {
         primaryStage.show();
     }
 
-
+    /**
+     * Точка входа в программу
+     * @param args
+     */
     public static void main(String[] args) {
-        System.setProperty( "log4j.configurationFile", "support/xml/log4j2.xml" );
-        LocaleLogger logger = new LocaleLogger();
-        logger.log("Configuration File Defined To Be :: "+System.getProperty("log4j.configurationFile"));
-        launch(args);
+        MyLogger log = new MyLogger();
+        if (log.deploy())
+            launch(args);
     }
 
 }

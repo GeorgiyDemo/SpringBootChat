@@ -22,8 +22,8 @@ public class Controller {
     private JFXTextField LoginTextField;
     @FXML
     private JFXTextField PasswordTextField;
-    @FXML
 
+    @FXML
     public void mainButtonClick() throws IOException {
         //alert.initOwner(root.getPrimaryStage );
 
@@ -35,6 +35,8 @@ public class Controller {
         stage.setScene(new Scene(root));
         stage.setTitle("ЧАТ");
         stage.show();
+
+        MyLogger.logger.info("Нажатие на button авторизации в программе");
     }
 
 }
