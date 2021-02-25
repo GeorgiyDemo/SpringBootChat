@@ -8,6 +8,8 @@
     <artifactId>client</artifactId>
     <version>1.0-SNAPSHOT</version>
     <dependencies>
+
+        <!--JavaFX -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
@@ -23,6 +25,8 @@
             <artifactId>javafx-controls</artifactId>
             <version>11.0.1</version>
         </dependency>
+
+        <!--Красивый интерфейс-->
         <dependency>
             <groupId>com.jfoenix</groupId>
             <artifactId>jfoenix</artifactId>
