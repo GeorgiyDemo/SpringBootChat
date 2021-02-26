@@ -7,3 +7,10 @@
     -fx-border-radius: 5em;
     -fx-background-radius: 5em;
 }
+
+
+.text-field{
+    -fx-text-inner-color: white;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: gray;
+}

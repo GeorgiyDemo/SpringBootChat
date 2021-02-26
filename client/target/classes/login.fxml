@@ -5,18 +5,18 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<VBox prefHeight="400.0" prefWidth="640.0" styleClass="background" stylesheets="@style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.LoginController">
   <children>
 
-      <AnchorPane style="-fx-background-color: #2a2c38;" VBox.vgrow="ALWAYS">
+      <AnchorPane VBox.vgrow="ALWAYS">
       <children>
 
-            <JFXTextField fx:id="LoginTextField" focusColor="WHITE" layoutX="245.0" layoutY="125.0" promptText="E-mail" style="-fx-text-inner-color: white; -fx-text-fill: white; -fx-prompt-text-fill: gray;" unFocusColor="WHITE">
+            <JFXTextField fx:id="LoginTextField" focusColor="WHITE" layoutX="245.0" layoutY="125.0" promptText="E-mail" unFocusColor="WHITE">
                <font>
                   <Font name="Helvetica" size="13.0" />
                </font>
             </JFXTextField>
-            <JFXTextField fx:id="PasswordTextField" focusColor="WHITE" layoutX="245.0" layoutY="183.0" promptText="Пароль" style="-fx-text-inner-color: white; -fx-text-fill: white; -fx-prompt-text-fill: gray;" unFocusColor="WHITE" />
+            <JFXTextField fx:id="PasswordTextField" focusColor="WHITE" layoutX="245.0" layoutY="183.0" promptText="Пароль" unFocusColor="WHITE" />
             <JFXButton fx:id="LoginButton" layoutX="245.0" layoutY="248.0" onAction="#mainButtonClick" prefHeight="40.0" prefWidth="143.0" ripplerFill="#2491bf" text="Войти" textFill="WHITE" />
             <Label fx:id="AppName" layoutX="240.0" layoutY="59.0" text="DEMKA CHAT" textFill="WHITE">
                <font>

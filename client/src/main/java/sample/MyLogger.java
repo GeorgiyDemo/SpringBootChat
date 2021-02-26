@@ -25,7 +25,7 @@ public class MyLogger {
             logger.info("Успешно инициализировали логгер");
             return true;
         } catch (IOException e) {
-            System.out.println("Не удалось загрузить конфиг логера :c");
+            System.out.println("Не удалось загрузить конфиг логера");
             e.printStackTrace();
             return false;
         }
