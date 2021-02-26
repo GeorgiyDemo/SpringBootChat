@@ -1,13 +1,7 @@
-package sample;
+package sample.utils;
 
 
-import java.io.*;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-import java.util.logging.Logger;
+import java.io.IOException;
 
 
 public class APIRequest {
@@ -23,10 +17,16 @@ public class APIRequest {
     private String longpollSubUrl;
     private String longpollKey;
 
+    public APIRequest(String login, String password) {
+
+        this.Auth(login, password);
+        System.out.printf("Авторизация пользователя {self.username} прошла успешно");
+    }
+
     /*
     Регистрация пользователя
      */
-    public static void Registration(String name, String login, String password){
+    public static void Registration(String name, String login, String password) {
         String URL = String.format("%s/register?name=%s&login=%s&password=%s", ServerURL, name, login, password);
         try {
             String response = HTTPRequest.Get(URL);
@@ -36,14 +36,7 @@ public class APIRequest {
         }
     }
 
-
-    public APIRequest(String login, String password ){
-
-        this.Auth(login, password);
-        System.out.printf("Авторизация пользователя {self.username} прошла успешно");
-    }
-
-    public boolean Auth(String login, String passwd){
+    public boolean Auth(String login, String passwd) {
         String URL = String.format("MEOW");
 
         /*

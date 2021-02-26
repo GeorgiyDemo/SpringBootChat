@@ -1,13 +1,9 @@
-package sample.controller;
+package sample.controllers;
 
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.stage.Stage;
-import sample.MyLogger;
+import sample.utils.MyLogger;
 
 import java.io.IOException;
 

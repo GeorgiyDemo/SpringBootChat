@@ -1,15 +1,15 @@
-.background{
+.background {
     -fx-background-color: #2a2c38;
 }
 
-.button{
+.button {
     -fx-background-color: #2167e4;
     -fx-border-radius: 5em;
     -fx-background-radius: 5em;
 }
 
 
-.text-field{
+.text-field {
     -fx-text-inner-color: white;
     -fx-text-fill: white;
     -fx-prompt-text-fill: gray;

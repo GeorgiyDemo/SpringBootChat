@@ -1,4 +1,4 @@
-package sample.controller;
+package sample.controllers;
 
 public class RootLayoutController extends SuperController {
 

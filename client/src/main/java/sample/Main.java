@@ -1,20 +1,16 @@
 package sample;
 
 import javafx.application.Application;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-
-import sample.controller.LoginController;
-import sample.controller.MainChatController;
-import sample.controller.RegController;
-import sample.controller.RootLayoutController;
-import sample.models.ChatRoom;
+import sample.controllers.LoginController;
+import sample.controllers.MainChatController;
+import sample.controllers.RegController;
+import sample.controllers.RootLayoutController;
+import sample.utils.MyLogger;
 
 import java.io.IOException;
 
@@ -23,6 +19,17 @@ public class Main extends Application {
 
     private Stage primaryStage;
     private BorderPane rootLayout;
+
+    /**
+     * Точка входа в программу
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+        MyLogger log = new MyLogger();
+        if (log.deploy())
+            launch(args);
+    }
 
     public Stage getPrimaryStage() {
         return primaryStage;
@@ -33,7 +40,7 @@ public class Main extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("DEMKA Messenger");
         initRootLayout();
@@ -46,10 +53,10 @@ public class Main extends Application {
      */
     public void Authorisation() {
 
-        try{
+        try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/login.fxml"));
-            AnchorPane mainPage = (AnchorPane) loader.load();
+            loader.setLocation(getClass().getResource("/views/login.fxml"));
+            AnchorPane mainPage = loader.load();
             rootLayout.setCenter(mainPage);
             LoginController controller = loader.getController();
             controller.setMainApp(this);
@@ -61,11 +68,11 @@ public class Main extends Application {
     /**
      * Логика регистрации в программе
      */
-    public void Registration(){
-        try{
+    public void Registration() {
+        try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/registration.fxml"));
-            AnchorPane mainPage = (AnchorPane) loader.load();
+            loader.setLocation(getClass().getResource("/views/registration.fxml"));
+            AnchorPane mainPage = loader.load();
             rootLayout.setCenter(mainPage);
             RegController controller = loader.getController();
             controller.setMainApp(this);
@@ -74,15 +81,14 @@ public class Main extends Application {
         }
     }
 
-
     /**
      * Основное окно с чатами
      */
-    public void MainChat(){
-        try{
+    public void MainChat() {
+        try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/MainChat.fxml"));
-            AnchorPane mainPage = (AnchorPane) loader.load();
+            loader.setLocation(getClass().getResource("/views/MainChat.fxml"));
+            AnchorPane mainPage = loader.load();
             rootLayout.setCenter(mainPage);
             MainChatController controller = loader.getController();
             controller.setMainApp(this);
@@ -90,15 +96,16 @@ public class Main extends Application {
             e.printStackTrace();
         }
     }
+
     /**
      * Базовый Layout
      */
-    public void initRootLayout(){
+    public void initRootLayout() {
 
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/RootLayout.fxml"));
-            rootLayout = (BorderPane) loader.load();
+            loader.setLocation(getClass().getResource("/views/RootLayout.fxml"));
+            rootLayout = loader.load();
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
             primaryStage.setResizable(false);
@@ -109,16 +116,6 @@ public class Main extends Application {
             e.printStackTrace();
         }
 
-    }
-
-    /**
-     * Точка входа в программу
-     * @param args
-     */
-    public static void main(String[] args) {
-        MyLogger log = new MyLogger();
-        if (log.deploy())
-            launch(args);
     }
 
 }

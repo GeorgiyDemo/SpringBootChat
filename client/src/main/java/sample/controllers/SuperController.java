@@ -1,5 +1,4 @@
-
-package sample.controller;
+package sample.controllers;
 
 import sample.Main;
 
@@ -8,7 +7,8 @@ import sample.Main;
  */
 public class SuperController {
     protected Main mainApp;
-    public void setMainApp(Main mainApp){
+
+    public void setMainApp(Main mainApp) {
         this.mainApp = mainApp;
     }
 }
