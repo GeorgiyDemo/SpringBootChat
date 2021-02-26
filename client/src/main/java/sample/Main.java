@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 
 import sample.controller.LoginController;
 import sample.controller.RegController;
+import sample.controller.RootLayoutController;
 import sample.models.ChatRoom;
 
 import java.io.IOException;
@@ -40,19 +41,18 @@ public class Main extends Application {
     }
 
     //TODO ЧТО НЕ ТАК?
-    public void Authorisation() throws IOException {
+    public void Authorisation() {
 
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/login.fxml"));
-        AnchorPane item = (AnchorPane) loader.load();
-        rootLayout.setCenter(item);
-
-
-        LoginController controller = loader.getController();
-        controller.setMainApp(this);
-
-
-
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/login.fxml"));
+            AnchorPane mainPage = (AnchorPane) loader.load();
+            rootLayout.setCenter(mainPage);
+            LoginController controller = loader.getController();
+            controller.setMainApp(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void Registration(){
@@ -75,18 +75,21 @@ public class Main extends Application {
      * Базовый Layout
      */
     public void initRootLayout(){
-        try{
+
+        try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/RootLayout.fxml"));
             rootLayout = (BorderPane) loader.load();
-
             Scene scene = new Scene(rootLayout);
-            primaryStage .setScene(scene);
+            primaryStage.setScene(scene);
+            primaryStage.setResizable(false);
+            RootLayoutController controller = loader.getController();
+            controller.setMainApp(this);
             primaryStage.show();
-
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     /**
