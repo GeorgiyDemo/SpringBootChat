@@ -33,6 +33,10 @@ public class Main extends Application {
             launch(args);
     }
 
+    public void setAPISession(MyAPI APISession) {
+        this.APISession = APISession;
+    }
+
     public MyAPI getAPISession() {
         return APISession;
     }
@@ -56,7 +60,7 @@ public class Main extends Application {
         //TODO: ЭТО ХАРДКОД, ПОТОМ ВЫНЕСТИ В SQLITE или куда-то
         //TODO: Проверка на всякое барахло по типу существующей авторизации и т д
         String BUFFLOGIN = "demka@mail.ru";
-        String BUFFPASSWRD = "384";
+        String BUFFPASSWRD = "3845";
         APISession = new MyAPI(BUFFLOGIN,BUFFPASSWRD);
 
         //Если пользователь не авторизован
