@@ -6,10 +6,11 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import sample.controllers.LoginController;
+import sample.controllers.AuthorisationController;
 import sample.controllers.MainChatController;
 import sample.controllers.RegController;
 import sample.controllers.RootLayoutController;
+import sample.utils.MyAPI;
 import sample.utils.MyLogger;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ public class Main extends Application {
 
     private Stage primaryStage;
     private BorderPane rootLayout;
+    private MyAPI APISession;
 
     /**
      * Точка входа в программу
@@ -31,6 +33,10 @@ public class Main extends Application {
             launch(args);
     }
 
+    public MyAPI getAPISession() {
+        return APISession;
+    }
+
     public Stage getPrimaryStage() {
         return primaryStage;
     }
@@ -41,24 +47,40 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+
+        //Выставляем RootLayout
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("DEMKA Messenger");
         initRootLayout();
+
+        //TODO: ЭТО ХАРДКОД, ПОТОМ ВЫНЕСТИ В SQLITE или куда-то
         //TODO: Проверка на всякое барахло по типу существующей авторизации и т д
-        Authorisation();
+        String BUFFLOGIN = "demka@mail.ru";
+        String BUFFPASSWRD = "384";
+        APISession = new MyAPI(BUFFLOGIN,BUFFPASSWRD);
+
+        //Если пользователь не авторизован
+        if  (!APISession.getIsAuthenticated()){
+            UserAuthorisation();
+        }
+        //Если уже успешно авторизовался
+        else {
+            MainChat();
+        }
+
     }
 
     /**
      * Логика авторизации в программе
      */
-    public void Authorisation() {
+    public void UserAuthorisation() {
 
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/views/login.fxml"));
+            loader.setLocation(getClass().getResource("/views/LoginView.fxml"));
             AnchorPane mainPage = loader.load();
             rootLayout.setCenter(mainPage);
-            LoginController controller = loader.getController();
+            AuthorisationController controller = loader.getController();
             controller.setMainApp(this);
         } catch (IOException e) {
             e.printStackTrace();
@@ -68,10 +90,10 @@ public class Main extends Application {
     /**
      * Логика регистрации в программе
      */
-    public void Registration() {
+    public void UserRegistration() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/views/registration.fxml"));
+            loader.setLocation(getClass().getResource("/views/RegistrationView.fxml"));
             AnchorPane mainPage = loader.load();
             rootLayout.setCenter(mainPage);
             RegController controller = loader.getController();
@@ -87,7 +109,7 @@ public class Main extends Application {
     public void MainChat() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/views/MainChat.fxml"));
+            loader.setLocation(getClass().getResource("/views/MainChatView.fxml"));
             AnchorPane mainPage = loader.load();
             rootLayout.setCenter(mainPage);
             MainChatController controller = loader.getController();
@@ -104,7 +126,7 @@ public class Main extends Application {
 
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/views/RootLayout.fxml"));
+            loader.setLocation(getClass().getResource("/views/RootLayoutView.fxml"));
             rootLayout = loader.load();
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
