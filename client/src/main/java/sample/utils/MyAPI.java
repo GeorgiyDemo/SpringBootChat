@@ -3,10 +3,13 @@ package sample.utils;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import sample.models.ChatRoom;
 
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MyAPI {
@@ -63,6 +66,26 @@ public class MyAPI {
         }
         MyLogger.logger.info("AUTH - получили пустой ответ от сервера");
         return false;
+    }
+
+    public List<ChatRoom> userChatRooms(){
+
+        List<ChatRoom> resultList = new ArrayList<ChatRoom>();
+        String URL = String.format("%s/getUserRooms?user_id=%s&key=%s", ServerURL, userId, userKey);
+        String response = HTTPRequest.Get(URL);
+        if (response != null) {
+            JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
+            if (jsonResult.get("result").getAsBoolean()) {
+                System.out.println(jsonResult);
+
+            }
+            MyLogger.logger.info("AUTH - Авторизация не удалась");
+
+        }
+        MyLogger.logger.info("AUTH - получили пустой ответ от сервера");
+
+
+    return resultList;
     }
 
     public boolean getIsAuthenticated(){

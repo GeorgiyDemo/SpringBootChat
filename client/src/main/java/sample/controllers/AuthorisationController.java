@@ -13,6 +13,8 @@ public class AuthorisationController extends SuperController {
     @FXML
     private Label AppName;
     @FXML
+    private Label WrongAuth;
+    @FXML
     private JFXTextField LoginTextField;
     @FXML
     private JFXTextField PasswordTextField;
@@ -37,6 +39,7 @@ public class AuthorisationController extends SuperController {
                 MyLogger.logger.info("Пользователь успешно авторизовался");
             }
             else{
+                WrongAuth.setOpacity(1);
                 MyLogger.logger.info("Не удалось авторизоваться");
             }
 

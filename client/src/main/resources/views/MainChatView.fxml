@@ -33,7 +33,7 @@
                         <HBox layoutX="247.0" layoutY="259.0" spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
                             <children>
                                 <JFXTextField prefHeight="27.0" prefWidth="300.0" />
-                                <JFXButton text="Отправить" />
+                                <JFXButton  fx:id="sendMessageButton" onAction="#sendMessageButtonClicked" text="Отправить" />
                             </children>
                         </HBox>
                     </children>
