@@ -5,12 +5,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="400.0" prefWidth="640.0" styleClass="background" stylesheets="@style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.LoginController">
-  <children>
 
-      <AnchorPane VBox.vgrow="ALWAYS">
+
+
+  <AnchorPane prefHeight="400.0" prefWidth="640.0" styleClass="background" stylesheets="@style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.controller.LoginController">
       <children>
-
+    
             <JFXTextField fx:id="LoginTextField" focusColor="WHITE" layoutX="245.0" layoutY="125.0" promptText="E-mail" unFocusColor="WHITE">
                <font>
                   <Font name="Helvetica" size="13.0" />
@@ -34,7 +34,4 @@
             </Label>
 
       </children>
-
-      </AnchorPane>
-  </children>
-</VBox>
+  </AnchorPane>
