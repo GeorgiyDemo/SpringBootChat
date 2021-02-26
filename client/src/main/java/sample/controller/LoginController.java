@@ -7,12 +7,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
-import sample.Main;
 import sample.MyLogger;
 
 import java.io.IOException;
 
-public class LoginController {
+public class LoginController extends SuperController {
 
     @FXML
     private Label AppName;
@@ -21,28 +20,11 @@ public class LoginController {
     @FXML
     private JFXTextField PasswordTextField;
 
-    private Main mainApp;
-
     @FXML
     public void mainButtonClick() throws IOException {
         //alert.initOwner(root.getPrimaryStage );
-
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getResource("/main.fxml"));
-        Parent root = loader.load();
-        LoginController controller = loader.getController();
-        Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.setTitle("ЧАТ");
-        stage.show();
+        mainApp.MainChat();
 
         MyLogger.logger.info("Нажатие на button авторизации в программе");
     }
-
-    public void setMainApp(Main mainApp){
-        this.mainApp = mainApp;
-    }
-
-
-
 }

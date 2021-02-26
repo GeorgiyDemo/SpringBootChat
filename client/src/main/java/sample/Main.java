@@ -11,6 +11,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import sample.controller.LoginController;
+import sample.controller.MainChatController;
 import sample.controller.RegController;
 import sample.controller.RootLayoutController;
 import sample.models.ChatRoom;
@@ -40,7 +41,9 @@ public class Main extends Application {
         Authorisation();
     }
 
-    //TODO ЧТО НЕ ТАК?
+    /**
+     * Логика авторизации в программе
+     */
     public void Authorisation() {
 
         try{
@@ -55,22 +58,38 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * Логика регистрации в программе
+     */
     public void Registration(){
         try{
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("/registration.fxml"));
-            AnchorPane persons = (AnchorPane) loader.load();
-
-            rootLayout.setCenter(persons);
-
+            AnchorPane mainPage = (AnchorPane) loader.load();
+            rootLayout.setCenter(mainPage);
             RegController controller = loader.getController();
             controller.setMainApp(this);
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
 
+    /**
+     * Основное окно с чатами
+     */
+    public void MainChat(){
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/MainChat.fxml"));
+            AnchorPane mainPage = (AnchorPane) loader.load();
+            rootLayout.setCenter(mainPage);
+            MainChatController controller = loader.getController();
+            controller.setMainApp(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * Базовый Layout
      */
