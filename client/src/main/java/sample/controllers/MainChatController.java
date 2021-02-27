@@ -11,7 +11,7 @@ import sample.utils.MyAPI;
 import sample.utils.MyLogger;
 
 public class MainChatController extends SuperController {
-    private ObservableList<Room> personData = FXCollections.observableArrayList();
+    private ObservableList<Room> RoomData = FXCollections.observableArrayList();
 
     private MyAPI APISession;
     @FXML
@@ -34,16 +34,14 @@ public class MainChatController extends SuperController {
     public void initialize(Main mainApp) {
         System.out.println("запустили setMainApp");
         this.mainApp = mainApp;
-        personTable.setItems(personData);
+        personTable.setItems(RoomData);
 
         System.out.println("запускили конструктор");
         APISession = mainApp.getAPISession();
         firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
         System.out.println("initialize отработал");
-        for (int i = 0; i < 5; i++) {
-            Room bufChat = new Room("MEOW"+i);
-            personData.add(bufChat);
-        }
+        //RoomData.addAll(APISession.getUserRooms());
+        
         APISession.getUserRooms();
         //userChatRooms
     }

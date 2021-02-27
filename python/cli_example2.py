@@ -2,7 +2,7 @@ from demka_cli import DEMKACli
 
 LOGIN = "mike@mail.ru"
 PASSWORD = "436436"
-FIRENDS_LIST = ["681470287766471aa58b26defd7813a1"]
+FIRENDS_LIST = ["903ccfc0d939478bbcd31e8f95ca87ad"]
 
 
 def main():

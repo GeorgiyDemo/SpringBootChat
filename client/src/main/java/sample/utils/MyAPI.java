@@ -1,10 +1,7 @@
 package sample.utils;
 
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import sample.models.Room;
 
 import java.net.URLEncoder;
@@ -76,7 +73,6 @@ public class MyAPI {
      */
     public List<Room> getUserRooms(){
 
-        Gson gson = new Gson();
 
         //Список комнат, который метод отдаёт
         List<Room> resultList = new ArrayList<Room>();
@@ -88,11 +84,19 @@ public class MyAPI {
         if (response != null) {
             JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
             if (jsonResult.get("result").getAsBoolean()) {
+
                 JsonArray bufList = jsonResult.get("body").getAsJsonArray();
+
                 for (int i = 0; i < bufList.size(); i++) {
-                    System.out.println(bufList.get(i));
-                    Room room = gson.fromJson(bufList.get(i), Room.class);
-                    resultList.add(room);
+                    JsonObject currentRoom = bufList.get(i).getAsJsonObject();
+
+                    String roomId = currentRoom.get("_id").getAsString();
+                    System.out.println(roomId);
+
+
+
+                    //Room room = new Room();
+                    //resultList.add(room);
                 }
                 MyLogger.logger.info("getUserRooms - Получили список комнат для пользователя "+userId);
                 return resultList;
