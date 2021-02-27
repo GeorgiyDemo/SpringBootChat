@@ -55,7 +55,7 @@ class MongoDB:
         for poll in longpolls_list:
             table.insert_one(poll.to_mongo())
 
-    def get_user_rooms(self, user_id : str) -> List:
+    def get_user_rooms(self, user_id: str) -> List:
         """Отдает список комнат, в которых состоит пользователь"""
         # Получаем комнаты, где состоит пользователь
         rooms_table = self.connection["Rooms"]
@@ -63,7 +63,7 @@ class MongoDB:
 
     def get_user_messages(self, user_id: str) -> List:
         """Отдает все сообщения, связанные с пользователем"""
-       
+
         rooms_list = self.get_user_rooms(user_id)
         messages_list = []
         # По каждой комнате получаем сообщения
@@ -81,7 +81,7 @@ class MongoDB:
             raise ValueError("Невозможно намутить лонгпул без сообщений!")
         return messages_list[0]["time_created"]
 
-    def get_new_messages(self, user_id : str, ts : int):
+    def get_new_messages(self, user_id: str, ts: int):
         """Получает новые сообщения для пользователя"""
 
         print("MONGO.get_new_messages")
@@ -89,9 +89,9 @@ class MongoDB:
         messages_list = []
         messages_table = self.connection["Messages"]
         for room in self.get_user_rooms(user_id):
-            find_filter = {"room_id": room["_id"], "time_created" : {"$gt" : int(ts)}}
+            find_filter = {"room_id": room["_id"], "time_created": {"$gt": int(ts)}}
             print(find_filter)
             messages_list.extend(messages_table.find(find_filter))
-        
+
         messages_list.sort(key=lambda x: x["time_created"], reverse=True)
         return messages_list

@@ -14,6 +14,7 @@ api = Api(app)
 mongo = MongoDB("SpringBootChat", os.environ.get("CONNECTION_STRING"))
 polls_list = []
 
+
 @app.route("/auth", methods=["GET"])
 def auth():
     """Авторизации пользователя"""
@@ -27,9 +28,11 @@ def auth():
     result = mongo.get_users({"login": login, "password": password})
     if len(result) != 1:
         return {"result": False}
-    
-    current_user = result[0]
-    return {"result": True, "user_id" : current_user.id, "name" : current_user.name, "key" : current_user.key}
+
+    current_dict = result[0].to_mongo()
+    current_dict.pop("login", None)
+    current_dict.pop("password", None)
+    return {"result": True, "body": current_dict}
 
 
 @app.route("/register", methods=["GET"])
@@ -43,7 +46,10 @@ def register():
     new_user = User(name, login, password)
     # Запись в БД
     mongo.set_users([new_user])
-    return {"result": True}
+    current_dict = new_user.to_mongo()
+    current_dict.pop("login", None)
+    current_dict.pop("password", None)
+    return {"result": True, "body": current_dict}
 
 
 @app.route("/createRoom", methods=["GET"])
@@ -53,45 +59,67 @@ def create_room():
     - Принимает список id пользователей
     """
     creator_id = request.args.get("creator_id")
-    name = request.args.get("name")
     users = request.args.get("users")
+    user_key = request.args.get("user_key")
+    room_name = request.args.get("name")
 
     # Фильтрация на поля
-    if any([x is None for x in (creator_id, users)]):
+    if any([x is None for x in (creator_id, users, user_key)]):
         return {"result": False, "description": "no enough values"}
+
+    # Проверка на авторизацию
+    if mongo.get_users({"key": user_key}) == 0:
+        return {"result": False, "description": "invalid auth key"}
 
     # Фильтрация на существование пользователей
     users_list = users.split(",")
     if any([mongo.get_users({"_id": user}) == 0 for user in users_list]):
         return {"result": False, "description": "some users does not exist"}
 
-    #Если создателя нет в списке пользователей комнаты, то добавляем его
+    # Если создателя нет в списке пользователей комнаты, то добавляем его
     if creator_id not in users_list:
         users_list.append(creator_id)
 
-    new_room = Room(creator_id, users_list, name)
+    new_room = Room(creator_id, users_list, room_name)
     mongo.set_rooms([new_room])
-    return {"result": True, "room_id" : new_room.id, "name" : new_room.name}
+    return {"result": True, "body": new_room.to_mongo()}
 
 
 @app.route("/getUserRooms", methods=["GET"])
 def get_user_rooms():
     """Получение списка комнат, в которых состоит пользователь"""
     user_id = request.args.get("user_id")
-    if user_id is None:
+    user_key = request.args.get("user_key")
+
+    # Фильтрация на поля
+    if any([x is None for x in (user_id, user_key)]):
         return {"result": False, "description": "no enough values"}
-    result = mongo.get_rooms({"users": user_id})
-    return json.dumps([room.to_mongo() for room in result], ensure_ascii=False)
+
+    # Проверка на пользователя
+    if mongo.get_users({"_id": user_id, "key": user_key}) == 0:
+        return {"result": False, "description": "invalid auth key"}
+
+    rooms_list = [room.to_mongo() for room in mongo.get_rooms({"users": user_id})]
+
+    return {"result": True, "body": rooms_list}
 
 
-# TODO
 @app.route("/search", methods=["GET"])
 def search():
     """Поиск пользователя в системе (для последующего чата)"""
-    return {"result": True}
+    user_key = request.args.get("user_key")
+    search_str = request.args.get("search_str")
+
+    if user_key is None:
+        return {"result": False, "description": "no enough values"}
+
+    # Проверка на пользователя
+    if mongo.get_users({"key": user_key}) == 0:
+        return {"result": False, "description": "invalid auth key"}
+
+    return {"result": True, "body": "SOME_INFO"}
 
 
-# TODO
 @app.route("/writeMessage", methods=["GET"])
 def write_message():
     """
@@ -99,52 +127,55 @@ def write_message():
     """
 
     user_from = request.args.get("user_from")
+    user_key = request.args.get("user_key")
     text = request.args.get("text")
     room_id = request.args.get("room_id")
 
     # Фильтрация на поля
-    if any([x is None for x in (user_from, text, room_id)]):
+    if any([x is None for x in (user_from, text, room_id, user_key)]):
         return {"result": False, "description": "no enough values"}
 
-    # TODO Фильтрация на пользователя
+    # Проверка на пользователя
+    if mongo.get_users({"_id": user_from, "key": user_key}) == 0:
+        return {"result": False, "description": "invalid auth key"}
 
-    # TODO Фильтрация на комнату
+    # Фильтрация на комнату
+    if mongo.get_rooms({"_id": room_id}) == 0:
+        return {"result": False, "description": "invalid room id"}
 
     message = Message(user_from, text, room_id)
     mongo.set_messages([message])
-    return {"result": True}
+    return {"result": True, "body": message.to_mongo()}
 
 
 @app.route("/getLongPollServer", methods=["GET"])
 def get_longpoll_server():
     """
-    Получение данных для лонгпула по определенному user_id
+    Получение данных для лонгпула по определенному user_id и его user_key
 
     Отдает следующие данные:
-    key - ключ пользователя
+    key - ключ лонгпула
     ts - время последнего полученного объекта пользователя
     server - URL, куда стучаться
     """
     user_id = request.args.get("user_id")
-    # Если нет переданного поля
-    if user_id is None:
+    user_key = request.args.get("user_key")
+
+    # Фильтрация на поля
+    if any([x is None for x in (user_id, user_key)]):
         return {"result": False, "description": "no enough values"}
 
-    # Если пользователя не существует
-    if mongo.get_users({"_id": user_id}) == 0:
-        return {"result": False, "description": "user does not exist"}
+    # Проверка на пользователя
+    if mongo.get_users({"_id": user_id, "key": user_key}) == 0:
+        return {"result": False, "description": "invalid auth key"}
 
     ts = mongo.get_user_last_message_date(user_id)
-    longpoll = LongPoll(user_id,ts)
-    #Добавляем в список пулов
+    longpoll = LongPoll(user_id, ts)
+    # Добавляем в список пулов
     polls_list.append(longpoll)
-    #Записываем в БД    
+    # Записываем в БД
     mongo.set_longpolls([longpoll])
-    
-    return_dict = longpoll.to_mongo()
-    return_dict.update({"result" : True})
-
-    return return_dict
+    return {"result": True, "body": longpoll.to_mongo()}
 
 
 # АЛГОРИТМ
@@ -154,7 +185,7 @@ def get_longpoll_server():
 @app.route("/LongPoll/<server>", methods=["GET"])
 def longpoll(server):
     print(f"Перешли по server = {server}")
-    
+
     key = request.args.get("key")
     ts = request.args.get("ts")
 
@@ -162,13 +193,13 @@ def longpoll(server):
     if any([x is None for x in (key, ts)]):
         return {"result": False, "description": "no enough values"}
 
-    #Проверка на существование пула
+    # Проверка на существование пула
     current_polls = [poll for poll in polls_list if poll.url == f"LongPoll/{server}"]
     if len(current_polls) != 1:
         return {"result": False, "description": "poll does not exist"}
     current_poll = current_polls[0]
 
-    #Проверка на корректность ключа
+    # Проверка на корректность ключа
     if current_poll.key != key:
         return {"result": False, "description": "invalid key"}
 
@@ -176,11 +207,12 @@ def longpoll(server):
     result = None
     while True:
         result = mongo.get_new_messages(current_poll.user_id, ts)
-        if len(result) !=0:
+        if len(result) != 0:
             new_ts = result[0]["time_created"]
             break
         time.sleep(0.5)
-    return {"result" : True, "body" : {"updates" : result, "ts" : new_ts}}
+    return {"result": True, "body": {"updates": result, "ts": new_ts}}
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", threaded=True, debug=False)
