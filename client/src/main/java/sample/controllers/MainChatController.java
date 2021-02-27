@@ -20,22 +20,6 @@ public class MainChatController extends SuperController {
     @FXML
     private TableColumn<ChatRoom, String> firstNameColumn;
 
-    @FXML
-    private void initialize(){
-        System.out.println("запускили конструктор");
-        APISession = mainApp.getAPISession();
-        firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
-        System.out.println("initialize отработал");
-        for (int i = 0; i < 5; i++) {
-            ChatRoom bufChat = new ChatRoom("MEOW"+i);
-            personData.add(bufChat);
-        }
-        APISession.userChatRooms();
-        //userChatRooms
-
-
-    }
-
     /***
      *  Обработчик нажатия на button отпраавки сообщения
      */
@@ -45,12 +29,22 @@ public class MainChatController extends SuperController {
 
     }
 
+
     @Override
-    public void setMainApp(Main mainApp){
+    public void initialize(Main mainApp) {
         System.out.println("запустили setMainApp");
         this.mainApp = mainApp;
         personTable.setItems(personData);
+
+        System.out.println("запускили конструктор");
+        APISession = mainApp.getAPISession();
+        firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+        System.out.println("initialize отработал");
+        for (int i = 0; i < 5; i++) {
+            ChatRoom bufChat = new ChatRoom("MEOW"+i);
+            personData.add(bufChat);
+        }
+        APISession.getUserRooms();
+        //userChatRooms
     }
-
-
 }

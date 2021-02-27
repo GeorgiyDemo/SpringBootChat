@@ -3,6 +3,7 @@ package sample.controllers;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import sample.Main;
 import sample.utils.MyAPI;
 import sample.utils.MyLogger;
 
@@ -46,5 +47,10 @@ public class AuthorisationController extends SuperController {
 
         }
 
+    }
+
+    @Override
+    public void initialize(Main mainApp) {
+        this.mainApp = mainApp;
     }
 }

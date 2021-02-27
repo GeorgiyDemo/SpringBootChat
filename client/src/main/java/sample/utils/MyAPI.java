@@ -55,8 +55,8 @@ public class MyAPI {
             if (authResult) {
                 System.out.println(jsonResult);
                 this.userId = jsonResult.get("user_id").getAsString();
-                this.userKey = jsonResult.get("key").getAsString();
-                this.userName = jsonResult.get("name").getAsString();
+                this.userKey = jsonResult.get("user_key").getAsString();
+                this.userName = jsonResult.get("user_name").getAsString();
                 MyLogger.logger.info("AUTH - Авторизация прошла успешно");
                 return true;
             }
@@ -68,10 +68,11 @@ public class MyAPI {
         return false;
     }
 
-    public List<ChatRoom> userChatRooms(){
+    public List<ChatRoom> getUserRooms(){
 
         List<ChatRoom> resultList = new ArrayList<ChatRoom>();
         String URL = String.format("%s/getUserRooms?user_id=%s&key=%s", ServerURL, userId, userKey);
+        System.out.println(URL);
         String response = HTTPRequest.Get(URL);
         if (response != null) {
             JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();

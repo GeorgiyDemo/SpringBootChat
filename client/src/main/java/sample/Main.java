@@ -85,7 +85,7 @@ public class Main extends Application {
             AnchorPane mainPage = loader.load();
             rootLayout.setCenter(mainPage);
             AuthorisationController controller = loader.getController();
-            controller.setMainApp(this);
+            controller.initialize(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -101,7 +101,7 @@ public class Main extends Application {
             AnchorPane mainPage = loader.load();
             rootLayout.setCenter(mainPage);
             RegController controller = loader.getController();
-            controller.setMainApp(this);
+            controller.initialize(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -117,7 +117,7 @@ public class Main extends Application {
             AnchorPane mainPage = loader.load();
             rootLayout.setCenter(mainPage);
             MainChatController controller = loader.getController();
-            controller.setMainApp(this);
+            controller.initialize(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -136,7 +136,7 @@ public class Main extends Application {
             primaryStage.setScene(scene);
             primaryStage.setResizable(false);
             RootLayoutController controller = loader.getController();
-            controller.setMainApp(this);
+            controller.initialize(this);
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
