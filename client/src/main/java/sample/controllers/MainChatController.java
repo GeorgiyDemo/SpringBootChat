@@ -6,19 +6,19 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import sample.Main;
-import sample.models.ChatRoom;
+import sample.models.Room;
 import sample.utils.MyAPI;
 import sample.utils.MyLogger;
 
 public class MainChatController extends SuperController {
-    private ObservableList<ChatRoom> personData = FXCollections.observableArrayList();
+    private ObservableList<Room> personData = FXCollections.observableArrayList();
 
     private MyAPI APISession;
     @FXML
-    private TableView<ChatRoom> personTable;
+    private TableView<Room> personTable;
 
     @FXML
-    private TableColumn<ChatRoom, String> firstNameColumn;
+    private TableColumn<Room, String> firstNameColumn;
 
     /***
      *  Обработчик нажатия на button отпраавки сообщения
@@ -41,7 +41,7 @@ public class MainChatController extends SuperController {
         firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
         System.out.println("initialize отработал");
         for (int i = 0; i < 5; i++) {
-            ChatRoom bufChat = new ChatRoom("MEOW"+i);
+            Room bufChat = new Room("MEOW"+i);
             personData.add(bufChat);
         }
         APISession.getUserRooms();

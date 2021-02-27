@@ -1,11 +1,12 @@
 package sample.utils;
 
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import sample.models.ChatRoom;
+import sample.models.Room;
 
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class MyAPI {
 
         String URL = String.format("%s/register?name=%s&login=%s&password=%s", ServerURL, name, login, password);
         String response = HTTPRequest.Get(URL);
-        System.out.printf(response);
+        System.out.println(response);
     }
 
     public boolean Auth(String login, String password) {
@@ -54,39 +55,57 @@ public class MyAPI {
             boolean authResult = jsonResult.get("result").getAsBoolean();
             if (authResult) {
                 System.out.println(jsonResult);
-                this.userId = jsonResult.get("user_id").getAsString();
-                this.userKey = jsonResult.get("user_key").getAsString();
-                this.userName = jsonResult.get("user_name").getAsString();
-                MyLogger.logger.info("AUTH - Авторизация прошла успешно");
+                JsonObject userData = jsonResult.get("body").getAsJsonObject();
+                this.userId = userData.get("_id").getAsString();
+                this.userKey = userData.get("key").getAsString();
+                this.userName = userData.get("name").getAsString();
+                MyLogger.logger.info("Auth - Авторизация прошла успешно");
                 return true;
             }
-            MyLogger.logger.info("AUTH - Авторизация не удалась");
+            MyLogger.logger.info("Auth - Авторизация не удалась");
             return false;
 
         }
-        MyLogger.logger.info("AUTH - получили пустой ответ от сервера");
+        MyLogger.logger.info("Auth - получили пустой ответ от сервера");
         return false;
     }
 
-    public List<ChatRoom> getUserRooms(){
+    /**
+     * Получение чат-комнат пользователя
+     * @return
+     */
+    public List<Room> getUserRooms(){
 
-        List<ChatRoom> resultList = new ArrayList<ChatRoom>();
-        String URL = String.format("%s/getUserRooms?user_id=%s&key=%s", ServerURL, userId, userKey);
-        System.out.println(URL);
+        Gson gson = new Gson();
+
+        //Список комнат, который метод отдаёт
+        List<Room> resultList = new ArrayList<Room>();
+
+        //Запрашиваем данные по URL
+        String URL = String.format("%s/getUserRooms?user_id=%s&user_key=%s", ServerURL, userId, userKey);
         String response = HTTPRequest.Get(URL);
+        //Если ответ есть
         if (response != null) {
             JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
             if (jsonResult.get("result").getAsBoolean()) {
-                System.out.println(jsonResult);
-
+                JsonArray bufList = jsonResult.get("body").getAsJsonArray();
+                for (int i = 0; i < bufList.size(); i++) {
+                    System.out.println(bufList.get(i));
+                    Room room = gson.fromJson(bufList.get(i), Room.class);
+                    resultList.add(room);
+                }
+                MyLogger.logger.info("getUserRooms - Получили список комнат для пользователя "+userId);
+                return resultList;
             }
-            MyLogger.logger.info("AUTH - Авторизация не удалась");
+
+            MyLogger.logger.info("getUserRooms - Не удалось получить список комнат для пользователя "+userId);
+            return resultList;
 
         }
-        MyLogger.logger.info("AUTH - получили пустой ответ от сервера");
 
+        MyLogger.logger.info("getUserRooms - получили пустой ответ от сервера");
+        return resultList;
 
-    return resultList;
     }
 
     public boolean getIsAuthenticated(){
