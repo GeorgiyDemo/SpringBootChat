@@ -21,7 +21,11 @@ public class MyAPI {
     private String longpollSubUrl;
     private String longpollKey;
 
+
+
     private boolean isAuthenticated;
+
+    private static String currentRoomId;
     private final static String ServerURL = "http://127.0.0.1:5000";
 
     public MyAPI(String login, String password) {
@@ -220,8 +224,17 @@ public class MyAPI {
         MyLogger.logger.error("LongPool не инициалзирован! Необходима инициализация с помощью this.getLongpollServer()");
         System.out.println("LongPool не инициалзирован!");
     }
+
     public boolean getIsAuthenticated(){
         return isAuthenticated;
+    }
+
+    public static String getCurrentRoomId() {
+        return currentRoomId;
+    }
+
+    public static void setCurrentRoomId(String currentRoomId) {
+        MyAPI.currentRoomId = currentRoomId;
     }
 }
 

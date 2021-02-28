@@ -10,11 +10,13 @@ import java.util.List;
 public class LongPollRunnable implements Runnable{
 
     ObservableList<Room> roomData;
+    ObservableList<Message> messageData;
     MyAPI apiSession;
 
-    public LongPollRunnable(ObservableList<Room> roomData, MyAPI apiSession) {
+    public LongPollRunnable(ObservableList<Room> roomData, ObservableList<Message> messageData, MyAPI apiSession) {
         this.roomData = roomData;
         this.apiSession = apiSession;
+        this.messageData = messageData;
     }
 
     /**
@@ -32,6 +34,7 @@ public class LongPollRunnable implements Runnable{
     public void run() {
         for (int i = 0; i < 100; i++) {
             try {
+
                 //Пример добавления комнат
                 Thread.sleep(1000);
                 MyLogger.logger.info("LongPollRunnable.run - работает!");
@@ -44,7 +47,17 @@ public class LongPollRunnable implements Runnable{
                 for (int j = 0; j < 4; j++) {
                     Message bufMessage = new Message("1","тестовое сообщение от LongPollRunnable"+j,thisRoom.getId(),1234,"85g677h8h6g686g78"+j);
                     thisRoom.addMessage(bufMessage);
+
+                    //Если открыт уже диалог с текущей конференцией
+                    if (bufMessage.getRoomId().equals(MyAPI.getCurrentRoomId())){
+                        messageData.add(bufMessage);
+                    }
+                    else{
+                        System.out.println("Конференция не открыта");
+                    }
+
                 }
+
 
             } catch (InterruptedException e) {
                 e.printStackTrace();

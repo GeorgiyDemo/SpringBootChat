@@ -82,7 +82,7 @@ public class MainChatController extends SuperController {
         MyLogger.logger.info("MainChatController - инициализировали все комнаты");
 
         //TODO: Инициализируем longpoll
-        LongPollRunnable runnable = new LongPollRunnable(RoomData, APISession);
+        LongPollRunnable runnable = new LongPollRunnable(RoomData, MessageData, APISession);
         Thread thread = new Thread(runnable, "LongPoll Thread");
         thread.start();
 
@@ -97,8 +97,10 @@ public class MainChatController extends SuperController {
      * @param room
      */
     private void showChatRoomDetails(Room room){
+        //Выставляем id текущей комнаты
         MessageData.clear();
         if(room != null) {
+            MyAPI.setCurrentRoomId(room.getId());
             MessageData.addAll(room.getMessages());
             MessageTable.setItems(MessageData);
         }
