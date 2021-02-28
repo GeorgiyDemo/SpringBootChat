@@ -16,7 +16,6 @@ public class MyAPI {
     private String userName;
     private String userKey;
     private String userId;
-    private String currentRoomId;
 
     private String longpollTs;
     private String longpollSubUrl;
@@ -30,8 +29,11 @@ public class MyAPI {
         MyLogger.logger.info("Инициализировали MyAPI");
     }
 
-    /*
-    Регистрация пользователя
+    /**
+     * TODO: Регистрация пользователя в системе
+     * @param name
+     * @param login
+     * @param password
      */
     public static void Registration(String name, String login, String password) {
         login = URLEncoder.encode(login, StandardCharsets.UTF_8);
@@ -42,6 +44,13 @@ public class MyAPI {
         System.out.println(response);
     }
 
+
+    /**
+     * Авторизация пользователя в системе
+     * @param login
+     * @param password
+     * @return
+     */
     public boolean Auth(String login, String password) {
         login = URLEncoder.encode(login, StandardCharsets.UTF_8);
         password = URLEncoder.encode(password, StandardCharsets.UTF_8);
@@ -164,6 +173,52 @@ public class MyAPI {
         MyLogger.logger.info("getRoomMessagesHistory - Получили пустой ответ от сервера");
         return resultList;
 
+    }
+
+    //TODO: createRoom
+    //TODO: writeMessage
+    //TODO: getLongpollServer
+
+    /**
+     * Получение LongPoll'а
+     * Выставляет longpollTs, longpollSubUrl, longpollKey
+     * @return
+     */
+    public boolean getLongpollServer(){
+        //Запрашиваем данные по URL
+        String URL = String.format("%s/getLongPollServer?user_id=%s&user_key=%s", ServerURL, userId, userKey);
+        String response = HTTPRequest.Get(URL);
+        //Если ответ есть
+        if (response != null) {
+            JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
+            if (jsonResult.get("result").getAsBoolean()) {
+
+                JsonObject credentials = jsonResult.get("body").getAsJsonObject();
+
+                this.longpollTs = credentials.get("ts").getAsString();
+                this.longpollSubUrl = credentials.get("url").getAsString();
+                this.longpollKey = credentials.get("key").getAsString();
+
+                MyLogger.logger.info("getLongpollServer - получили конфиг");
+                return true;
+            }
+            MyLogger.logger.info("getLongpollServer - Не удалось получить конфиг");
+            return false;
+        }
+
+        MyLogger.logger.info("getLongpollServer - Получили пустой ответ от сервера");
+        return false;
+
+    }
+    //TODO: longpoll_listener
+
+    /**
+     *
+     */
+    public  void  longpollListener(){
+        //if this.longpollTs == None or ...
+        MyLogger.logger.error("LongPool не инициалзирован! Необходима инициализация с помощью this.getLongpollServer()");
+        System.out.println("LongPool не инициалзирован!");
     }
     public boolean getIsAuthenticated(){
         return isAuthenticated;

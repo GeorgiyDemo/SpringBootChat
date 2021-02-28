@@ -8,6 +8,7 @@ import javafx.scene.control.TableView;
 import sample.Main;
 import sample.models.Message;
 import sample.models.Room;
+import sample.utils.LongPollRunnable;
 import sample.utils.MyAPI;
 import sample.utils.MyLogger;
 
@@ -57,6 +58,8 @@ public class MainChatController extends SuperController {
         RoomTable.getSelectionModel().selectedItemProperty().addListener(
                 ((observableValue, oldValue, newValue) -> showChatRoomDetails(newValue))
         );
+
+
         //Отображение имени комнаты в таблице
         RoomColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
         //Отображение сообщений в таблице
@@ -79,6 +82,13 @@ public class MainChatController extends SuperController {
         MyLogger.logger.info("MainChatController - инициализировали все комнаты");
 
         //TODO: Инициализируем longpoll
+        LongPollRunnable runnable = new LongPollRunnable(RoomData, APISession);
+        Thread thread = new Thread(runnable, "LongPoll Thread");
+        thread.start();
+
+        //Запускаем отдельный поток, который будет:
+        // Добавлять новую комнату в RoomData, если пришло обновление по комнате, id которой нет в RoomData
+        // Добавлять в определенный элемент room.addMessage() новое сообщение, которое прилетело через лонгпул
 
     }
 
