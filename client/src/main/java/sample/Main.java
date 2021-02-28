@@ -134,7 +134,6 @@ public class Main extends Application {
             rootLayout = loader.load();
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
-            primaryStage.setResizable(false);
             RootLayoutController controller = loader.getController();
             controller.initialize(this);
             primaryStage.show();

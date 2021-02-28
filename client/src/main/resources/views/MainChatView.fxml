@@ -22,7 +22,7 @@
                 </AnchorPane>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" styleClass="background">
                     <children>
-                  <TableView fx:id="MessageTable" prefHeight="298.0" prefWidth="416.0">
+                  <TableView fx:id="MessageTable" prefHeight="254.0" prefWidth="416.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <columns>
                         <TableColumn fx:id="MessageUserColumn" editable="false" prefWidth="96.03500366210938" sortable="false" text="Пользователь" />
                         <TableColumn fx:id="MessageTextColumn" editable="false" prefWidth="317.9650573730469" sortable="false" text="Сообщение" />
@@ -31,10 +31,10 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
-                        <HBox layoutX="247.0" layoutY="259.0" spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
+                        <HBox layoutX="247.0" layoutY="259.0" spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="10.0">
                             <children>
-                                <JFXTextField prefHeight="27.0" prefWidth="300.0" />
-                                <JFXButton fx:id="sendMessageButton" onAction="#sendMessageButtonClicked" text="Отправить" />
+                                <JFXTextField fx:id="newMessageText" prefHeight="27.0" prefWidth="300.0" />
+                                <JFXButton fx:id="sendMessageButton" disable="true" onAction="#sendMessageButtonClicked" text="Отправить" />
                             </children>
                         </HBox>
                     </children>

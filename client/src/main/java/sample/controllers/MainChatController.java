@@ -1,10 +1,13 @@
 package sample.controllers;
 
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import sample.Main;
 import sample.models.Message;
 import sample.models.Room;
@@ -12,6 +15,8 @@ import sample.utils.LongPollRunnable;
 import sample.utils.MyAPI;
 import sample.utils.MyLogger;
 
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.util.List;
 
 public class MainChatController extends SuperController {
@@ -24,7 +29,6 @@ public class MainChatController extends SuperController {
     @FXML
     private TableColumn<Room, String> RoomColumn;
 
-
     @FXML
     private TableView<Message> MessageTable;
     @FXML
@@ -32,12 +36,23 @@ public class MainChatController extends SuperController {
     @FXML
     private TableColumn<Message, String> MessageTextColumn;
 
+    @FXML
+    private Button sendMessageButton;
+    @FXML
+    private TextField newMessageText;
     /***
      *  Обработчик нажатия на button отпраавки сообщения
      */
     @FXML
     private void sendMessageButtonClicked(){
-        MyLogger.logger.info("Нажали на button отправки сообщения");
+        String messageText = newMessageText.getText();
+        if (messageText.equals("")){
+            MyLogger.logger.info("Поле отправки сообщения пустое");
+        }
+        else {
+            MyLogger.logger.info("*Отправили сообщение*");
+        }
+
 
     }
 
@@ -59,12 +74,17 @@ public class MainChatController extends SuperController {
                 ((observableValue, oldValue, newValue) -> showChatRoomDetails(newValue))
         );
 
-
         //Отображение имени комнаты в таблице
         RoomColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
         //Отображение сообщений в таблице
         MessageUserColumn.setCellValueFactory(cellData -> cellData.getValue().getUserFromProperty());
         MessageTextColumn.setCellValueFactory(cellData -> cellData.getValue().getTextProperty());
+
+        //Слушатель изменения текста
+        newMessageText.textProperty().addListener((observable, oldValue, newValue) -> {
+            boolean flag = newValue.equals("");
+            sendMessageButton.setDisable(flag);
+        });
 
         //Получаем комнаты и запускаем цикл по каждой из них
         List<Room> roomList = APISession.getUserRooms();
