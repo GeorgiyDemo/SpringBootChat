@@ -6,9 +6,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import sample.Main;
+import sample.models.Message;
 import sample.models.Room;
 import sample.utils.MyAPI;
 import sample.utils.MyLogger;
+
+import java.util.List;
 
 public class MainChatController extends SuperController {
     private ObservableList<Room> RoomData = FXCollections.observableArrayList();
@@ -32,17 +35,27 @@ public class MainChatController extends SuperController {
 
     @Override
     public void initialize(Main mainApp) {
-        System.out.println("запустили setMainApp");
         this.mainApp = mainApp;
         personTable.setItems(RoomData);
 
-        System.out.println("запускили конструктор");
         APISession = mainApp.getAPISession();
+        //Отображение имени комнаты в таблице
         firstNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
-        System.out.println("initialize отработал");
-        //RoomData.addAll(APISession.getUserRooms());
-        
-        APISession.getUserRooms();
-        //userChatRooms
+
+        //Получаем комнаты и запускаем цикл по каждой из них
+        List<Room> roomList = APISession.getUserRooms();
+        for (Room currentRoom : roomList) {
+
+            String currentRoomId = currentRoom.getId();
+            //Получаем сообщения для каждой из комнат
+            for (Message message : APISession.getRoomMessagesHistory(currentRoomId)) {
+                currentRoom.addMessage(message);
+            }
+
+        }
+        RoomData.addAll(roomList);
+
+        MyLogger.logger.info("MainChatController - конструктор отработал");
+
     }
 }

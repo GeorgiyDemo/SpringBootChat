@@ -11,9 +11,10 @@ from models import User, Room, Message, LongPoll
 app = Flask(__name__)
 api = Api(app)
 
+api.app.config['RESTFUL_JSON'] = {'ensure_ascii': False}
+
 mongo = MongoDB("SpringBootChat", os.environ.get("CONNECTION_STRING"))
 polls_list = []
-
 
 @app.route("/auth", methods=["GET"])
 def auth():
@@ -103,6 +104,23 @@ def get_user_rooms():
 
     return {"result": True, "body": rooms_list}
 
+@app.route("/getRoomMessagesHistory", methods=["GET"])
+def get_room_messages_history():
+    """Получение истории сообщений оппределенной комнаты"""
+    room_id = request.args.get("room_id")
+    user_key = request.args.get("user_key")
+
+    # Фильтрация на поля
+    if any([x is None for x in (room_id, user_key)]):
+        return {"result": False, "description": "no enough values"}
+
+    # Проверка на пользователя
+    if mongo.get_users({"key": user_key}) == 0:
+        return {"result": False, "description": "invalid auth key"}
+
+    messages_list = [message.to_mongo() for message in mongo.get_messages({"room_id": room_id})]
+
+    return {"result": True, "body": messages_list}
 
 @app.route("/search", methods=["GET"])
 def search():

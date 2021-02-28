@@ -2,6 +2,7 @@ package sample.utils;
 
 
 import com.google.gson.*;
+import sample.models.Message;
 import sample.models.Room;
 
 import java.net.URLEncoder;
@@ -91,13 +92,20 @@ public class MyAPI {
                     JsonObject currentRoom = bufList.get(i).getAsJsonObject();
 
                     String roomId = currentRoom.get("_id").getAsString();
-                    System.out.println(roomId);
+                    String creatorId = currentRoom.get("creator_id").getAsString();
+                    String roomName = currentRoom.get("name").getAsString();
 
+                    List<String> usersList = new ArrayList<>();
+                    JsonArray usersArray  = currentRoom.get("users").getAsJsonArray();
+                    for (int j = 0; j < usersArray.size(); j++) {
+                        usersList.add(usersArray.get(i).getAsString());
+                    }
 
-
-                    //Room room = new Room();
-                    //resultList.add(room);
+                    int timeCreated = currentRoom.get("time_created").getAsInt();
+                    Room room = new Room(creatorId,roomName,timeCreated,usersList,roomId);
+                    resultList.add(room);
                 }
+
                 MyLogger.logger.info("getUserRooms - Получили список комнат для пользователя "+userId);
                 return resultList;
             }
@@ -112,6 +120,51 @@ public class MyAPI {
 
     }
 
+    /**
+     * Получение истории сообщений по конкретной комнате
+     * @param roomId
+     * @return
+     */
+    public List<Message> getRoomMessagesHistory(String roomId){
+        //Список комнат, который метод отдаёт
+        List<Message> resultList = new ArrayList<Message>();
+
+        //Запрашиваем данные по URL
+        String URL = String.format("%s/getRoomMessagesHistory?room_id=%s&user_key=%s", ServerURL, roomId, userKey);
+        String response = HTTPRequest.Get(URL);
+        //Если ответ есть
+        if (response != null) {
+            JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
+            if (jsonResult.get("result").getAsBoolean()) {
+
+                JsonArray bufList = jsonResult.get("body").getAsJsonArray();
+
+                for (int i = 0; i < bufList.size(); i++) {
+                    JsonObject currentMessage = bufList.get(i).getAsJsonObject();
+
+                    String messageId = currentMessage.get("_id").getAsString();
+                    String messageRoom = currentMessage.get("room_id").getAsString();
+                    String messageText = currentMessage.get("text").getAsString();
+                    Integer messageTimeCreated = currentMessage.get("time_created").getAsInt();
+                    String messageUserFrom = currentMessage.get("user_from").getAsString();
+
+                    Message bufMessage = new Message(messageUserFrom,messageText, messageRoom, messageTimeCreated, messageId );
+                    resultList.add(bufMessage);
+                }
+
+                MyLogger.logger.info("getRoomMessagesHistory - Получили список сообщений для комнаты "+roomId);
+                return resultList;
+            }
+
+            MyLogger.logger.info("getRoomMessagesHistory - Не удалось получить список сообщений для комнаты "+roomId);
+            return resultList;
+
+        }
+
+        MyLogger.logger.info("getRoomMessagesHistory - Получили пустой ответ от сервера");
+        return resultList;
+
+    }
     public boolean getIsAuthenticated(){
         return isAuthenticated;
     }
