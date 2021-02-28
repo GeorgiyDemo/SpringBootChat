@@ -30,6 +30,14 @@ public class Message {
         return userFrom.get();
     }
 
+    public StringProperty getUserFromProperty(){
+        return userFrom;
+    }
+
+    public StringProperty getTextProperty(){
+        return text;
+    }
+
     public int getTimeCreated() {
         return timeCreated.get();
     }

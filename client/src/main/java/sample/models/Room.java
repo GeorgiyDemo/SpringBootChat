@@ -40,4 +40,8 @@ public class Room {
     public void addMessage(Message message) {
         this.messages.add(message);
     }
+
+    public List<Message> getMessages() {
+        return messages;
+    }
 }
