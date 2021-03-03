@@ -32,8 +32,40 @@ public class LongPollRunnable implements Runnable{
      */
     @Override
     public void run() {
+
+        while (true) {
+            MyLogger.logger.info("LongPollRunnable - Работаем");
+            //Пытаемся получить новые данные
+            try {
+                List<Message> newMessages = apiSession.longpollListener();
+
+                //TODO: Проверка на существование комнаты. Если ее нет - добавляем
+
+                //Далее добавляем сообщения
+            }
+            //Если необходимо заново пройти авторизацию - проходим
+            catch (MyAPI.LongpollListenerException e) {
+                System.out.println(e);
+                apiSession.getLongpollServer();
+            }
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                MyLogger.logger.error("LongPollRunnable - Прекратил работу");
+                return;
+            }
+        }
+        //Кароч получаем лонгпул
+        //И получаем обновления
+
+
+
+        /*
         for (int i = 0; i < 100; i++) {
             try {
+
 
                 //Пример добавления комнат
                 Thread.sleep(1000);
@@ -64,5 +96,7 @@ public class LongPollRunnable implements Runnable{
             }
 
         }
+
+         */
     }
 }

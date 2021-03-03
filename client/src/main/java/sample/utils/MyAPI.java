@@ -203,10 +203,10 @@ public class MyAPI {
                 this.longpollSubUrl = credentials.get("url").getAsString();
                 this.longpollKey = credentials.get("key").getAsString();
 
-                MyLogger.logger.info("getLongpollServer - получили конфиг");
+                MyLogger.logger.info("getLongpollServer - получили конфиг, инициализировались");
                 return true;
             }
-            MyLogger.logger.info("getLongpollServer - Не удалось получить конфиг");
+            MyLogger.logger.info("getLongpollServer - Не удалось получить конфиг, не инициализировались");
             return false;
         }
 
@@ -219,10 +219,73 @@ public class MyAPI {
     /**
      *
      */
-    public  void  longpollListener(){
-        //if this.longpollTs == None or ...
-        MyLogger.logger.error("LongPool не инициалзирован! Необходима инициализация с помощью this.getLongpollServer()");
-        System.out.println("LongPool не инициалзирован!");
+    public List<Message> longpollListener() throws LongpollListenerException {
+
+        //Если лонгпул не инициализирован
+        if (longpollKey == null || longpollTs == null || longpollSubUrl == null){
+            MyLogger.logger.error("longpollListener - LongPool не инициалзирован");
+            throw new LongpollListenerException("Лонгпул не был иницилизирован! Нужно использовать метод getLongpollServer для иницализации");
+        }
+
+        //Если же инициализация прошла успешно
+        else{
+
+            //Список результатов сообщений
+            List<Message> resultList = new ArrayList<>();
+
+            //Запрашиваем данные по URL
+            String URL = String.format("%s/%s?key=%s&ts=%s", ServerURL, longpollSubUrl, longpollKey, longpollTs);
+            MyLogger.logger.info("longpollListener - отправили запрос, ожидаем новые сообщения..");
+            String response = HTTPRequest.Get(URL);
+
+            //Если ответ есть
+            if (response != null) {
+                JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
+                if (jsonResult.get("result").getAsBoolean()) {
+
+                    //Данные, которые получили
+                    JsonObject newData = jsonResult.get("body").getAsJsonObject();
+                    //Обновляем ts
+                    this.longpollTs = newData.get("ts").getAsString();
+
+                    //Работем с сообщениями
+                    JsonArray newMessages = newData.get("updates").getAsJsonArray();
+                    for (int i = 0; i < newMessages.size(); i++) {
+
+                        JsonObject currentMessage = newMessages.get(i).getAsJsonObject();
+
+                        String messageId = currentMessage.get("_id").getAsString();
+                        String messageRoom = currentMessage.get("room_id").getAsString();
+                        String messageText = currentMessage.get("text").getAsString();
+                        Integer messageTimeCreated = currentMessage.get("time_created").getAsInt();
+                        String messageUserFrom = currentMessage.get("user_from").getAsString();
+
+                        Message bufMessage = new Message(messageUserFrom,messageText, messageRoom, messageTimeCreated, messageId);
+                        resultList.add(bufMessage);
+                    }
+                    MyLogger.logger.info("longpollListener - получили новые сообщения");
+                }
+                else{
+                    MyLogger.logger.info("longpollListener - result == false");
+                    throw new LongpollListenerException("Что-то не так с лонгпулом. Ответ result == false");
+                }
+            }
+            else{
+                MyLogger.logger.info("longpollListener - время ожидания истекло");
+                throw new LongpollListenerException("Лонгпул ничего не получил от сервера. Что-то сломалось или время ожидания истекло");
+            }
+
+            return resultList;
+        }
+    }
+
+    /**
+     * Ошибка инициализации longpoll
+     */
+    public static class LongpollListenerException extends Exception {
+        public LongpollListenerException(String errorMessage) {
+            super(errorMessage);
+        }
     }
 
     public boolean getIsAuthenticated(){
