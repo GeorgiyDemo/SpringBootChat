@@ -2,6 +2,8 @@ package sample.utils;
 
 
 import com.google.gson.*;
+import sample.exceptions.LongpollListenerException;
+import sample.exceptions.RoomNotFoundException;
 import sample.models.Message;
 import sample.models.Room;
 
@@ -20,8 +22,6 @@ public class MyAPI {
     private String longpollTs;
     private String longpollSubUrl;
     private String longpollKey;
-
-
 
     private boolean isAuthenticated;
 
@@ -77,12 +77,12 @@ public class MyAPI {
             return false;
 
         }
-        MyLogger.logger.info("Auth - получили пустой ответ от сервера");
+        MyLogger.logger.error("Auth - получили пустой ответ от сервера");
         return false;
     }
 
     /**
-     * Получение чат-комнат пользователя
+     * Получение всех чат-комнат пользователя
      * @return
      */
     public List<Room> getUserRooms(){
@@ -111,7 +111,7 @@ public class MyAPI {
                     List<String> usersList = new ArrayList<>();
                     JsonArray usersArray  = currentRoom.get("users").getAsJsonArray();
                     for (int j = 0; j < usersArray.size(); j++) {
-                        usersList.add(usersArray.get(i).getAsString());
+                        usersList.add(usersArray.get(j).getAsString());
                     }
 
                     int timeCreated = currentRoom.get("time_created").getAsInt();
@@ -123,13 +123,54 @@ public class MyAPI {
                 return resultList;
             }
 
-            MyLogger.logger.info("getUserRooms - Не удалось получить список комнат для пользователя "+userId);
+            MyLogger.logger.error("getUserRooms - Не удалось получить список комнат для пользователя "+userId);
             return resultList;
 
         }
 
-        MyLogger.logger.info("getUserRooms - получили пустой ответ от сервера");
+        MyLogger.logger.error("getUserRooms - получили пустой ответ от сервера");
         return resultList;
+
+    }
+
+    /**
+     * Получение объекта комнаты, в которой состоит пользователь, по её id
+     * @param roomId
+     * @return
+     */
+    public Room getRoomInfo(String roomId) throws RoomNotFoundException {
+
+        //Запрашиваем данные по URL
+        //TODO: url фиксануть
+        String URL = String.format("%s/getRoomInfo?room_id=%s&user_key=%s", ServerURL, roomId, userKey);
+        String response = HTTPRequest.Get(URL);
+        //Если ответ есть
+        if (response != null) {
+            JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
+            if (jsonResult.get("result").getAsBoolean()) {
+
+                JsonObject currentRoom = jsonResult.get("body").getAsJsonObject();
+                String creatorId = currentRoom.get("creator_id").getAsString();
+                String roomName = currentRoom.get("name").getAsString();
+                List<String> usersList = new ArrayList<>();
+                JsonArray usersArray  = currentRoom.get("users").getAsJsonArray();
+                for (int i = 0; i < usersArray.size(); i++) {
+                    usersList.add(usersArray.get(i).getAsString());
+                }
+                int timeCreated = currentRoom.get("time_created").getAsInt();
+                MyLogger.logger.info("getRoomInfo - отдали данные для комнаты с id "+roomId);
+                return new Room(creatorId,roomName,timeCreated,usersList,roomId);
+            }
+            else {
+                MyLogger.logger.error("getRoomInfo - Запрашиваемой комнаты с id "+roomId+" не существует");
+                throw new RoomNotFoundException("Запрашиваемой комнаты с id "+roomId+" не существует");
+            }
+
+        }
+        else {
+            MyLogger.logger.error("getRoomInfo - получили пустой ответ от сервера");
+            throw new RoomNotFoundException("Получили пустой ответ от сервера");
+        }
 
     }
 
@@ -169,19 +210,18 @@ public class MyAPI {
                 return resultList;
             }
 
-            MyLogger.logger.info("getRoomMessagesHistory - Не удалось получить список сообщений для комнаты "+roomId);
+            MyLogger.logger.error("getRoomMessagesHistory - Не удалось получить список сообщений для комнаты "+roomId);
             return resultList;
 
         }
 
-        MyLogger.logger.info("getRoomMessagesHistory - Получили пустой ответ от сервера");
+        MyLogger.logger.error("getRoomMessagesHistory - Получили пустой ответ от сервера");
         return resultList;
 
     }
 
     //TODO: createRoom
     //TODO: writeMessage
-    //TODO: getLongpollServer
 
     /**
      * Получение LongPoll'а
@@ -206,18 +246,19 @@ public class MyAPI {
                 MyLogger.logger.info("getLongpollServer - получили конфиг, инициализировались");
                 return true;
             }
-            MyLogger.logger.info("getLongpollServer - Не удалось получить конфиг, не инициализировались");
+            MyLogger.logger.error("getLongpollServer - Не удалось получить конфиг, не инициализировались");
             return false;
         }
 
-        MyLogger.logger.info("getLongpollServer - Получили пустой ответ от сервера");
+        MyLogger.logger.error("getLongpollServer - Получили пустой ответ от сервера");
         return false;
 
     }
-    //TODO: longpoll_listener
 
     /**
-     *
+     * Слушатель лонгпула
+     * @return
+     * @throws LongpollListenerException
      */
     public List<Message> longpollListener() throws LongpollListenerException {
 
@@ -266,12 +307,12 @@ public class MyAPI {
                     MyLogger.logger.info("longpollListener - получили новые сообщения");
                 }
                 else{
-                    MyLogger.logger.info("longpollListener - result == false");
+                    MyLogger.logger.error("longpollListener - result == false");
                     throw new LongpollListenerException("Что-то не так с лонгпулом. Ответ result == false");
                 }
             }
             else{
-                MyLogger.logger.info("longpollListener - время ожидания истекло");
+                MyLogger.logger.error("longpollListener - время ожидания истекло");
                 throw new LongpollListenerException("Лонгпул ничего не получил от сервера. Что-то сломалось или время ожидания истекло");
             }
 
@@ -279,14 +320,6 @@ public class MyAPI {
         }
     }
 
-    /**
-     * Ошибка инициализации longpoll
-     */
-    public static class LongpollListenerException extends Exception {
-        public LongpollListenerException(String errorMessage) {
-            super(errorMessage);
-        }
-    }
 
     public boolean getIsAuthenticated(){
         return isAuthenticated;

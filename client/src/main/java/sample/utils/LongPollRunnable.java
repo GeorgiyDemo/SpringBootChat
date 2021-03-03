@@ -1,6 +1,8 @@
 package sample.utils;
 
 import javafx.collections.ObservableList;
+import sample.exceptions.LongpollListenerException;
+import sample.exceptions.RoomNotFoundException;
 import sample.models.Message;
 import sample.models.Room;
 
@@ -30,6 +32,21 @@ public class LongPollRunnable implements Runnable{
      *
      * @see Thread#run()
      */
+
+    /***
+     * Проверка на существование комнаты по её id
+     * @param roomId
+     * @return
+     */
+    public Integer isRoomExist(String roomId){
+        for (int i = 0; i < roomData.size(); i++) {
+            if (roomData.get(i).getId().equals(roomId)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
     @Override
     public void run() {
 
@@ -39,64 +56,52 @@ public class LongPollRunnable implements Runnable{
             try {
                 List<Message> newMessages = apiSession.longpollListener();
 
-                //TODO: Проверка на существование комнаты. Если ее нет - добавляем
+                for (Message msg: newMessages) {
+                    //Проверка на существование комнаты
+                    String messageRoomId = msg.getRoomId();
+                    Integer existInt = isRoomExist(messageRoomId);
 
-                //Далее добавляем сообщения
+                    //Существует
+                    if (existInt != -1){
+                        //Добавляем сообщение
+                        roomData.get(existInt).addMessage(msg);
+                        MyLogger.logger.info("Добавили сообщение '"+msg.getText()+"' для комнаты "+msg.getRoomId());
+                        //Если открыт уже диалог с текущей конференцией
+                        if (messageRoomId.equals(MyAPI.getCurrentRoomId())){
+                            messageData.add(msg);
+                        }
+                    }
+
+                    //Значит это сообщение с новой комнаты
+                    else{
+                        try {
+                            //Создаем объект комнаты
+                            Room newRoom = apiSession.getRoomInfo(messageRoomId);
+                            //Добавляем полученное сообщение
+                            newRoom.addMessage(msg);
+                            //Добавляем саму комнату
+                            roomData.add(newRoom);
+                            MyLogger.logger.info("Получили новую комнату "+newRoom.getNameProperty()+"["+newRoom.getId()+"]");
+                        }
+                        catch (RoomNotFoundException e){
+                            MyLogger.logger.error("Случилось странное: бек отдал сообщение с комнаты "+messageRoomId+", но её не существует");
+                        }
+                    }
+                }
             }
             //Если необходимо заново пройти авторизацию - проходим
-            catch (MyAPI.LongpollListenerException e) {
+            catch (LongpollListenerException e) {
                 System.out.println(e);
                 apiSession.getLongpollServer();
             }
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(250);
             } catch (InterruptedException e) {
                 e.printStackTrace();
                 MyLogger.logger.error("LongPollRunnable - Прекратил работу");
                 return;
             }
         }
-        //Кароч получаем лонгпул
-        //И получаем обновления
-
-
-
-        /*
-        for (int i = 0; i < 100; i++) {
-            try {
-
-
-                //Пример добавления комнат
-                Thread.sleep(1000);
-                MyLogger.logger.info("LongPollRunnable.run - работает!");
-                List<String> users = new ArrayList<>();
-                Room bufferRoom = new Room("45436","LongPollRunnable"+i,343285,users,"85g677h8h6787g686g78"+i);
-                roomData.add(bufferRoom);
-
-                //Пример добавления сообщения в комнату
-                Room thisRoom =roomData.get(0);
-                for (int j = 0; j < 4; j++) {
-                    Message bufMessage = new Message("1","тестовое сообщение от LongPollRunnable"+j,thisRoom.getId(),1234,"85g677h8h6g686g78"+j);
-                    thisRoom.addMessage(bufMessage);
-
-                    //Если открыт уже диалог с текущей конференцией
-                    if (bufMessage.getRoomId().equals(MyAPI.getCurrentRoomId())){
-                        messageData.add(bufMessage);
-                    }
-                    else{
-                        System.out.println("Конференция не открыта");
-                    }
-
-                }
-
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-        }
-
-         */
     }
 }

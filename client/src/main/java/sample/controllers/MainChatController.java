@@ -101,14 +101,14 @@ public class MainChatController extends SuperController {
         RoomData.addAll(roomList);
         MyLogger.logger.info("MainChatController - инициализировали все комнаты");
 
-        //TODO: Инициализируем longpoll
+        //Запускаем отдельный поток, который будет:
+        // Добавлять новую комнату в RoomData, если пришло обновление по комнате, id которой нет в RoomData
+        // Добавлять в определенный элемент room.addMessage() новое сообщение, которое прилетело через лонгпул
         LongPollRunnable runnable = new LongPollRunnable(RoomData, MessageData, APISession);
         Thread thread = new Thread(runnable, "LongPoll Thread");
         thread.start();
 
-        //Запускаем отдельный поток, который будет:
-        // Добавлять новую комнату в RoomData, если пришло обновление по комнате, id которой нет в RoomData
-        // Добавлять в определенный элемент room.addMessage() новое сообщение, которое прилетело через лонгпул
+        MyLogger.logger.info("MainChatController - стартанули LongPollRunnable");
 
     }
 

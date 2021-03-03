@@ -104,6 +104,30 @@ def get_user_rooms():
 
     return {"result": True, "body": rooms_list}
 
+
+@app.route("/getRoomInfo", methods=["GET"])
+def get_room_info():
+    """Получение """
+    room_id = request.args.get("room_id")
+    user_key = request.args.get("user_key")
+
+    # Фильтрация на поля
+    if any([x is None for x in (room_id, user_key)]):
+        return {"result": False, "description": "no enough values"}
+
+    # Проверка на существование ключа
+    if mongo.get_users({"key": user_key}) == 0:
+        return {"result": False, "description": "invalid auth key"}
+
+    rooms_list = [room for room in mongo.get_rooms({"_id": room_id})]
+
+    #Если комната с указанным id не найдена
+    if len(rooms_list) == 0:
+        return {"result" : False, "body" : "room not found"}
+
+    room = rooms_list[0]
+    return {"result": True, "body": room.to_mongo()}
+
 @app.route("/getRoomMessagesHistory", methods=["GET"])
 def get_room_messages_history():
     """Получение истории сообщений оппределенной комнаты"""
