@@ -80,6 +80,7 @@ public class MainChatController extends SuperController {
         RoomTable.getSelectionModel().selectedItemProperty().addListener(
                 ((observableValue, oldValue, newValue) -> showChatRoomDetails(newValue))
         );
+        RoomTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         //Отображение имени комнаты в таблице
         RoomColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
@@ -92,6 +93,7 @@ public class MainChatController extends SuperController {
         placeholder.setText("Выберите диалог слева или <создайте новый>");
         placeholder.setStyle("-fx-text-fill: white");
         MessageTable.setPlaceholder(placeholder);
+        MessageTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         //Слушатель изменения текста
         newMessageText.textProperty().addListener((observable, oldValue, newValue) -> {
