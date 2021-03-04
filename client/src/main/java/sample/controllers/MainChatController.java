@@ -56,7 +56,10 @@ public class MainChatController extends SuperController {
             newMessageText.setText("");
             MyLogger.logger.info("*Отправили сообщение*");
         }
+    }
 
+    @FXML
+    private void createRoomButtonClicked(){
 
     }
 
