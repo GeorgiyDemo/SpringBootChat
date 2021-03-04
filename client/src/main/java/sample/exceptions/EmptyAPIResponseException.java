@@ -1,6 +1,7 @@
 package sample.exceptions;
 
 
+import javafx.application.Platform;
 import sample.Main;
 import sample.utils.MyLogger;
 
@@ -12,12 +13,7 @@ public class EmptyAPIResponseException extends Exception {
         super(errorMessage);
         MyLogger.logger.error(errorMessage);
 
-
-        synchronized(mainApp)
-        {
-            mainApp.ConnectionError();
-            // Access shared variables and other
-            // shared resources
-        }
+        //Это синхронизация с main JavaFX потоком, чтоб там отрисовать эту сцену
+        Platform.runLater(mainApp::ConnectionError);
     }
 }
