@@ -67,7 +67,7 @@ public class LongPollRunnable implements Runnable{
                         roomData.get(existInt).addMessage(msg);
                         MyLogger.logger.info("Добавили сообщение '"+msg.getText()+"' для комнаты "+msg.getRoomId());
                         //Если открыт уже диалог с текущей конференцией
-                        if (messageRoomId.equals(MyAPI.getCurrentRoomId())){
+                        if (messageRoomId.equals(apiSession.getCurrentRoomId())){
                             messageData.add(msg);
                         }
                     }

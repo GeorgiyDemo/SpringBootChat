@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MyAPI implements API  {
+public class MyAPI implements SuperAPI {
 
     private String userName;
     private String userKey;
@@ -24,10 +24,10 @@ public class MyAPI implements API  {
     private String longpollTs;
     private String longpollSubUrl;
     private String longpollKey;
+    private String currentRoomId;
 
     private boolean isAuthenticated;
 
-    private static String currentRoomId;
 
     public MyAPI(String login, String password) {
         isAuthenticated = this.Auth(login, password);
@@ -327,12 +327,12 @@ public class MyAPI implements API  {
         return isAuthenticated;
     }
 
-    public static String getCurrentRoomId() {
+    public String getCurrentRoomId() {
         return currentRoomId;
     }
 
-    public static void setCurrentRoomId(String currentRoomId) {
-        MyAPI.currentRoomId = currentRoomId;
+    public void setCurrentRoomId(String currentRoomId) {
+        this.currentRoomId = currentRoomId;
     }
 }
 

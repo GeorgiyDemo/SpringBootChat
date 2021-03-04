@@ -8,7 +8,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import sample.Main;
-import sample.api.API;
 import sample.models.Message;
 import sample.models.Room;
 import sample.api.LongPollRunnable;
@@ -118,7 +117,7 @@ public class MainChatController extends SuperController {
         //Выставляем id текущей комнаты
         MessageData.clear();
         if(room != null) {
-            MyAPI.setCurrentRoomId(room.getId());
+            APISession.setCurrentRoomId(room.getId());
             MessageData.addAll(room.getMessages());
             MessageTable.setItems(MessageData);
         }

@@ -10,17 +10,17 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public interface API {
+public interface SuperAPI {
 
+    String ServerURL = "http://127.0.0.1:5000";
 
-    public final static String ServerURL = "http://127.0.0.1:5000";
     /**
      * TODO: Регистрация пользователя в системе
      * @param name
      * @param login
      * @param password
      */
-    public static void Registration(String name, String login, String password) {
+    static void Registration(String name, String login, String password) {
         login = URLEncoder.encode(login, StandardCharsets.UTF_8);
         password = URLEncoder.encode(password, StandardCharsets.UTF_8);
 
@@ -35,13 +35,13 @@ public interface API {
      * @param password
      * @return
      */
-    public boolean Auth(String login, String password);
+    boolean Auth(String login, String password);
 
     /**
      * Получение всех чат-комнат пользователя
      * @return
      */
-    public List<Room> getUserRooms();
+    List<Room> getUserRooms();
 
 
     /**
@@ -49,23 +49,22 @@ public interface API {
      * @param roomId
      * @return
      */
-    public Room getRoomInfo(String roomId) throws RoomNotFoundException;
+    Room getRoomInfo(String roomId) throws RoomNotFoundException;
 
     /**
      * Получение истории сообщений по конкретной комнате
      * @param roomId
      * @return
      */
-    public List<Message> getRoomMessagesHistory(String roomId);
-
+    List<Message> getRoomMessagesHistory(String roomId);
 
     //TODO: создание комнаты
-    public boolean createRoom();
+    boolean createRoom();
 
     //TODO: отправка сообщения
-    public boolean writeMessage(String text);
+    boolean writeMessage(String text);
 
-    public boolean getLongpollServer();
+    boolean getLongpollServer();
 
-    public List<Message> longpollListener() throws LongpollListenerException;
+    List<Message> longpollListener() throws LongpollListenerException;
 }
