@@ -1,6 +1,7 @@
 package sample.utils;
 
 import java.io.*;
+import java.net.ConnectException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -23,7 +24,6 @@ public class HTTPRequest {
             return sb.toString();
         }
         catch (IOException e){
-            e.printStackTrace();
             return null;
         }
     }

@@ -1,6 +1,8 @@
 package sample.api;
 
 import javafx.collections.ObservableList;
+import sample.exceptions.EmptyAPIResponseException;
+import sample.exceptions.FalseServerFlagException;
 import sample.exceptions.LongpollListenerException;
 import sample.exceptions.RoomNotFoundException;
 import sample.models.Message;
@@ -85,6 +87,8 @@ public class LongPollRunnable implements Runnable{
                         }
                         catch (RoomNotFoundException e){
                             MyLogger.logger.error("Случилось странное: бек отдал сообщение с комнаты "+messageRoomId+", но её не существует");
+                        } catch (EmptyAPIResponseException e) {
+                            e.printStackTrace();
                         }
                     }
                 }
@@ -92,7 +96,11 @@ public class LongPollRunnable implements Runnable{
             //Если необходимо заново пройти авторизацию - проходим
             catch (LongpollListenerException e) {
                 System.out.println(e);
-                apiSession.getLongpollServer();
+                try {
+                    apiSession.getLongpollServer();
+                } catch (EmptyAPIResponseException | FalseServerFlagException newE) {
+                    newE.printStackTrace();
+                }
             }
 
             try {

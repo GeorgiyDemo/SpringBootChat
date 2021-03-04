@@ -7,10 +7,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import sample.api.MyAPI;
-import sample.controllers.AuthorisationController;
-import sample.controllers.MainChatController;
-import sample.controllers.RegController;
-import sample.controllers.RootLayoutController;
+import sample.controllers.*;
 import sample.utils.MyLogger;
 
 import java.io.IOException;
@@ -61,7 +58,7 @@ public class Main extends Application {
         //TODO: Проверка на всякое барахло по типу существующей авторизации и т д
         String BUFFLOGIN = "demka@mail.ru";
         String BUFFPASSWRD = "3845";
-        APISession = new MyAPI(BUFFLOGIN,BUFFPASSWRD);
+        APISession = new MyAPI(BUFFLOGIN,BUFFPASSWRD, this);
 
         //Если пользователь не авторизован
         if  (!APISession.getIsAuthenticated()){
@@ -117,6 +114,19 @@ public class Main extends Application {
             AnchorPane mainPage = loader.load();
             rootLayout.setCenter(mainPage);
             MainChatController controller = loader.getController();
+            controller.initialize(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void ConnectionError() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/views/ConnectionErrorView.fxml"));
+            AnchorPane mainPage = loader.load();
+            rootLayout.setCenter(mainPage);
+            ConnectionErrorController controller = loader.getController();
             controller.initialize(this);
         } catch (IOException e) {
             e.printStackTrace();

@@ -8,6 +8,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import sample.Main;
+import sample.exceptions.EmptyAPIResponseException;
+import sample.exceptions.FalseServerFlagException;
 import sample.models.Message;
 import sample.models.Room;
 import sample.api.LongPollRunnable;
@@ -84,14 +86,23 @@ public class MainChatController extends SuperController {
         });
 
         //Получаем комнаты и запускаем цикл по каждой из них
-        List<Room> roomList = APISession.getUserRooms();
+        List<Room> roomList = null;
+        try {
+            roomList = APISession.getUserRooms();
+        } catch (FalseServerFlagException | EmptyAPIResponseException e) {
+            e.printStackTrace();
+        }
         for (Room currentRoom : roomList) {
 
             String currentRoomId = currentRoom.getId();
             //Получаем сообщения для каждой из комнат
-            for (Message message : APISession.getRoomMessagesHistory(currentRoomId)) {
-                //Добавляем сообщеньку для комнаты
-                currentRoom.addMessage(message);
+            try {
+                for (Message message : APISession.getRoomMessagesHistory(currentRoomId)) {
+                    //Добавляем сообщеньку для комнаты
+                    currentRoom.addMessage(message);
+                }
+            } catch (FalseServerFlagException | EmptyAPIResponseException e) {
+                e.printStackTrace();
             }
 
         }
@@ -104,7 +115,6 @@ public class MainChatController extends SuperController {
         LongPollRunnable runnable = new LongPollRunnable(RoomData, MessageData, APISession);
         Thread thread = new Thread(runnable, "LongPoll Thread");
         thread.start();
-
         MyLogger.logger.info("MainChatController - стартанули LongPollRunnable");
 
     }

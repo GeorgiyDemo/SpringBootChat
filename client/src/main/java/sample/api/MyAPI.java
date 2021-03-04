@@ -2,6 +2,9 @@ package sample.api;
 
 
 import com.google.gson.*;
+import sample.Main;
+import sample.exceptions.EmptyAPIResponseException;
+import sample.exceptions.FalseServerFlagException;
 import sample.exceptions.LongpollListenerException;
 import sample.exceptions.RoomNotFoundException;
 import sample.models.Message;
@@ -17,6 +20,8 @@ import java.util.List;
 
 public class MyAPI implements SuperAPI {
 
+    private Main mainApp;
+
     private String userName;
     private String userKey;
     private String userId;
@@ -29,12 +34,15 @@ public class MyAPI implements SuperAPI {
     private boolean isAuthenticated;
 
 
-    public MyAPI(String login, String password) {
-        isAuthenticated = this.Auth(login, password);
+    public MyAPI(String login, String password, Main mainApp) {
+        this.mainApp = mainApp;
+        try {
+            isAuthenticated = this.Auth(login, password);
+        } catch (EmptyAPIResponseException e) {
+            e.printStackTrace();
+        }
         MyLogger.logger.info("Инициализировали MyAPI");
     }
-
-
 
 
     /**
@@ -42,9 +50,10 @@ public class MyAPI implements SuperAPI {
      * @param login
      * @param password
      * @return
+     * @throws EmptyAPIResponseException
      */
     @Override
-    public boolean Auth(String login, String password) {
+    public boolean Auth(String login, String password) throws EmptyAPIResponseException {
         login = URLEncoder.encode(login, StandardCharsets.UTF_8);
         password = URLEncoder.encode(password, StandardCharsets.UTF_8);
 
@@ -66,16 +75,17 @@ public class MyAPI implements SuperAPI {
             return false;
 
         }
-        MyLogger.logger.error("Auth - получили пустой ответ от сервера");
-        return false;
+        throw new EmptyAPIResponseException(mainApp, "Auth - получили пустой ответ от сервера");
     }
 
     /**
      * Получение всех чат-комнат пользователя
      * @return
+     * @throws FalseServerFlagException
+     * @throws EmptyAPIResponseException
      */
     @Override
-    public List<Room> getUserRooms(){
+    public List<Room> getUserRooms() throws FalseServerFlagException, EmptyAPIResponseException {
 
 
         //Список комнат, который метод отдаёт
@@ -112,15 +122,13 @@ public class MyAPI implements SuperAPI {
                 MyLogger.logger.info("getUserRooms - Получили список комнат для пользователя "+userId);
                 return resultList;
             }
-
-            MyLogger.logger.error("getUserRooms - Не удалось получить список комнат для пользователя "+userId);
-            return resultList;
-
+            else{
+                throw new FalseServerFlagException(URL,response,"getUserRooms - Не удалось получить список комнат для пользователя "+userId);
+            }
         }
-
-        MyLogger.logger.error("getUserRooms - получили пустой ответ от сервера");
-        return resultList;
-
+        else{
+            throw new EmptyAPIResponseException(mainApp, "getUserRooms - получили пустой ответ от сервера");
+        }
     }
 
     /**
@@ -129,7 +137,7 @@ public class MyAPI implements SuperAPI {
      * @return
      */
     @Override
-    public Room getRoomInfo(String roomId) throws RoomNotFoundException {
+    public Room getRoomInfo(String roomId) throws RoomNotFoundException, EmptyAPIResponseException {
 
         //Запрашиваем данные по URL
         //TODO: url фиксануть
@@ -153,14 +161,11 @@ public class MyAPI implements SuperAPI {
                 return new Room(creatorId,roomName,timeCreated,usersList,roomId);
             }
             else {
-                MyLogger.logger.error("getRoomInfo - Запрашиваемой комнаты с id "+roomId+" не существует");
-                throw new RoomNotFoundException("Запрашиваемой комнаты с id "+roomId+" не существует");
+                throw new RoomNotFoundException("getRoomInfo - Запрашиваемой комнаты с id "+roomId+" не существует");
             }
-
         }
         else {
-            MyLogger.logger.error("getRoomInfo - получили пустой ответ от сервера");
-            throw new RoomNotFoundException("Получили пустой ответ от сервера");
+            throw new EmptyAPIResponseException(mainApp, "getRoomInfo - получили пустой ответ от сервера");
         }
 
     }
@@ -171,7 +176,7 @@ public class MyAPI implements SuperAPI {
      * @return
      */
     @Override
-    public List<Message> getRoomMessagesHistory(String roomId){
+    public List<Message> getRoomMessagesHistory(String roomId) throws FalseServerFlagException, EmptyAPIResponseException {
         //Список комнат, который метод отдаёт
         List<Message> resultList = new ArrayList<Message>();
 
@@ -197,19 +202,16 @@ public class MyAPI implements SuperAPI {
                     Message bufMessage = new Message(messageUserFrom,messageText, messageRoom, messageTimeCreated, messageId );
                     resultList.add(bufMessage);
                 }
-
                 MyLogger.logger.info("getRoomMessagesHistory - Получили список сообщений для комнаты "+roomId);
                 return resultList;
             }
-
-            MyLogger.logger.error("getRoomMessagesHistory - Не удалось получить список сообщений для комнаты "+roomId);
-            return resultList;
-
+            else {
+                throw new FalseServerFlagException(URL, response, "getRoomMessagesHistory - Не удалось получить список сообщений для комнаты " + roomId);
+            }
         }
-
-        MyLogger.logger.error("getRoomMessagesHistory - Получили пустой ответ от сервера");
-        return resultList;
-
+        else{
+            throw new EmptyAPIResponseException(mainApp, "getRoomMessagesHistory - Получили пустой ответ от сервера");
+        }
     }
 
     //TODO: создание комнаты
@@ -219,17 +221,48 @@ public class MyAPI implements SuperAPI {
     }
     //TODO: отправка сообщения
     @Override
-    public boolean writeMessage(String text){
-        return false;
+    public Message writeMessage(String text) throws FalseServerFlagException, EmptyAPIResponseException {
+        text = URLEncoder.encode(text, StandardCharsets.UTF_8);
+        //Запрашиваем данные по URL
+        String URL = String.format("%s/writeMessage?user_from=%s&text=%s&room_id=%s&user_key=%s", ServerURL, userId, text, currentRoomId, userKey);
+        String response = HTTPRequest.Get(URL);
+        //Если ответ есть
+        if (response != null) {
+            JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
+            if (jsonResult.get("result").getAsBoolean()) {
+
+                JsonObject newMessageJsonObject = jsonResult.get("body").getAsJsonObject();
+
+
+                    String messageId = newMessageJsonObject.get("_id").getAsString();
+                    String roomId = newMessageJsonObject.get("room_id").getAsString();
+                    String messageText = newMessageJsonObject.get("text").getAsString();
+                    Integer timeCreated = newMessageJsonObject.get("time_created").getAsInt();
+                    String userFrom = newMessageJsonObject.get("user_from").getAsString();
+
+                    MyLogger.logger.info("writeMessage - Отправили новое сообщение "+messageText +" "+messageId);
+                    return new Message(userFrom,messageText,roomId,timeCreated,messageId);
+            }
+
+            else{
+                throw  new FalseServerFlagException(URL,response, "writeMessage - Не удалось отправить новое сообщение");
+            }
+
+        }
+        else {
+            throw  new EmptyAPIResponseException(mainApp, "writeMessage - получили пустой ответ от сервера");
+        }
+
     }
 
     /**
      * Получение LongPoll'а
      * Выставляет longpollTs, longpollSubUrl, longpollKey
-     * @return
+     * @throws EmptyAPIResponseException
+     * @throws FalseServerFlagException
      */
     @Override
-    public boolean getLongpollServer(){
+    public void getLongpollServer() throws EmptyAPIResponseException, FalseServerFlagException {
         //Запрашиваем данные по URL
         String URL = String.format("%s/getLongPollServer?user_id=%s&user_key=%s", ServerURL, userId, userKey);
         String response = HTTPRequest.Get(URL);
@@ -243,17 +276,15 @@ public class MyAPI implements SuperAPI {
                 this.longpollTs = credentials.get("ts").getAsString();
                 this.longpollSubUrl = credentials.get("url").getAsString();
                 this.longpollKey = credentials.get("key").getAsString();
-
                 MyLogger.logger.info("getLongpollServer - получили конфиг, инициализировались");
-                return true;
             }
-            MyLogger.logger.error("getLongpollServer - Не удалось получить конфиг, не инициализировались");
-            return false;
+            else {
+                throw new FalseServerFlagException(URL,response,"getLongpollServer - Не удалось получить конфиг, не инициализировались");
+            }
         }
-
-        MyLogger.logger.error("getLongpollServer - Получили пустой ответ от сервера");
-        return false;
-
+        else {
+            throw new EmptyAPIResponseException(mainApp, "getLongpollServer - Получили пустой ответ от сервера");
+        }
     }
 
     /**
@@ -309,12 +340,10 @@ public class MyAPI implements SuperAPI {
                     MyLogger.logger.info("longpollListener - получили новые сообщения");
                 }
                 else{
-                    MyLogger.logger.error("longpollListener - result == false");
                     throw new LongpollListenerException("Что-то не так с лонгпулом. Ответ result == false");
                 }
             }
             else{
-                MyLogger.logger.error("longpollListener - время ожидания истекло");
                 throw new LongpollListenerException("Лонгпул ничего не получил от сервера. Что-то сломалось или время ожидания истекло");
             }
 

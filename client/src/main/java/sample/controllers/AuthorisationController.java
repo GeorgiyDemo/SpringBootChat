@@ -32,7 +32,7 @@ public class AuthorisationController extends SuperController {
         }
         else{
             //Пытаемся авторизоваться
-            MyAPI bufSession = new MyAPI(login,password);
+            MyAPI bufSession = new MyAPI(login,password, this.mainApp);
             //Если удалось произвести авторизацию
             if (bufSession.getIsAuthenticated()) {
                 mainApp.setAPISession(bufSession);

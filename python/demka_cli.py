@@ -67,6 +67,8 @@ class DEMKACli:
             raise ValueError(
                 f"Не удалось отправить сообщение '{message_text}' в комнату {self.current_room}"
             )
+        print("writeMessage.body:")
+        print(message_result["body"])
 
     def get_longpoll_server(self):
         """Получение лонгпула"""
