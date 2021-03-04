@@ -90,6 +90,7 @@ public class MainChatController extends SuperController {
         //Текст для таблицы сообщений, когда комната не выбрана
         Label placeholder = new Label();
         placeholder.setText("Выберите диалог слева или <создайте новый>");
+        placeholder.setStyle("-fx-text-fill: white");
         MessageTable.setPlaceholder(placeholder);
 
         //Слушатель изменения текста

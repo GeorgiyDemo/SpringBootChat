@@ -1,5 +1,5 @@
 .background {
-    -fx-background-color: #2a2c38;
+    -fx-background-color: #202234;
 }
 
 .button {
@@ -13,4 +13,26 @@
     -fx-text-inner-color: white;
     -fx-text-fill: white;
     -fx-prompt-text-fill: gray;
+}
+
+
+
+/*
+ДАЛЬШЕ ФИГНЯ
+ */
+.table-view {
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-view .cell{
+    -fx-background-color: transparent;
+}
+
+.root .table-view{
+    -fx-control-inner-background:  #202234;
+}
+
+.table-row-cell:selected .table-cell {
+    -fx-background-color: #2d3143 ;
+    -fx-background: #2d3143 ;
 }

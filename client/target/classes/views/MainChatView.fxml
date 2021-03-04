@@ -34,7 +34,7 @@
                   </TableView>
                         <HBox layoutX="247.0" layoutY="259.0" spacing="5.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="10.0">
                             <children>
-                                <JFXTextField fx:id="newMessageText" prefHeight="27.0" prefWidth="300.0" />
+                                <JFXTextField fx:id="newMessageText"  promptText="Введите сообщение.." unFocusColor="WHITE" prefHeight="27.0" prefWidth="300.0" />
                                 <JFXButton fx:id="sendMessageButton" defaultButton="true" disable="true" onAction="#sendMessageButtonClicked" text="Отправить" />
                             </children>
                         </HBox>
