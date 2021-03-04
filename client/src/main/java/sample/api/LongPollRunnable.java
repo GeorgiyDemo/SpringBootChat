@@ -1,12 +1,12 @@
-package sample.utils;
+package sample.api;
 
 import javafx.collections.ObservableList;
 import sample.exceptions.LongpollListenerException;
 import sample.exceptions.RoomNotFoundException;
 import sample.models.Message;
 import sample.models.Room;
+import sample.utils.MyLogger;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class LongPollRunnable implements Runnable{

@@ -6,11 +6,12 @@ import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import sample.api.API;
+import sample.api.MyAPI;
 import sample.controllers.AuthorisationController;
 import sample.controllers.MainChatController;
 import sample.controllers.RegController;
 import sample.controllers.RootLayoutController;
-import sample.utils.MyAPI;
 import sample.utils.MyLogger;
 
 import java.io.IOException;

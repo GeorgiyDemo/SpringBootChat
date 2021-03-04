@@ -1,6 +1,5 @@
 package sample.controllers;
 
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -9,14 +8,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import sample.Main;
+import sample.api.API;
 import sample.models.Message;
 import sample.models.Room;
-import sample.utils.LongPollRunnable;
-import sample.utils.MyAPI;
+import sample.api.LongPollRunnable;
+import sample.api.MyAPI;
 import sample.utils.MyLogger;
 
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.util.List;
 
 public class MainChatController extends SuperController {

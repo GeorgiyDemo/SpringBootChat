@@ -1,4 +1,4 @@
-package sample.utils;
+package sample.api;
 
 
 import com.google.gson.*;
@@ -6,6 +6,8 @@ import sample.exceptions.LongpollListenerException;
 import sample.exceptions.RoomNotFoundException;
 import sample.models.Message;
 import sample.models.Room;
+import sample.utils.HTTPRequest;
+import sample.utils.MyLogger;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -13,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MyAPI {
+public class MyAPI implements API  {
 
     private String userName;
     private String userKey;
@@ -26,27 +28,13 @@ public class MyAPI {
     private boolean isAuthenticated;
 
     private static String currentRoomId;
-    private final static String ServerURL = "http://127.0.0.1:5000";
 
     public MyAPI(String login, String password) {
         isAuthenticated = this.Auth(login, password);
         MyLogger.logger.info("Инициализировали MyAPI");
     }
 
-    /**
-     * TODO: Регистрация пользователя в системе
-     * @param name
-     * @param login
-     * @param password
-     */
-    public static void Registration(String name, String login, String password) {
-        login = URLEncoder.encode(login, StandardCharsets.UTF_8);
-        password = URLEncoder.encode(password, StandardCharsets.UTF_8);
 
-        String URL = String.format("%s/register?name=%s&login=%s&password=%s", ServerURL, name, login, password);
-        String response = HTTPRequest.Get(URL);
-        System.out.println(response);
-    }
 
 
     /**
@@ -55,6 +43,7 @@ public class MyAPI {
      * @param password
      * @return
      */
+    @Override
     public boolean Auth(String login, String password) {
         login = URLEncoder.encode(login, StandardCharsets.UTF_8);
         password = URLEncoder.encode(password, StandardCharsets.UTF_8);
@@ -85,6 +74,7 @@ public class MyAPI {
      * Получение всех чат-комнат пользователя
      * @return
      */
+    @Override
     public List<Room> getUserRooms(){
 
 
@@ -138,6 +128,7 @@ public class MyAPI {
      * @param roomId
      * @return
      */
+    @Override
     public Room getRoomInfo(String roomId) throws RoomNotFoundException {
 
         //Запрашиваем данные по URL
@@ -179,6 +170,7 @@ public class MyAPI {
      * @param roomId
      * @return
      */
+    @Override
     public List<Message> getRoomMessagesHistory(String roomId){
         //Список комнат, который метод отдаёт
         List<Message> resultList = new ArrayList<Message>();
@@ -220,14 +212,23 @@ public class MyAPI {
 
     }
 
-    //TODO: createRoom
-    //TODO: writeMessage
+    //TODO: создание комнаты
+    @Override
+    public boolean createRoom(){
+        return false;
+    }
+    //TODO: отправка сообщения
+    @Override
+    public boolean writeMessage(String text){
+        return false;
+    }
 
     /**
      * Получение LongPoll'а
      * Выставляет longpollTs, longpollSubUrl, longpollKey
      * @return
      */
+    @Override
     public boolean getLongpollServer(){
         //Запрашиваем данные по URL
         String URL = String.format("%s/getLongPollServer?user_id=%s&user_key=%s", ServerURL, userId, userKey);
@@ -260,6 +261,7 @@ public class MyAPI {
      * @return
      * @throws LongpollListenerException
      */
+    @Override
     public List<Message> longpollListener() throws LongpollListenerException {
 
         //Если лонгпул не инициализирован

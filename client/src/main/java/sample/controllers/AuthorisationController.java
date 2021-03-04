@@ -4,7 +4,7 @@ import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import sample.Main;
-import sample.utils.MyAPI;
+import sample.api.MyAPI;
 import sample.utils.MyLogger;
 
 import java.io.IOException;
