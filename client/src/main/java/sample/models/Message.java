@@ -8,14 +8,16 @@ import java.util.List;
 
 public class Message {
 
-    private StringProperty userFrom;
+    private StringProperty userId;
+    private StringProperty userName;
     private StringProperty text;
     private StringProperty roomId;
     private IntegerProperty timeCreated;
     private StringProperty id;
 
-    public Message(String userFrom, String text, String roomId, int timeCreated, String id){
-        this.userFrom = new SimpleStringProperty(userFrom);
+    public Message(String userId, String userName, String text, String roomId, int timeCreated, String id){
+        this.userId = new SimpleStringProperty(userId);
+        this.userName = new SimpleStringProperty(userName);
         this.text = new SimpleStringProperty(text);
         this.roomId = new SimpleStringProperty(roomId);
         this.timeCreated = new SimpleIntegerProperty(timeCreated);
@@ -26,12 +28,12 @@ public class Message {
         return text.get();
     }
 
-    public String getUserFrom() {
-        return userFrom.get();
+    public String getUserName() {
+        return userName.get();
     }
 
-    public StringProperty getUserFromProperty(){
-        return userFrom;
+    public StringProperty getUserNameProperty(){
+        return userName;
     }
 
     public StringProperty getTextProperty(){

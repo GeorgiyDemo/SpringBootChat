@@ -49,6 +49,14 @@ public class MainChatController extends SuperController {
             MyLogger.logger.info("Поле отправки сообщения пустое");
         }
         else {
+            //Отправляем сообщеньку
+            try {
+                APISession.writeMessage(messageText);
+            } catch (FalseServerFlagException | EmptyAPIResponseException e) {
+                e.printStackTrace();
+            }
+
+            newMessageText.setText("");
             MyLogger.logger.info("*Отправили сообщение*");
         }
 
@@ -76,7 +84,7 @@ public class MainChatController extends SuperController {
         //Отображение имени комнаты в таблице
         RoomColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
         //Отображение сообщений в таблице
-        MessageUserColumn.setCellValueFactory(cellData -> cellData.getValue().getUserFromProperty());
+        MessageUserColumn.setCellValueFactory(cellData -> cellData.getValue().getUserNameProperty());
         MessageTextColumn.setCellValueFactory(cellData -> cellData.getValue().getTextProperty());
 
         //Слушатель изменения текста

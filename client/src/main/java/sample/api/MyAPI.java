@@ -197,9 +197,10 @@ public class MyAPI implements SuperAPI {
                     String messageRoom = currentMessage.get("room_id").getAsString();
                     String messageText = currentMessage.get("text").getAsString();
                     Integer messageTimeCreated = currentMessage.get("time_created").getAsInt();
-                    String messageUserFrom = currentMessage.get("user_from").getAsString();
+                    String messageUserId = currentMessage.get("user_id").getAsString();
+                    String messageUserName = currentMessage.get("user_name").getAsString();
 
-                    Message bufMessage = new Message(messageUserFrom,messageText, messageRoom, messageTimeCreated, messageId );
+                    Message bufMessage = new Message(messageUserId, messageUserName, messageText, messageRoom, messageTimeCreated, messageId );
                     resultList.add(bufMessage);
                 }
                 MyLogger.logger.info("getRoomMessagesHistory - Получили список сообщений для комнаты "+roomId);
@@ -238,10 +239,12 @@ public class MyAPI implements SuperAPI {
                     String roomId = newMessageJsonObject.get("room_id").getAsString();
                     String messageText = newMessageJsonObject.get("text").getAsString();
                     Integer timeCreated = newMessageJsonObject.get("time_created").getAsInt();
-                    String userFrom = newMessageJsonObject.get("user_from").getAsString();
+                    String messageUserId = newMessageJsonObject.get("user_id").getAsString();
+                    String messageUserName = newMessageJsonObject.get("user_name").getAsString();
+
 
                     MyLogger.logger.info("writeMessage - Отправили новое сообщение "+messageText +" "+messageId);
-                    return new Message(userFrom,messageText,roomId,timeCreated,messageId);
+                    return new Message(messageUserId, messageUserName, messageText,roomId,timeCreated,messageId);
             }
 
             else{
@@ -332,9 +335,10 @@ public class MyAPI implements SuperAPI {
                         String messageRoom = currentMessage.get("room_id").getAsString();
                         String messageText = currentMessage.get("text").getAsString();
                         Integer messageTimeCreated = currentMessage.get("time_created").getAsInt();
-                        String messageUserFrom = currentMessage.get("user_from").getAsString();
+                        String messageUserId = currentMessage.get("user_id").getAsString();
+                        String messageUserName = currentMessage.get("user_name").getAsString();
 
-                        Message bufMessage = new Message(messageUserFrom,messageText, messageRoom, messageTimeCreated, messageId);
+                        Message bufMessage = new Message(messageUserId, messageUserName, messageText, messageRoom, messageTimeCreated, messageId);
                         resultList.add(bufMessage);
                     }
                     MyLogger.logger.info("longpollListener - получили новые сообщения");

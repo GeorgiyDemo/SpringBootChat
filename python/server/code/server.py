@@ -185,7 +185,9 @@ def write_message():
     if mongo.get_rooms({"_id": room_id}) == 0:
         return {"result": False, "description": "invalid room id"}
 
-    message = Message(user_from, text, room_id)
+    #Определяем имя пользователя
+    user_name = mongo.get_users({"_id": user_from})[0].name
+    message = Message(user_from, user_name, text, room_id)
     mongo.set_messages([message])
     return {"result": True, "body": message.to_mongo()}
 

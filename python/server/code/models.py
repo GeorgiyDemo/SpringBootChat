@@ -117,13 +117,15 @@ class Message(MongoModel):
 
     def __init__(
         self,
-        user_from: str,
+        user_id: str,
+        user_name: str,
         text: str,
         room_id: str,
         time_created: int = None,
         _id: str = None,
     ) -> None:
-        self.__user_from = user_from
+        self.__user_id = user_id
+        self.__user_name = user_name
         self.__text = text
         self.__room_id = room_id
         self.__time_created = time_created
@@ -137,7 +139,8 @@ class Message(MongoModel):
     def to_mongo(self):
         return {
             "_id": self.__id,
-            "user_from": self.__user_from,
+            "user_id": self.__user_id,
+            "user_name": self.__user_name,
             "text": self.__text,
             "room_id": self.__room_id,
             "time_created": self.__time_created,
