@@ -3,10 +3,7 @@ package sample.controllers;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import sample.Main;
 import sample.exceptions.EmptyAPIResponseException;
 import sample.exceptions.FalseServerFlagException;
@@ -86,6 +83,11 @@ public class MainChatController extends SuperController {
         //Отображение сообщений в таблице
         MessageUserColumn.setCellValueFactory(cellData -> cellData.getValue().getUserNameProperty());
         MessageTextColumn.setCellValueFactory(cellData -> cellData.getValue().getTextProperty());
+
+        //Текст для таблицы сообщений, когда комната не выбрана
+        Label placeholder = new Label();
+        placeholder.setText("Выберите диалог слева или <создайте новый>");
+        MessageTable.setPlaceholder(placeholder);
 
         //Слушатель изменения текста
         newMessageText.textProperty().addListener((observable, oldValue, newValue) -> {

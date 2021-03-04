@@ -23,7 +23,7 @@
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" styleClass="background">
                     <children>
                   <TableView fx:id="MessageTable" prefHeight="254.0" prefWidth="416.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <columns>
+                      <columns>
                         <TableColumn fx:id="MessageUserColumn" editable="false" prefWidth="96.03500366210938" sortable="false" text="Пользователь" />
                         <TableColumn fx:id="MessageTextColumn" editable="false" prefWidth="317.9650573730469" sortable="false" text="Сообщение" />
                      </columns>
