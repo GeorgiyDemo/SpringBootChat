@@ -33,7 +33,7 @@
                      </columnResizePolicy>
                   </TableView>
                           <JFXButton fx:id="sendMessageButton" defaultButton="true" disable="true" onAction="#sendMessageButtonClicked" text="Отправить" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
-                          <JFXTextField fx:id="newMessageText" prefHeight="27.0" prefWidth="300.0" promptText="Введите сообщение.." unFocusColor="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" />
+                          <JFXTextField fx:id="newMessageText" prefHeight="27.0" prefWidth="300.0" promptText="Введите сообщение.." unFocusColor="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="100.0" />
                     </children>
                 </AnchorPane>
             </items>
