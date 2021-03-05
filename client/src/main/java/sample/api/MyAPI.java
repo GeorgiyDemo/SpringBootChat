@@ -364,6 +364,10 @@ public class MyAPI implements SuperAPI {
         return currentRoomId;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
     public void setCurrentRoomId(String currentRoomId) {
         this.currentRoomId = currentRoomId;
     }

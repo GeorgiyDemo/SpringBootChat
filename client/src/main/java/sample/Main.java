@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import sample.api.MyAPI;
 import sample.controllers.*;
@@ -51,7 +52,7 @@ public class Main extends Application {
 
         //Выставляем RootLayout
         this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("DEMKA Messenger");
+        this.primaryStage.setTitle("Авторизация");
         initRootLayout();
 
         //TODO: ЭТО ХАРДКОД, ПОТОМ ВЫНЕСТИ В SQLITE или куда-то
@@ -66,7 +67,9 @@ public class Main extends Application {
         }
         //Если уже успешно авторизовался
         else {
+            this.primaryStage.setTitle("Сообщения ["+APISession.getUserName()+"]");
             MainChat();
+
         }
 
     }
@@ -120,6 +123,9 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * Логика ошибки соединения
+     */
     public void ConnectionError() {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -129,6 +135,30 @@ public class Main extends Application {
             ConnectionErrorController controller = loader.getController();
             controller.initialize(this);
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Окно создания новой комнаты
+     */
+    public void NewRoom(){
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/views/CreateNewRoomView.fxml"));
+            AnchorPane page = (AnchorPane) loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Создание диалога");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+            CreateNewRoomController controller = loader.getController();
+            controller.initialize(this, dialogStage);
+            dialogStage.showAndWait();;
+
+        }catch(IOException e){
             e.printStackTrace();
         }
     }

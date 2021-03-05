@@ -54,13 +54,13 @@ public class MainChatController extends SuperController {
             }
 
             newMessageText.setText("");
-            MyLogger.logger.info("*Отправили сообщение*");
+            MessageTable.scrollTo(MessageData.get(MessageData.size()-1));
         }
     }
 
     @FXML
     private void createRoomButtonClicked(){
-
+         mainApp.NewRoom();
     }
 
 
@@ -72,6 +72,10 @@ public class MainChatController extends SuperController {
     public void initialize(Main mainApp) {
         this.mainApp = mainApp;
         RoomTable.setItems(RoomData);
+
+        newMessageText.setDisable(true);
+        sendMessageButton.setOpacity(0);
+        newMessageText.setOpacity(0);
 
         //API, через которое взаимодействуем с миром
         APISession = mainApp.getAPISession();
@@ -140,6 +144,12 @@ public class MainChatController extends SuperController {
      * @param room
      */
     private void showChatRoomDetails(Room room){
+
+        //Отображаем отправку сообщений
+        newMessageText.setDisable(false);
+        sendMessageButton.setOpacity(1);
+        newMessageText.setOpacity(1);
+
         //Выставляем id текущей комнаты
         MessageData.clear();
         if(room != null) {
@@ -147,6 +157,6 @@ public class MainChatController extends SuperController {
             MessageData.addAll(room.getMessages());
             MessageTable.setItems(MessageData);
         }
-
+        MessageTable.scrollTo(MessageData.get(MessageData.size()-1));
     }
 }
