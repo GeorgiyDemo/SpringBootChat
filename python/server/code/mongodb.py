@@ -1,5 +1,6 @@
 from typing import Dict, List
 import pymongo
+import re
 from models import User, Room, Message, LongPoll
 
 
@@ -8,8 +9,23 @@ class MongoDB:
         myclient = pymongo.MongoClient(connection)
         self.connection = myclient[db_name]
 
-    def get_users(self, condition: Dict = None) -> List[User]:
-        """Получение пользователей"""
+    def get_users_search(self, name: str = "", limit: int = 200) -> List[Dict]:
+        """Поиск пользователей (при создании нового чата)"""
+        table = self.connection["Users"]
+        if name == "":
+            return list(
+                table.find({}, {"login": 0, "password": 0, "key": 0}).limit(limit)
+            )
+
+        regx = re.compile(f"^{name}", re.IGNORECASE)
+        return list(
+            table.find({"name": regx}, {"login": 0, "password": 0, "key": 0}).limit(
+                limit
+            )
+        )
+
+    def get_users_auth(self, condition: Dict = None) -> List[User]:
+        """Получение пользователей (авторизация/регистрация)"""
         table = self.connection["Users"]
         result = table.find() if condition is None else table.find(condition)
         return [User(**item) for item in result]

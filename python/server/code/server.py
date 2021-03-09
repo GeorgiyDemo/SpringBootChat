@@ -11,10 +11,11 @@ from models import User, Room, Message, LongPoll
 app = Flask(__name__)
 api = Api(app)
 
-api.app.config['RESTFUL_JSON'] = {'ensure_ascii': False}
+api.app.config["RESTFUL_JSON"] = {"ensure_ascii": False}
 
 mongo = MongoDB("SpringBootChat", os.environ.get("CONNECTION_STRING"))
 polls_list = []
+
 
 @app.route("/auth", methods=["GET"])
 def auth():
@@ -26,7 +27,7 @@ def auth():
     if any([x is None for x in (login, password)]):
         return {"result": False, "description": "no enough values"}
 
-    result = mongo.get_users({"login": login, "password": password})
+    result = mongo.get_users_auth({"login": login, "password": password})
     if len(result) != 1:
         return {"result": False}
 
@@ -69,7 +70,7 @@ def create_room():
         return {"result": False, "description": "no enough values"}
 
     # Проверка на авторизацию
-    if mongo.get_users({"key": user_key}) == 0:
+    if mongo.get_users_auth({"key": user_key}) == 0:
         return {"result": False, "description": "invalid auth key"}
 
     # Фильтрация на существование пользователей
@@ -97,7 +98,7 @@ def get_user_rooms():
         return {"result": False, "description": "no enough values"}
 
     # Проверка на пользователя
-    if mongo.get_users({"_id": user_id, "key": user_key}) == 0:
+    if mongo.get_users_auth({"_id": user_id, "key": user_key}) == 0:
         return {"result": False, "description": "invalid auth key"}
 
     rooms_list = [room.to_mongo() for room in mongo.get_rooms({"users": user_id})]
@@ -116,17 +117,18 @@ def get_room_info():
         return {"result": False, "description": "no enough values"}
 
     # Проверка на существование ключа
-    if mongo.get_users({"key": user_key}) == 0:
+    if mongo.get_users_auth({"key": user_key}) == 0:
         return {"result": False, "description": "invalid auth key"}
 
     rooms_list = [room for room in mongo.get_rooms({"_id": room_id})]
 
-    #Если комната с указанным id не найдена
+    # Если комната с указанным id не найдена
     if len(rooms_list) == 0:
-        return {"result" : False, "body" : "room not found"}
+        return {"result": False, "body": "room not found"}
 
     room = rooms_list[0]
     return {"result": True, "body": room.to_mongo()}
+
 
 @app.route("/getRoomMessagesHistory", methods=["GET"])
 def get_room_messages_history():
@@ -139,27 +141,40 @@ def get_room_messages_history():
         return {"result": False, "description": "no enough values"}
 
     # Проверка на пользователя
-    if mongo.get_users({"key": user_key}) == 0:
+    if mongo.get_users_auth({"key": user_key}) == 0:
         return {"result": False, "description": "invalid auth key"}
 
-    messages_list = [message.to_mongo() for message in mongo.get_messages({"room_id": room_id})]
+    messages_list = [
+        message.to_mongo() for message in mongo.get_messages({"room_id": room_id})
+    ]
 
     return {"result": True, "body": messages_list}
+
 
 @app.route("/search", methods=["GET"])
 def search():
     """Поиск пользователя в системе (для последующего чата)"""
     user_key = request.args.get("user_key")
     search_str = request.args.get("search_str")
+    count = request.args.get("count")
 
+    # Обязательные параметры
     if user_key is None:
         return {"result": False, "description": "no enough values"}
 
+    # Необязательные параметры
+    if count is None:
+        count = 250
+    if search_str is None:
+        search_str = ""
+
     # Проверка на пользователя
-    if mongo.get_users({"key": user_key}) == 0:
+    if mongo.get_users_auth({"key": user_key}) == 0:
         return {"result": False, "description": "invalid auth key"}
 
-    return {"result": True, "body": "SOME_INFO"}
+    # Получаем пользователей
+    users_list = mongo.get_users_search(name=search_str, limit=count)
+    return {"result": True, "body": users_list}
 
 
 @app.route("/writeMessage", methods=["GET"])
@@ -178,15 +193,15 @@ def write_message():
         return {"result": False, "description": "no enough values"}
 
     # Проверка на пользователя
-    if mongo.get_users({"_id": user_from, "key": user_key}) == 0:
+    if mongo.get_users_auth({"_id": user_from, "key": user_key}) == 0:
         return {"result": False, "description": "invalid auth key"}
 
     # Фильтрация на комнату
     if mongo.get_rooms({"_id": room_id}) == 0:
         return {"result": False, "description": "invalid room id"}
 
-    #Определяем имя пользователя
-    user_name = mongo.get_users({"_id": user_from})[0].name
+    # Определяем имя пользователя
+    user_name = mongo.get_users_auth({"_id": user_from})[0].name
     message = Message(user_from, user_name, text, room_id)
     mongo.set_messages([message])
     return {"result": True, "body": message.to_mongo()}
@@ -210,7 +225,7 @@ def get_longpoll_server():
         return {"result": False, "description": "no enough values"}
 
     # Проверка на пользователя
-    if mongo.get_users({"_id": user_id, "key": user_key}) == 0:
+    if mongo.get_users_auth({"_id": user_id, "key": user_key}) == 0:
         return {"result": False, "description": "invalid auth key"}
 
     ts = mongo.get_user_last_message_date(user_id)

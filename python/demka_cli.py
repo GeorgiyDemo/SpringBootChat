@@ -114,6 +114,20 @@ class DEMKACli:
                 print(f"[USER #{message['user_from']}] -> {message['text']}")
             time.sleep(1)
 
+    def search(self, search_str: str = None):
+        """Поиск пользователей"""
+        if search_str is not None:
+            url = quote(
+                f"{self.URL}/search?user_key={self.user_key}&search_str={search_str}",
+                safe="/:?=&",
+            )
+        else:
+            url = quote(f"{self.URL}/search?user_key={self.user_key}", safe="/:?=&")
+        message_result = requests.get(url).json()
+        print(message_result)
+        if not message_result["result"]:
+            raise ValueError(f"Не удалось получить список пользователей")
+
 
 if __name__ == "__main__":
     print(
