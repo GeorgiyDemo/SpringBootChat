@@ -9,6 +9,7 @@ import sample.exceptions.LongpollListenerException;
 import sample.exceptions.RoomNotFoundException;
 import sample.models.Message;
 import sample.models.Room;
+import sample.models.User;
 import sample.utils.HTTPRequest;
 import sample.utils.MyLogger;
 
@@ -220,7 +221,55 @@ public class MyAPI implements SuperAPI {
     public boolean createRoom(){
         return false;
     }
-    //TODO: отправка сообщения
+
+    /**
+     * Поиск пользователей в системе
+     *
+     * @param searchString
+     * @return
+     */
+
+    @Override
+    public List<User> getUsers(String searchString) throws FalseServerFlagException, EmptyAPIResponseException {
+
+        List<User> resultList = new ArrayList<User>();
+        String URL = "";
+        if (searchString == null){
+            URL = String.format("%s/search?user_key=%s", ServerURL, userKey);
+        }
+        else{
+            URL = String.format("%s/search?user_key=%s&search_str=%s", ServerURL, userKey, searchString);
+        }
+        String response = HTTPRequest.Get(URL);
+        //Если ответ есть
+        if (response != null) {
+            JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
+            if (jsonResult.get("result").getAsBoolean()) {
+
+                JsonArray bufList = jsonResult.get("body").getAsJsonArray();
+                for (int i = 0; i < bufList.size(); i++) {
+                    JsonObject currentUser = bufList.get(i).getAsJsonObject();
+
+                    String userId = currentUser.get("_id").getAsString();
+                    String userName = currentUser.get("name").getAsString();
+                    Integer userTimeCreated = currentUser.get("time_created").getAsInt();
+
+                    User bufUser = new User(userId, userName, userTimeCreated);
+                    resultList.add(bufUser);
+                }
+                MyLogger.logger.info("getUsers - получили "+resultList.size()+" пользователей");
+                return resultList;
+            }
+            else{
+                throw  new FalseServerFlagException(URL,response, "getUsers - Не удалось отправить новое сообщение");
+            }
+
+        }
+        else {
+            throw  new EmptyAPIResponseException(mainApp, "getUsers - получили пустой ответ от сервера");
+        }
+    }
+
     @Override
     public Message writeMessage(String text) throws FalseServerFlagException, EmptyAPIResponseException {
         text = URLEncoder.encode(text, StandardCharsets.UTF_8);

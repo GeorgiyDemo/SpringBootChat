@@ -6,6 +6,7 @@ import sample.exceptions.LongpollListenerException;
 import sample.exceptions.RoomNotFoundException;
 import sample.models.Message;
 import sample.models.Room;
+import sample.models.User;
 import sample.utils.HTTPRequest;
 
 import java.net.URLEncoder;
@@ -60,13 +61,41 @@ public interface SuperAPI {
      */
     List<Message> getRoomMessagesHistory(String roomId) throws FalseServerFlagException, EmptyAPIResponseException;
 
-    //TODO: создание комнаты
+
+    /**
+     * TODO: Создание комнаты
+     * @return
+     */
     boolean createRoom();
 
-    //TODO: отправка сообщения
+    /**
+     * Поиск пользователей в системе
+     * @param searchString
+     * @return
+     */
+    List<User> getUsers(String searchString) throws FalseServerFlagException, EmptyAPIResponseException;
+
+    /**
+     * Отправка сообщения
+     * @param text
+     * @return
+     * @throws FalseServerFlagException
+     * @throws EmptyAPIResponseException
+     */
     Message writeMessage(String text) throws FalseServerFlagException, EmptyAPIResponseException;
 
+    /**
+     * Получение сервера лонгпула
+     * @throws EmptyAPIResponseException
+     * @throws FalseServerFlagException
+     */
     void getLongpollServer() throws EmptyAPIResponseException, FalseServerFlagException;
 
+    /**
+     * Слушатель лонгпула
+     * @return
+     * @throws LongpollListenerException
+     * @throws EmptyAPIResponseException
+     */
     List<Message> longpollListener() throws LongpollListenerException, EmptyAPIResponseException;
 }

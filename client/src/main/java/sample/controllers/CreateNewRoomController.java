@@ -1,5 +1,6 @@
 package sample.controllers;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -9,6 +10,8 @@ import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import sample.Main;
 import sample.api.MyAPI;
+import sample.exceptions.EmptyAPIResponseException;
+import sample.exceptions.FalseServerFlagException;
 import sample.models.Message;
 import sample.models.Room;
 import sample.models.User;
@@ -60,7 +63,14 @@ public class CreateNewRoomController{
 
         //Отображение имен пользователей
         AllUsersColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
-        ChatUsersColumn.setCellValueFactory(cellData -> cellData.getValue().getUserNameProperty());
+        ChatUsersColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+
+        //Добавляем пользователей системы
+        try {
+            AllUsersData.addAll(APISession.getUsers(null));
+        } catch (FalseServerFlagException | EmptyAPIResponseException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -78,7 +88,9 @@ public class CreateNewRoomController{
      * @param user
      */
     private void addUserToChat(User user){
-
+        //AllUsersData.remove(user);
+        ChatUsersData.add(user);
+        //Platform.runLater(() -> AllUsersData.remove(user));
     }
 
     /**
@@ -86,6 +98,11 @@ public class CreateNewRoomController{
      * @param user
      */
     private void removeUserFromChat(User user){
-
+        //ChatUsersData.remove(user);
+        AllUsersData.add(user);
+        //Platform.runLater(() -> ChatUsersData.remove(user));
     }
+
+
+
 }
