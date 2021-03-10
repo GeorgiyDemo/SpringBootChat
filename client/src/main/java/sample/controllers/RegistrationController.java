@@ -2,7 +2,7 @@ package sample.controllers;
 
 import sample.Main;
 
-public class RegController extends SuperController {
+public class RegistrationController extends SuperFullController {
 
     /**
      * Метод инициализации (вызывается с Main)

@@ -9,7 +9,7 @@ import sample.utils.MyLogger;
 
 import java.io.IOException;
 
-public class AuthorisationController extends SuperController {
+public class AuthorisationController extends SuperFullController {
 
     @FXML
     private Label AppName;

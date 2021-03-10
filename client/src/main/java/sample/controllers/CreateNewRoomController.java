@@ -19,7 +19,7 @@ import sample.utils.MyLogger;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateNewRoomController{
+public class CreateNewRoomController extends SuperPartController {
     private Main mainApp;
     private Stage dialogStage;
 
@@ -42,7 +42,7 @@ public class CreateNewRoomController{
 
     private boolean CustomChatName = false;
 
-    //В табилце слева все возможные
+    @Override
     public void initialize(Main mainApp, Stage dialogStage) {
         this.mainApp = mainApp;
         this.dialogStage = dialogStage;

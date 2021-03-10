@@ -100,7 +100,7 @@ public class Main extends Application {
             loader.setLocation(getClass().getResource("/views/RegistrationView.fxml"));
             AnchorPane mainPage = loader.load();
             rootLayout.setCenter(mainPage);
-            RegController controller = loader.getController();
+            RegistrationController controller = loader.getController();
             controller.initialize(this);
         } catch (IOException e) {
             e.printStackTrace();

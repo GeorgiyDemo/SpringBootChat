@@ -15,7 +15,7 @@ import sample.utils.MyLogger;
 
 import java.util.List;
 
-public class MainChatController extends SuperController {
+public class MainChatController extends SuperFullController {
     private ObservableList<Room> RoomData = FXCollections.observableArrayList();
     private ObservableList<Message> MessageData = FXCollections.observableArrayList();
 

@@ -2,7 +2,7 @@ package sample.controllers;
 
 import sample.Main;
 
-public class RootLayoutController extends SuperController {
+public class RootLayoutController extends SuperFullController {
 
     /**
      * Метод инициализации (вызывается с Main)

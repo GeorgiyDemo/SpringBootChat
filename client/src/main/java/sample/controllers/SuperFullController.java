@@ -3,9 +3,9 @@ package sample.controllers;
 import sample.Main;
 
 /**
- * Класс, от которого наследуются все контроллеры
+ * Класс, от которого наследуются все контроллеры, layout которых открывается на всё окно
  */
-public abstract class SuperController {
+public abstract class SuperFullController {
     protected Main mainApp;
 
     /**
