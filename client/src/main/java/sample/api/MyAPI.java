@@ -141,7 +141,6 @@ public class MyAPI implements SuperAPI {
     public Room getRoomInfo(String roomId) throws RoomNotFoundException, EmptyAPIResponseException {
 
         //Запрашиваем данные по URL
-        //TODO: url фиксануть
         String URL = String.format("%s/getRoomInfo?room_id=%s&user_key=%s", ServerURL, roomId, userKey);
         String response = HTTPRequest.Get(URL);
         //Если ответ есть
@@ -216,10 +215,33 @@ public class MyAPI implements SuperAPI {
         }
     }
 
-    //TODO: создание комнаты
+    /**
+     * Создание комнаты
+     * @param roomName
+     * @param usersString
+     * @return
+     */
     @Override
-    public boolean createRoom(){
-        return false;
+    public boolean createRoom(String roomName, String usersString) throws FalseServerFlagException, EmptyAPIResponseException {
+        //Запрашиваем данные по URL
+        roomName = URLEncoder.encode(roomName, StandardCharsets.UTF_8);
+        String URL = String.format("%s/createRoom?creator_id=%s&user_key=%s&room_name=%s&users=%s", ServerURL, userId, userKey, roomName, usersString);
+        String response = HTTPRequest.Get(URL);
+
+        //Если ответ есть
+        if (response != null) {
+            JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
+            if (jsonResult.get("result").getAsBoolean()) {
+                MyLogger.logger.info("createRoom - Успешно создали новую комнату");
+                return  true;
+            }
+            else {
+                throw new FalseServerFlagException(URL, response, "createRoom - Не удалось создать новую комнату");
+            }
+        }
+        else{
+            throw new EmptyAPIResponseException(mainApp, "createRoom - Получили пустой ответ от сервера");
+        }
     }
 
     /**

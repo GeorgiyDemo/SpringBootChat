@@ -9,20 +9,20 @@ class MongoDB:
         myclient = pymongo.MongoClient(connection)
         self.connection = myclient[db_name]
 
-    def get_users_search(self, name: str = "", limit: int = 200) -> List[Dict]:
+    def get_users_search(self, user_key : str, name: str = "", limit: int = 200) -> List[Dict]:
         """Поиск пользователей (при создании нового чата)"""
         table = self.connection["Users"]
         if name == "":
-            return list(
-                table.find({}, {"login": 0, "password": 0, "key": 0}).limit(limit)
-            )
+            users_list = list(table.find({}, {"login": 0, "password": 0}).limit(limit))
+            users_list = [item for item in users_list if item["key"] != user_key]
+            [item.pop('key', None) for item in users_list]
+            return users_list
 
         regx = re.compile(f"^{name}", re.IGNORECASE)
-        return list(
-            table.find({"name": regx}, {"login": 0, "password": 0, "key": 0}).limit(
-                limit
-            )
-        )
+        users_list = list(table.find({"name": regx}, {"login": 0, "password": 0}).limit(limit))
+        users_list = [item for item in users_list if item["key"] != user_key]
+        [item.pop('key', None) for item in users_list]
+        return users_list
 
     def get_users_auth(self, condition: Dict = None) -> List[User]:
         """Получение пользователей (авторизация/регистрация)"""

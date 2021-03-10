@@ -5,8 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import sample.Main;
 import sample.api.MyAPI;
@@ -16,6 +15,9 @@ import sample.models.Message;
 import sample.models.Room;
 import sample.models.User;
 import sample.utils.MyLogger;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CreateNewRoomController{
     private Main mainApp;
@@ -29,13 +31,17 @@ public class CreateNewRoomController{
     private TableView<User> AllUsersTable;
     @FXML
     private TableColumn<User, String> AllUsersColumn;
-
     @FXML
     private TableView<User> ChatUsersTable;
     @FXML
     private TableColumn<User, String> ChatUsersColumn;
+    @FXML
+    private Button CreateRoomButton;
+    @FXML
+    private TextField ChatName;
 
-    //TODO: Инициализация двух таблиц
+    private boolean CustomChatName = false;
+
     //В табилце слева все возможные
     public void initialize(Main mainApp, Stage dialogStage) {
         this.mainApp = mainApp;
@@ -48,15 +54,6 @@ public class CreateNewRoomController{
         //API, через которое взаимодействуем с миром
         APISession = mainApp.getAPISession();
 
-        //Обработчик добавления пользователя в список участников
-        AllUsersTable.getSelectionModel().selectedItemProperty().addListener(
-                ((observableValue, oldValue, newValue) -> addUserToChat(newValue))
-        );
-        //Обработчик удаления пользователя из списка участников
-        ChatUsersTable.getSelectionModel().selectedItemProperty().addListener(
-                ((observableValue, oldValue, newValue) -> removeUserFromChat(newValue))
-        );
-
         //Ресайз, зависящий от данных
         AllUsersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         ChatUsersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -64,6 +61,9 @@ public class CreateNewRoomController{
         //Отображение имен пользователей
         AllUsersColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
         ChatUsersColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+
+        AllUsersTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        ChatUsersTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         //Добавляем пользователей системы
         try {
@@ -79,30 +79,89 @@ public class CreateNewRoomController{
     }
 
     @FXML
-    public void CreateRoomButtonClicker() {
-        MyLogger.logger.info("*Кликнули на создание комнаты*");
+    public void CreateRoomButtonClicked() {
+        String localeChatName;
+        StringBuilder usersIds = new StringBuilder();
+        //Если не было задано название конфы, то генерируем ее из имен
+        if (ChatName.getText().equals("")){
+
+            StringBuilder ChatNameBuilder = new StringBuilder();
+            ChatNameBuilder.append("Чат с ");
+            for (User user: ChatUsersData) {
+                ChatNameBuilder.append(user.getName()).append(", ");
+            }
+            //Удаляем последнюю запятую
+            ChatNameBuilder.setLength(ChatNameBuilder.length() - 2);
+            //Если длина слишком большая - сокращаем
+            if (ChatNameBuilder.length() > 100){
+                ChatNameBuilder.setLength(100);
+                ChatNameBuilder.append("..");
+            }
+            localeChatName = ChatNameBuilder.toString();
+
+        }
+        else{
+            localeChatName = ChatName.getText();
+        }
+
+        //Добавляем id всех пользователей
+        for (User user: ChatUsersData) {
+            usersIds.append(user.getId());
+            usersIds.append(",");
+        }
+        //Удаляем последнюю запятую
+        usersIds.setLength(usersIds.length() - 1);
+
+        //Создаем комнату
+        try {
+            APISession.createRoom(localeChatName,usersIds.toString());
+        } catch (FalseServerFlagException | EmptyAPIResponseException e) {
+            e.printStackTrace();
+        }
+
+        dialogStage.close();
     }
 
     /**
      * Добавление пользователя в чат
-     * @param user
      */
-    private void addUserToChat(User user){
-        //AllUsersData.remove(user);
-        ChatUsersData.add(user);
-        //Platform.runLater(() -> AllUsersData.remove(user));
+    @FXML
+    private void addUserToChat(){
+
+        ObservableList<User> selectedItems = AllUsersTable.getSelectionModel().getSelectedItems();
+        //Буферный список, который не изменяется
+        List<User> selectedUsers = new ArrayList<User>();
+        selectedUsers.addAll(selectedItems);
+
+        for (int i = 0; i < selectedUsers.size(); i++) {
+            User user = selectedUsers.get(i);
+            MyLogger.logger.info("addUserToChat - добавили пользователя " + user.getName());
+            AllUsersData.remove(user);
+            ChatUsersData.add(user);
+        }
+
+        CreateRoomButton.setDisable(ChatUsersData.size() <= 0);
+
     }
 
     /**
      * Удаление пользователя из чата
-     * @param user
      */
-    private void removeUserFromChat(User user){
-        //ChatUsersData.remove(user);
-        AllUsersData.add(user);
-        //Platform.runLater(() -> ChatUsersData.remove(user));
+    @FXML
+    private void removeUserFromChat(){
+
+        ObservableList<User> selectedItems = ChatUsersTable.getSelectionModel().getSelectedItems();
+        //Буферный список, который не изменяется
+        List<User> selectedUsers = new ArrayList<User>();
+        selectedUsers.addAll(selectedItems);
+
+        for (int i = 0; i < selectedUsers.size(); i++) {
+            User user = selectedUsers.get(i);
+            MyLogger.logger.info("addUserToChat - удалили пользователя " + user.getName());
+            ChatUsersData.remove(user);
+            AllUsersData.add(user);
+        }
+
+        CreateRoomButton.setDisable(ChatUsersData.size() <= 0);
     }
-
-
-
 }

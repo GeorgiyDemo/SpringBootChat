@@ -63,10 +63,14 @@ public interface SuperAPI {
 
 
     /**
-     * TODO: Создание комнаты
+     * Создание комнаты
+     * @param roomName
+     * @param usersString
      * @return
+     * @throws FalseServerFlagException
+     * @throws EmptyAPIResponseException
      */
-    boolean createRoom();
+    public boolean createRoom(String roomName, String usersString) throws FalseServerFlagException, EmptyAPIResponseException;
 
     /**
      * Поиск пользователей в системе

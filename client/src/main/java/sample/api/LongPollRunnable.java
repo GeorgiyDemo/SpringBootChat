@@ -83,7 +83,7 @@ public class LongPollRunnable implements Runnable{
                             newRoom.addMessage(msg);
                             //Добавляем саму комнату
                             roomData.add(newRoom);
-                            MyLogger.logger.info("Получили новую комнату "+newRoom.getNameProperty()+"["+newRoom.getId()+"]");
+                            MyLogger.logger.info("Получили новую комнату "+newRoom.getName()+" ["+newRoom.getId()+"]");
                         }
                         catch (RoomNotFoundException e){
                             MyLogger.logger.error("Случилось странное: бек отдал сообщение с комнаты "+messageRoomId+", но её не существует");

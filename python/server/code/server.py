@@ -63,7 +63,7 @@ def create_room():
     creator_id = request.args.get("creator_id")
     users = request.args.get("users")
     user_key = request.args.get("user_key")
-    room_name = request.args.get("name")
+    room_name = request.args.get("room_name")
 
     # Фильтрация на поля
     if any([x is None for x in (creator_id, users, user_key)]):
@@ -75,15 +75,22 @@ def create_room():
 
     # Фильтрация на существование пользователей
     users_list = users.split(",")
-    if any([mongo.get_users({"_id": user}) == 0 for user in users_list]):
+    if any([mongo.get_users_auth({"_id": user}) == 0 for user in users_list]):
         return {"result": False, "description": "some users does not exist"}
 
     # Если создателя нет в списке пользователей комнаты, то добавляем его
     if creator_id not in users_list:
         users_list.append(creator_id)
 
-    new_room = Room(creator_id, users_list, room_name)
+    #Выставляем комнату
+    new_room = Room(creator_id=creator_id, users=users_list, name=room_name)
     mongo.set_rooms([new_room])
+
+    #Сообщение о том, что комната была создана
+    user_name = mongo.get_users_auth({"_id": creator_id})[0].name
+    message = Message(creator_id, user_name, "*Комната была создана*", new_room.id)
+    mongo.set_messages([message])
+
     return {"result": True, "body": new_room.to_mongo()}
 
 
@@ -173,7 +180,7 @@ def search():
         return {"result": False, "description": "invalid auth key"}
 
     # Получаем пользователей
-    users_list = mongo.get_users_search(name=search_str, limit=count)
+    users_list = mongo.get_users_search(user_key=user_key, name=search_str, limit=count)
     return {"result": True, "body": users_list}
 
 

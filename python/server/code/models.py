@@ -31,7 +31,7 @@ class Room(MongoModel):
             self.__time_created = util.current_time()
 
         if self.__name is None:
-            self.__name = "Комната N"
+            self.__name = "Комната без названия"
 
         if self.__id is None:
             self.__id = util.random_string()

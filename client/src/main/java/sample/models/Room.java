@@ -33,6 +33,10 @@ public class Room {
         return name;
     }
 
+    public String getName() {
+        return name.get();
+    }
+
     public String getId() {
         return id.get();
     }
