@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateNewRoomController extends SuperPartController {
-    private Main mainApp;
     private Stage dialogStage;
 
     private ObservableList<User> AllUsersData = FXCollections.observableArrayList();
