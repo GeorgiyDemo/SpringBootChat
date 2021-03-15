@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
+import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
 
 import com.mongodb.Mongo;
 import com.mongodb.MongoClient;
@@ -19,7 +19,7 @@ import com.mongodb.ServerAddress;
  *
  */
 @Configuration
-public class MongoConfig extends AbstractMongoConfiguration {
+public class MongoConfig extends AbstractMongoClientConfiguration {
 
     @Value("${spring.data.mongodb.uri}")
     private String mongoUri;
@@ -33,7 +33,7 @@ public class MongoConfig extends AbstractMongoConfiguration {
     }
 
     @Override
-    public Mongo mongo() throws Exception {
+    public MongoClient mongoClient() throws Exception {
         String[] addresses = mongoUri.split(",");
         List<ServerAddress> servers = new ArrayList<>();
         for (String address : addresses) {

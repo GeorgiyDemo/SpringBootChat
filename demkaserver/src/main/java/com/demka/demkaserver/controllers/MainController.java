@@ -2,12 +2,10 @@ package com.demka.demkaserver.controllers;
 
 import com.demka.demkaserver.config.MongoConfig;
 import com.demka.demkaserver.models.User;
-import com.demka.demkaserver.config.MongoDBPOperations;
+
 import com.demka.demkaserver.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.data.mongodb.core.MongoOperations;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
