@@ -53,7 +53,6 @@ def register():
     current_dict.pop("password", None)
     return {"result": True, "body": current_dict}
 
-
 @app.route("/createRoom", methods=["GET"])
 def create_room():
     """

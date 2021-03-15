@@ -18,6 +18,47 @@ public class UserController {
         this.userService = userService;
     }
 
+    /** TODO: Авторизация пользователя
+     * @return
+     */
+    @GetMapping(value = "/auth")
+    public ResponseEntity<List<User>> auth() {
+        final List<User> persons = userService.readAll();
+        return persons != null && !persons.isEmpty() ? new ResponseEntity<>(persons, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * TODO: Регистрация пользователя
+     * @return
+     */
+    @GetMapping(value = "/register")
+    public ResponseEntity<List<User>> register() {
+        final List<User> persons = userService.readAll();
+        return persons != null && !persons.isEmpty() ? new ResponseEntity<>(persons, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * TODO: Поиск пользователя в системе (для последующего чата)
+     * @return
+     */
+    @GetMapping(value = "/search")
+    public ResponseEntity<List<User>> search() {
+        final List<User> persons = userService.readAll();
+        return persons != null && !persons.isEmpty() ? new ResponseEntity<>(persons, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * TODO: Отправка сообщения в опеределенную комнату room_id
+     * @return
+     */
+    @GetMapping(value = "/writeMessage")
+    public ResponseEntity<List<User>> writeMessage() {
+        final List<User> persons = userService.readAll();
+        return persons != null && !persons.isEmpty() ? new ResponseEntity<>(persons, HttpStatus.OK) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
+
+
+
     @PostMapping(value = "/persons")
     public ResponseEntity<?> create(@RequestBody User person) {
         User newPerson = userService.create(person);
