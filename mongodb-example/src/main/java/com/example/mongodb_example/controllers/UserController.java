@@ -7,6 +7,8 @@ import com.example.mongodb_example.dto.UserDTO;
 import com.example.mongodb_example.models.RoleModel;
 import com.example.mongodb_example.models.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.web.bind.annotation.*;
 import com.example.mongodb_example.repositories.UserMongoRepository;
 
@@ -30,6 +32,10 @@ public class UserController {
 
     @GetMapping("/info")
     public List<UserModel> getAllUsersInfo() {
+
+        //Query query = new Query(Criteria.where("_id").ne());
+        //query.fields().include("_id");
+
         List<UserModel> allUsersList = userMongoRepository.findAll();
         System.out.println(allUsersList.toString());
         return allUsersList;

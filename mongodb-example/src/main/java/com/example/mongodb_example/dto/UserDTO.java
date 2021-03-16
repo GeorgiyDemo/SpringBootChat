@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class UserDTO implements SuperDTO {
-    private String id;
+    private String _id;
     private String name;
     private Integer age;
     private String email;

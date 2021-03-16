@@ -1,21 +1,23 @@
 package com.example.mongodb_example.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.UUID;
-
 
 @Document(collection="Users")
 public class UserModel {
 
     @Id
+    @JsonProperty
     private String id;
 
+    @JsonProperty
     private String name;
 
+    @JsonProperty
     private Integer age;
 
+    @JsonProperty
     private String email;
 
     public UserModel(String id, String name, Integer age, String email){
@@ -37,6 +39,10 @@ public class UserModel {
 
     public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {

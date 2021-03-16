@@ -7,7 +7,7 @@ import com.example.mongodb_example.models.UserModel;
 public class RoleConverter implements SuperConverter {
 
     public static RoleModel transform(final RoleDTO roleDTO) {
-        RoleModel buf = new RoleModel(roleDTO.getId(), roleDTO.getName());
+        RoleModel buf = new RoleModel(roleDTO.get_id(), roleDTO.getName());
         return buf;
     }
 }
