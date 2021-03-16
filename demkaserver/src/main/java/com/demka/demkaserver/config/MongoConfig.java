@@ -4,6 +4,7 @@ package com.demka.demkaserver.config;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mongodb.client.MongoClients;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.config.AbstractMongoClientConfiguration;
@@ -21,26 +22,25 @@ import com.mongodb.ServerAddress;
 @Configuration
 public class MongoConfig extends AbstractMongoClientConfiguration {
 
-    @Value("${spring.data.mongodb.uri}")
-    private String mongoUri;
+    @Value("${spring.data.mongodb.host}")
+    private String host;
 
-    @Value("${server.dbName}")
-    private String dbName;
+    @Value("${spring.data.mongodb.database}")
+    private String database;
 
     @Override
     protected String getDatabaseName() {
-        return dbName;
+        return database;
     }
 
     @Override
-    public MongoClient mongoClient() throws Exception {
-        String[] addresses = mongoUri.split(",");
-        List<ServerAddress> servers = new ArrayList<>();
-        for (String address : addresses) {
-            String[] split = address.trim().split(":");
-            servers.add(new ServerAddress(split[0].trim(), Integer.parseInt(split[1].trim())));
-        }
-        return new MongoClient(servers);
+    public MongoClient mongoClient() {
+        return MongoClients.create(this.host);
+    }
+
+    @Override
+    protected boolean autoIndexCreation() {
+        return super.autoIndexCreation();
     }
 
 }

@@ -3,3 +3,4 @@
 python/database/mongodbdata/
 python/.env
 *.pyc
+*.properties
