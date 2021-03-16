@@ -18,8 +18,8 @@ public class UserModel {
 
     private String email;
 
-    public UserModel(String name, Integer age, String email){
-        this.id = UUID.randomUUID().toString();
+    public UserModel(String id, String name, Integer age, String email){
+        this.id = id;
         this.name = name;
         this.age = age;
         this.email = email;

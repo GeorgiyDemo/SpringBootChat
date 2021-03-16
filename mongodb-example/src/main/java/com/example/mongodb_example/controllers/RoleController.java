@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/role")
@@ -19,6 +20,7 @@ public class RoleController {
 
     @PostMapping("/create")
     public RoleDTO createRole(@RequestBody RoleDTO role) {
+        role.setId(UUID.randomUUID().toString());
         RoleModel buf = RoleConverter.transform(role);
         roleMongoRepository.save(buf);
         return role;
@@ -27,7 +29,6 @@ public class RoleController {
     @GetMapping("/info")
     public List<RoleModel> getAllRolesInfo() {
         List<RoleModel> allRolesList = roleMongoRepository.findAll();
-        System.out.println(allRolesList.toString());
         return allRolesList;
     }
 
