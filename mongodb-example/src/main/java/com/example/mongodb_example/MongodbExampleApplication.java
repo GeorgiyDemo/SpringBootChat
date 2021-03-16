@@ -1,15 +1,7 @@
 package com.example.mongodb_example;
 
-import com.example.mongodb_example.models.Role;
-import com.example.mongodb_example.models.User;
-import com.example.mongodb_example.repositories.UserMongoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
-
-import java.util.Collections;
 
 @SpringBootApplication
 public class MongodbExampleApplication {
@@ -27,11 +19,11 @@ public class MongodbExampleApplication {
     @EventListener(ApplicationReadyEvent.class)
     public void afterTheStart() {
         System.out.println("the application started...");
-        Role u = new Role();
+        RoleModel u = new RoleModel();
         u.setName("USER");
         u.setPrivilege("USER_PRIVILEGE");
 
-        User user = new User();
+        UserModel user = new UserModel();
         user.setAge(25);
         user.setEmail("test1@gmail.com");
         user.setName("test1_name");

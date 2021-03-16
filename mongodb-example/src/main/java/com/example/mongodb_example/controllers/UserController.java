@@ -1,8 +1,11 @@
 package com.example.mongodb_example.controllers;
 
 
-import com.example.mongodb_example.models.Role;
-import com.example.mongodb_example.models.User;
+import com.example.mongodb_example.converters.RoleConverter;
+import com.example.mongodb_example.converters.UserConverter;
+import com.example.mongodb_example.dto.UserDTO;
+import com.example.mongodb_example.models.RoleModel;
+import com.example.mongodb_example.models.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.example.mongodb_example.repositories.UserMongoRepository;
@@ -15,15 +18,16 @@ public class UserController {
     private UserMongoRepository userMongoRepository;
 
     @PostMapping("/create")
-    public User createUser(@RequestBody User user) {
-        userMongoRepository.save(user);
+    public UserDTO createUser(@RequestBody UserDTO user) {
+        UserModel buf = UserConverter.transform(user);
+        userMongoRepository.save(buf);
         return user;
     }
 
     /*
     @GetMapping("/info/{userId}")
-    public User getUserInfo(@PathVariable String userId) {
-        User localeUser = userMongoRepository.findFirstByid(userId);
+    public UserModel getUserInfo(@PathVariable String userId) {
+        UserModel localeUser = userMongoRepository.findFirstByid(userId);
         return localeUser;
     }
      */

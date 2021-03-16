@@ -3,11 +3,20 @@ package com.example.mongodb_example.models;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection="Roles")
-public class Role {
+public class RoleModel {
 
     private String name;
-    public Role(String name){
+
+    public RoleModel(String name) {
         this.name = name;
+    }
+
+
+    @Override
+    public String toString() {
+        return "RoleModel{" +
+                "name='" + name + '\'' +
+                '}';
     }
 
     public String getName() {
@@ -15,12 +24,5 @@ public class Role {
     }
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return "Role{" +
-                "name='" + name + '\'' +
-                '}';
     }
 }

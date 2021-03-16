@@ -3,9 +3,11 @@ package com.example.mongodb_example.models;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.UUID;
+
 
 @Document(collection="Users")
-public class User {
+public class UserModel {
 
     @Id
     private String id;
@@ -16,6 +18,26 @@ public class User {
 
     private String email;
 
+    public UserModel(String name, Integer age, String email){
+        this.id = UUID.randomUUID().toString();
+        this.name = name;
+        this.age = age;
+        this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return "UserModel{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", age=" + age +
+                ", email='" + email + '\'' +
+                '}';
+    }
+
+    public String getId() {
+        return id;
+    }
 
     public String getName() {
         return name;
@@ -41,13 +63,4 @@ public class User {
         this.email = email;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", age=" + age +
-                ", email='" + email + '\'' +
-                '}';
-    }
 }

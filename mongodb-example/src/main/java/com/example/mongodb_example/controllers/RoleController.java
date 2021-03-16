@@ -1,13 +1,11 @@
 package com.example.mongodb_example.controllers;
 
-import com.example.mongodb_example.models.User;
-import com.example.mongodb_example.models.Role;
+import com.example.mongodb_example.converters.RoleConverter;
+import com.example.mongodb_example.dto.RoleDTO;
+import com.example.mongodb_example.models.RoleModel;
 import com.example.mongodb_example.repositories.RoleMongoRepository;
-import com.example.mongodb_example.repositories.UserMongoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 
 @RestController
 @RequestMapping("/role")
@@ -17,15 +15,16 @@ public class RoleController {
     private RoleMongoRepository roleMongoRepository;
 
     @PostMapping("/create")
-    public Role createRole(@RequestBody Role role) {
-        roleMongoRepository.save(role);
+    public RoleDTO createRole(@RequestBody RoleDTO role) {
+        RoleModel buf = RoleConverter.transform(role);
+        roleMongoRepository.save(buf);
         return role;
     }
 
     /*
     @GetMapping("/info/{roleId}")
-    public Role getRoleInfo(@PathVariable String roleId) {
-        Role localeRole = roleMongoRepository.findFirstByid(roleId);
+    public RoleModel getRoleInfo(@PathVariable String roleId) {
+        RoleModel localeRole = roleMongoRepository.findFirstByid(roleId);
         return localeRole;
     }
      */

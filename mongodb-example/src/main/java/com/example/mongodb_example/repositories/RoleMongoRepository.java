@@ -1,10 +1,9 @@
 package com.example.mongodb_example.repositories;
 
-import com.example.mongodb_example.models.Role;
-import com.example.mongodb_example.models.User;
+import com.example.mongodb_example.models.RoleModel;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface RoleMongoRepository extends MongoRepository<Role, String> {
+public interface RoleMongoRepository extends MongoRepository<RoleModel, String> {
 
 
 }
