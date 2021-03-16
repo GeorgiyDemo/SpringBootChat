@@ -7,6 +7,9 @@ import com.example.mongodb_example.repositories.RoleMongoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/role")
 public class RoleController {
@@ -21,11 +24,17 @@ public class RoleController {
         return role;
     }
 
-    /*
+    @GetMapping("/info")
+    public List<RoleModel> getAllRolesInfo() {
+        List<RoleModel> allRolesList = roleMongoRepository.findAll();
+        System.out.println(allRolesList.toString());
+        return allRolesList;
+    }
+
     @GetMapping("/info/{roleId}")
-    public RoleModel getRoleInfo(@PathVariable String roleId) {
-        RoleModel localeRole = roleMongoRepository.findFirstByid(roleId);
+    public Optional<RoleModel> getRoleInfoById(@PathVariable String roleId) {
+        Optional<RoleModel> localeRole = roleMongoRepository.findById(roleId);
         return localeRole;
     }
-     */
+
 }

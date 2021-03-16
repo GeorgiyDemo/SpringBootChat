@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.example.mongodb_example.repositories.UserMongoRepository;
 
+import java.util.List;
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -22,6 +25,20 @@ public class UserController {
         UserModel buf = UserConverter.transform(user);
         userMongoRepository.save(buf);
         return user;
+    }
+
+
+    @GetMapping("/info")
+    public List<UserModel> getAllUsersInfo() {
+        List<UserModel> allUsersList = userMongoRepository.findAll();
+        System.out.println(allUsersList.toString());
+        return allUsersList;
+    }
+
+    @GetMapping("/info/{userId}")
+    public Optional<UserModel> getUSerInfoById(@PathVariable String userId) {
+        Optional<UserModel> localeUser = userMongoRepository.findById(userId);
+        return localeUser;
     }
 
     /*
