@@ -20,7 +20,7 @@ public class RoleController {
 
     @PostMapping("/create")
     public RoleDTO createRole(@RequestBody RoleDTO role) {
-        role.set_id(UUID.randomUUID().toString());
+        role.set_id(UUID.randomUUID().toString().replace("-",""));
         RoleModel buf = RoleConverter.transform(role);
         roleMongoRepository.save(buf);
         return role;

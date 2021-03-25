@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class DemkaserverApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(DemkaserverApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(DemkaserverApplication.class, args);
+	}
 
 }
