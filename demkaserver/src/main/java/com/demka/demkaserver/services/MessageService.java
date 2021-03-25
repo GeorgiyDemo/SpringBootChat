@@ -1,8 +1,7 @@
 package com.demka.demkaserver.services;
 
-import com.demka.demkaserver.entities.MessageEntity;
+import com.demka.demkaserver.entities.database.MessageDBEntity;
 import com.demka.demkaserver.repos.MessageRepository;
-import com.demka.demkaserver.repos.RoomRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,22 +15,22 @@ public class MessageService {
     @Autowired
     private MessageRepository messageRepo;
 
-    public void create(MessageEntity item){
+    public void create(MessageDBEntity item){
         messageRepo.save(item);
     }
 
-    public void update(MessageEntity oldObj, MessageEntity newObj) {
+    public void update(MessageDBEntity oldObj, MessageDBEntity newObj) {
         messageRepo.delete(oldObj);
         messageRepo.save(newObj);
     }
 
-    public void delete(MessageEntity item) { messageRepo.delete(item); }
+    public void delete(MessageDBEntity item) { messageRepo.delete(item); }
 
-    public List<MessageEntity> findAll(){
+    public List<MessageDBEntity> findAll(){
         return messageRepo.findAll();
     }
 
-    public Optional<MessageEntity> find(String id){
+    public Optional<MessageDBEntity> find(String id){
         return messageRepo.findById(id);
     }
 

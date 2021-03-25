@@ -1,13 +1,14 @@
 package com.demka.demkaserver.repos;
 
-import com.demka.demkaserver.entities.UserEntity;
+import com.demka.demkaserver.entities.database.UserDBEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
 import java.util.Optional;
 
-public interface UserRepository extends MongoRepository<UserEntity, String> {
+public interface UserRepository extends MongoRepository<UserDBEntity, String> {
+
 
     @Query("{ 'login' : ?0, 'password' : ?1}")
-    public Optional<UserEntity> findAllDocuments(String login, String password);
+    public Optional<UserDBEntity> checkUserAuth(String login, String password);
 }

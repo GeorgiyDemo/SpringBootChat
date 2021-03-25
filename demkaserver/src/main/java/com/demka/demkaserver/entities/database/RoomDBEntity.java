@@ -1,5 +1,4 @@
-package com.demka.demkaserver.entities;
-
+package com.demka.demkaserver.entities.database;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -7,33 +6,31 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+
 @Data
 @NoArgsConstructor
-@Document(collection="Users")
-public class UserEntity {
+@Document(collection="Rooms")
+public class RoomDBEntity {
 
     @Id
     @JsonProperty
     private String id;
     @JsonProperty
+    private String creator_id;
+    @JsonProperty
+    private Integer users;
+    @JsonProperty
     private String name;
-    @JsonProperty
-    private Integer login;
-    @JsonProperty
-    private String password;
-    @JsonProperty
-    private String key;
     @JsonProperty
     private Integer timeCreated;
 
     @Override
     public String toString() {
-        return "UserEntity{" +
+        return "RoomDBEntity{" +
                 "id='" + id + '\'' +
+                ", creator_id='" + creator_id + '\'' +
+                ", users=" + users +
                 ", name='" + name + '\'' +
-                ", login=" + login +
-                ", password='" + password + '\'' +
-                ", key='" + key + '\'' +
                 ", timeCreated=" + timeCreated +
                 '}';
     }

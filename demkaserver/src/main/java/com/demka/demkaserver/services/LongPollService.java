@@ -1,9 +1,7 @@
 package com.demka.demkaserver.services;
 
-import com.demka.demkaserver.entities.LongPollEntity;
-import com.demka.demkaserver.entities.LongPollEntity;
+import com.demka.demkaserver.entities.database.LongPollDBEntity;
 import com.demka.demkaserver.repos.LongPollRepository;
-import com.demka.demkaserver.repos.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,22 +14,22 @@ public class LongPollService {
     @Autowired
     private LongPollRepository longPollRepo;
 
-    public void create(LongPollEntity item){
+    public void create(LongPollDBEntity item){
         longPollRepo.save(item);
     }
 
-    public void update(LongPollEntity oldObj, LongPollEntity newObj) {
+    public void update(LongPollDBEntity oldObj, LongPollDBEntity newObj) {
         longPollRepo.delete(oldObj);
         longPollRepo.save(newObj);
     }
 
-    public void delete(LongPollEntity item) { longPollRepo.delete(item); }
+    public void delete(LongPollDBEntity item) { longPollRepo.delete(item); }
 
-    public List<LongPollEntity> findAll(){
+    public List<LongPollDBEntity> findAll(){
         return longPollRepo.findAll();
     }
 
-    public Optional<LongPollEntity> find(String id){
+    public Optional<LongPollDBEntity> find(String id){
         return longPollRepo.findById(id);
     }
 

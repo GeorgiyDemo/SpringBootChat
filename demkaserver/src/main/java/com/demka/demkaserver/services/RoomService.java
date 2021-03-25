@@ -1,9 +1,7 @@
 package com.demka.demkaserver.services;
 
-import com.demka.demkaserver.entities.RoomEntity;
-import com.demka.demkaserver.entities.UserEntity;
+import com.demka.demkaserver.entities.database.RoomDBEntity;
 import com.demka.demkaserver.repos.RoomRepository;
-import com.demka.demkaserver.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,22 +15,22 @@ public class RoomService {
     @Autowired
     private RoomRepository roomRepo;
 
-    public void create(RoomEntity item){
+    public void create(RoomDBEntity item){
         roomRepo.save(item);
     }
 
-    public void update(RoomEntity oldObj, RoomEntity newObj) {
+    public void update(RoomDBEntity oldObj, RoomDBEntity newObj) {
         roomRepo.delete(oldObj);
         roomRepo.save(newObj);
     }
 
-    public void delete(RoomEntity item) { roomRepo.delete(item); }
+    public void delete(RoomDBEntity item) { roomRepo.delete(item); }
 
-    public List<RoomEntity> findAll(){
+    public List<RoomDBEntity> findAll(){
         return roomRepo.findAll();
     }
 
-    public Optional<RoomEntity> find(String id){
+    public Optional<RoomDBEntity> find(String id){
         return roomRepo.findById(id);
     }
 

@@ -1,38 +1,41 @@
-package com.demka.demkaserver.entities;
+package com.demka.demkaserver.entities.database;
+
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
 @NoArgsConstructor
-@Document(collection="Messages")
-public class MessageEntity {
+@Document(collection="Users")
+public class UserDBEntity {
 
     @Id
     @JsonProperty
     private String id;
     @JsonProperty
-    private String user_id;
-    @JsonProperty
     private String name;
     @JsonProperty
-    private String text;
+    private String login;
     @JsonProperty
-    private String roomId;
+    private String password;
     @JsonProperty
-    private Integer timeCreated;
+    private String key;
+    @JsonProperty
+    @Field(name = "time_created")
+    private Long timeCreated;
 
     @Override
     public String toString() {
-        return "MessageEntity{" +
+        return "UserDBEntity{" +
                 "id='" + id + '\'' +
-                ", user_id='" + user_id + '\'' +
                 ", name='" + name + '\'' +
-                ", text='" + text + '\'' +
-                ", roomId='" + roomId + '\'' +
+                ", login='" + login + '\'' +
+                ", password='" + password + '\'' +
+                ", key='" + key + '\'' +
                 ", timeCreated=" + timeCreated +
                 '}';
     }

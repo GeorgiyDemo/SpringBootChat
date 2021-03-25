@@ -1,13 +1,12 @@
 package com.demka.demkaserver.controllers;
 
-import com.demka.demkaserver.entities.UserEntity;
+import com.demka.demkaserver.entities.converters.UserConverter;
+import com.demka.demkaserver.entities.database.UserDBEntity;
 import com.demka.demkaserver.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @RestController
@@ -24,9 +23,9 @@ public class UserController {
      */
     @GetMapping("/auth")
     public ResponseEntity<?> auth(@RequestParam String login, @RequestParam String password) {
-
-        if (userService.checkAuth(login, password)) {
-            return new ResponseEntity<>(HttpStatus.OK);
+        UserDBEntity result = userService.checkAuth(login, password);
+        if (result != null){
+            return new ResponseEntity<>(UserConverter.convert(result), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
@@ -34,14 +33,14 @@ public class UserController {
     /*
 
     @PostMapping("/create")
-    public ResponseEntity<?> createUser(@RequestBody UserEntity user) {
+    public ResponseEntity<?> createUser(@RequestBody UserDBEntity user) {
         userService.create(user);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
     @GetMapping("/info")
-    public ResponseEntity<List<UserEntity>> getAllUsersInfo() {
+    public ResponseEntity<List<UserDBEntity>> getAllUsersInfo() {
 
         //Query query = new Query(Criteria.where("_id").ne());
         //query.fields().include("_id");

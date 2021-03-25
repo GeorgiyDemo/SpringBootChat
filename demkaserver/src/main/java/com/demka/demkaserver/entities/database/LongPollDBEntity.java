@@ -1,4 +1,4 @@
-package com.demka.demkaserver.entities;
+package com.demka.demkaserver.entities.database;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Data
 @NoArgsConstructor
 @Document(collection="LongPolls")
-public class LongPollEntity {
+public class LongPollDBEntity {
 
     @Id
     @JsonProperty
