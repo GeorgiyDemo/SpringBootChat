@@ -5,8 +5,12 @@ import com.demka.demkaserver.repos.UserRepository;
 import com.demka.demkaserver.utils.TimeUtil;
 import com.demka.demkaserver.utils.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,7 +52,7 @@ public class UserService {
     public UserDBEntity regUser(String login, String password, String username){
 
         //Проверяем на то, не зарегался ли уже пользователь с таким email или именем
-        if ((userRepo.findAllByLogin(login).isPresent()) || (userRepo.findAllByName(username).isPresent())){
+        if ((userRepo.findByLogin(login).isPresent()) || (userRepo.findByName(username).isPresent())){
             return null;
         }
 
@@ -66,6 +70,36 @@ public class UserService {
 
         userRepo.save(newUser);
         return newUser;
+    }
+
+    //Поиск пользователей
+    public List<UserDBEntity> searchUsers(String name, Integer limit, String currentUserKey){
+
+        List<UserDBEntity> bufList = new ArrayList<UserDBEntity>();
+        List<UserDBEntity> resultList = new ArrayList<UserDBEntity>();
+        Pageable pageLimit = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "time_created"));
+
+        if (name != null){
+            //TODO: Проврека на то, чтоб не было ключа пользователя, собственно
+            bufList.addAll(userRepo.findAllByNameLimit("^"+name, pageLimit));
+        }
+        else{
+            bufList.addAll(userRepo.findAllLimit(pageLimit));
+        }
+
+        //Выкидываем самого пользователя, который запросил данные
+        for (UserDBEntity item: bufList) {
+            if (!item.getKey().equals(currentUserKey)){
+                resultList.add(item);
+            }
+        }
+
+        return resultList;
+    }
+
+    //Проверка на валидный ключ пользователя
+    public boolean checkUserKey(String key){
+        return userRepo.checkUserKey(key).isPresent();
     }
 
 }
