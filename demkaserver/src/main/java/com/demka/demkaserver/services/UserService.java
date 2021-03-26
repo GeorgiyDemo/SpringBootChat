@@ -2,6 +2,8 @@ package com.demka.demkaserver.services;
 
 import com.demka.demkaserver.entities.database.UserDBEntity;
 import com.demka.demkaserver.repos.UserRepository;
+import com.demka.demkaserver.utils.TimeUtil;
+import com.demka.demkaserver.utils.UUIDUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,12 +35,37 @@ public class UserService {
         return userRepo.findById(id);
     }
 
+    //Проверка на авторизацию пользователя
     public UserDBEntity checkAuth(String login, String password){
         Optional<UserDBEntity> result = userRepo.checkUserAuth(login, password);
         if (result.isPresent()){
             return result.get();
         }
         return null;
+    }
+
+    //Регистрация пользователя
+    public UserDBEntity regUser(String login, String password, String username){
+
+        //Проверяем на то, не зарегался ли уже пользователь с таким email или именем
+        if ((userRepo.findAllByLogin(login).isPresent()) || (userRepo.findAllByName(username).isPresent())){
+            return null;
+        }
+
+        Optional<UserDBEntity> result = userRepo.checkUserAuth(login, password);
+
+        UserDBEntity newUser = new UserDBEntity();
+
+        newUser.setLogin(login);
+        newUser.setPassword(password);
+        newUser.setName(username);
+
+        newUser.setKey(UUIDUtil.newKey());
+        newUser.setTimeCreated(TimeUtil.unixTime());
+        newUser.setId(UUIDUtil.newId());
+
+        userRepo.save(newUser);
+        return newUser;
     }
 
 }

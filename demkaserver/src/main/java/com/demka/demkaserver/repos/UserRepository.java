@@ -11,4 +11,11 @@ public interface UserRepository extends MongoRepository<UserDBEntity, String> {
 
     @Query("{ 'login' : ?0, 'password' : ?1}")
     public Optional<UserDBEntity> checkUserAuth(String login, String password);
+
+    @Query("{ 'login' : ?0}")
+    public Optional<UserDBEntity> findAllByLogin(String login);
+
+    @Query("{ 'name' : ?0}")
+    public Optional<UserDBEntity> findAllByName(String name);
+
 }

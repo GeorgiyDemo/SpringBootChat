@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 
 @RestController
 @RequestMapping("/user")
@@ -17,27 +20,42 @@ public class UserController {
     private UserService userService;
 
     /**
-     * TODO: Авторизация пользователя
-     *
+     * Авторизация пользователя
+     * @param login
+     * @param password
      * @return
      */
     @GetMapping("/auth")
-    public ResponseEntity<?> auth(@RequestParam String login, @RequestParam String password) {
+    public ResponseEntity<HashMap<String, Object>> auth(@RequestParam String login, @RequestParam String password) {
+        HashMap<String, Object> map = new HashMap<>();
         UserDBEntity result = userService.checkAuth(login, password);
+
         if (result != null){
-            return new ResponseEntity<>(UserConverter.convert(result), HttpStatus.OK);
+            map.put("result", true);
+            map.put("body", UserConverter.convert(result));
         }
-        return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        else{
+            map.put("result", false);
+        }
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+
+    @PostMapping("/register")
+    public ResponseEntity<HashMap<String, Object>> regUser(@RequestBody Map<String, String> data) {
+        HashMap<String, Object> map = new HashMap<>();
+        UserDBEntity result = userService.regUser(data.get("login"), data.get("password"), data.get("username"));
+        if (result != null) {
+            map.put("result", true);
+            map.put("body", UserConverter.convert(result));
+        }
+        else{
+            map.put("result", false);
+        }
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     /*
-
-    @PostMapping("/create")
-    public ResponseEntity<?> createUser(@RequestBody UserDBEntity user) {
-        userService.create(user);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
 
     @GetMapping("/info")
     public ResponseEntity<List<UserDBEntity>> getAllUsersInfo() {
