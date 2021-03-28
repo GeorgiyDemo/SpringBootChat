@@ -36,31 +36,40 @@ public class MessageController {
      */
     @PostMapping(value = "/send")
     public ResponseEntity<HashMap<String, Object>> sendMessage(@RequestBody Map<String, String> data) {
+
         HashMap<String, Object> map = new HashMap<>();
         String key = data.get("key");
         String messageText = data.get("text");
         String roomId = data.get("room_id");
 
-        //Получаем объект создателя через key + проверка ключа
-        Optional<UserDBEntity> creatorUser = userService.findByKey(key);
-        if (creatorUser.isEmpty()){
+        //Получаем объект пользователя через key + проверка ключа
+        Optional<UserDBEntity> roomUserOptional = userService.findByKey(key);
+        if (roomUserOptional.isEmpty()){
             map.put("result", false);
             return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
         }
 
         //Проверка на комнату
-        if (roomService.find(roomId).isEmpty()){
+        Optional<RoomDBEntity> currentRoomOptional = roomService.find(roomId);
+        if (currentRoomOptional.isEmpty()){
             map.put("result", false);
             return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         }
 
-        UserDBEntity creator = creatorUser.get();
-        MessageDBEntity newMessage = messageService.create(creator.getId(),creator.getName(), messageText, roomId);
+        RoomDBEntity currentRoom = currentRoomOptional.get();
+        UserDBEntity roomUser = roomUserOptional.get();
+
+        //Проверка на то, может ли пользователь вообще писать в эту комнату
+        if (!currentRoom.getUsers().contains(roomUser.getId())){
+            map.put("result", false);
+            return new ResponseEntity<>(map, HttpStatus.FORBIDDEN);
+        }
+
+        MessageDBEntity newMessage = messageService.create(roomUser.getId(),roomUser.getName(), messageText, roomId);
         map.put("result", true);
         map.put("body", newMessage);
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
-
 
     /**
      * Получение истории сообщений определенной комнаты

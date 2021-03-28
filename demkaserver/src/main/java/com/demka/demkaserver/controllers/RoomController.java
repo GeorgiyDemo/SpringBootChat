@@ -3,6 +3,7 @@ package com.demka.demkaserver.controllers;
 import com.demka.demkaserver.entities.converters.UserConverter;
 import com.demka.demkaserver.entities.database.RoomDBEntity;
 import com.demka.demkaserver.entities.database.UserDBEntity;
+import com.demka.demkaserver.services.MessageService;
 import com.demka.demkaserver.services.RoomService;
 import com.demka.demkaserver.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,10 @@ public class RoomController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private MessageService messageService;
+
     /**
-     * TODO: Формирование сообщения, что комната была создана!
      * Создание комнаты для общения пользователей
      * @param data
      * @return
@@ -37,9 +40,9 @@ public class RoomController {
         String key = data.get("key");
 
         //Получаем id создателя через key + проверка ключа
-        Optional<UserDBEntity> creatorUser = userService.findByKey(key);
+        Optional<UserDBEntity> creatorUserOptional = userService.findByKey(key);
         //Если вдруг пользователь с key не найден
-        if (creatorUser.isEmpty()){
+        if (creatorUserOptional.isEmpty()){
             map.put("result", false);
             return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
         }
@@ -52,9 +55,14 @@ public class RoomController {
             }
         }
 
-        String creatorId = creatorUser.get().getId();
-
+        UserDBEntity creatorUser = creatorUserOptional.get();
+        String creatorId = creatorUser.getId();
         RoomDBEntity newRoom = roomService.create(creatorId, roomName, users);
+
+        //Формируем сообщение, что комната создана
+        String messageText = "*Комната была создана*";
+        messageService.create(creatorId,creatorUser.getName(), messageText, newRoom.getId());
+
         map.put("result", true);
         map.put("body", newRoom);
         return new ResponseEntity<>(map, HttpStatus.OK);

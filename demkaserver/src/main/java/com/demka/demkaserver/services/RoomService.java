@@ -36,20 +36,22 @@ public class RoomService {
         return roomRepo.findById(id);
     }
 
-    public RoomDBEntity create(String creatorId, String roomName, List<String> users) {
+    public RoomDBEntity create(String creatorId, String roomName, List<String> usersBuffer) {
 
         //Проверка, чтоб создатель также был в списке пользователей комнаты
 
-        List<String> allUsers = new ArrayList<String>(users);
+        List<String> allUsers = new ArrayList<String>(usersBuffer);
 
         if (!allUsers.contains(creatorId)){
             allUsers.add(creatorId);
         }
 
+        System.out.println();
+
         RoomDBEntity newRoom = new RoomDBEntity();
         newRoom.setCreatorId(creatorId);
         newRoom.setName(roomName);
-        newRoom.setUsers(users);
+        newRoom.setUsers(allUsers);
         newRoom.setId(UUIDUtil.newId());
         newRoom.setTimeCreated(TimeUtil.unixTime());
 

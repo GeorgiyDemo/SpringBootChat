@@ -1,7 +1,6 @@
 package com.demka.demkaserver.entities.converters;
 
 import com.demka.demkaserver.entities.database.UserDBEntity;
-import com.demka.demkaserver.entities.response.UserAuthResponseEntity;
 import com.demka.demkaserver.entities.response.UserSearchResponseEntity;
 
 
