@@ -16,14 +16,14 @@ public class LongPollDBEntity {
     @JsonProperty
     private String id;
     @JsonProperty
-    @Field(name = "user_id")
-    private String userId;
-    @JsonProperty
     private String ts;
     @JsonProperty
     private String key;
     @JsonProperty
     private String url;
+    @JsonProperty
+    @Field(name = "user_id")
+    private String userId;
 
 
 }
