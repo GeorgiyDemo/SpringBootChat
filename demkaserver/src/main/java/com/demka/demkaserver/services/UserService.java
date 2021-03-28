@@ -20,9 +20,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepo;
 
-    public void create(UserDBEntity item){
-        userRepo.save(item);
-    }
 
     public void update(UserDBEntity oldObj, UserDBEntity newObj) {
         userRepo.delete(oldObj);
@@ -49,7 +46,7 @@ public class UserService {
     }
 
     //Регистрация пользователя
-    public UserDBEntity regUser(String login, String password, String username){
+    public UserDBEntity create(String login, String password, String username){
 
         //Проверяем на то, не зарегался ли уже пользователь с таким email или именем
         if ((userRepo.findByLogin(login).isPresent()) || (userRepo.findByName(username).isPresent())){
@@ -70,6 +67,11 @@ public class UserService {
 
         userRepo.save(newUser);
         return newUser;
+    }
+
+    //Поиск по ключу
+    public Optional<UserDBEntity> findByKey(String key){
+        return userRepo.checkUserKey(key);
     }
 
     //Поиск пользователей

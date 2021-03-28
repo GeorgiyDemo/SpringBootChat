@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
 @NoArgsConstructor
@@ -23,7 +24,8 @@ public class MessageDBEntity {
     @JsonProperty
     private String roomId;
     @JsonProperty
-    private Integer timeCreated;
+    @Field(name = "time_created")
+    private Long timeCreated;
 
     @Override
     public String toString() {

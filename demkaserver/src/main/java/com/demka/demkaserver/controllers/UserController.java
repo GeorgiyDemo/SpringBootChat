@@ -52,7 +52,7 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<HashMap<String, Object>> regUser(@RequestBody Map<String, String> data) {
         HashMap<String, Object> map = new HashMap<>();
-        UserDBEntity result = userService.regUser(data.get("login"), data.get("password"), data.get("username"));
+        UserDBEntity result = userService.create(data.get("login"), data.get("password"), data.get("username"));
         if (result != null) {
             map.put("result", true);
             map.put("body", UserConverter.convert(result));

@@ -53,6 +53,33 @@ def register():
     current_dict.pop("password", None)
     return {"result": True, "body": current_dict}
 
+
+@app.route("/search", methods=["GET"])
+def search():
+    """Поиск пользователя в системе (для последующего чата)"""
+    user_key = request.args.get("user_key")
+    search_str = request.args.get("search_str")
+    count = request.args.get("count")
+
+    # Обязательные параметры
+    if user_key is None:
+        return {"result": False, "description": "no enough values"}
+
+    # Необязательные параметры
+    if count is None:
+        count = 250
+    if search_str is None:
+        search_str = ""
+
+    # Проверка на пользователя
+    if mongo.get_users_auth({"key": user_key}) == 0:
+        return {"result": False, "description": "invalid auth key"}
+
+    # Получаем пользователей
+    users_list = mongo.get_users_search(user_key=user_key, name=search_str, limit=count)
+    return {"result": True, "body": users_list}
+
+
 @app.route("/createRoom", methods=["GET"])
 def create_room():
     """
@@ -155,32 +182,6 @@ def get_room_messages_history():
     ]
 
     return {"result": True, "body": messages_list}
-
-
-@app.route("/search", methods=["GET"])
-def search():
-    """Поиск пользователя в системе (для последующего чата)"""
-    user_key = request.args.get("user_key")
-    search_str = request.args.get("search_str")
-    count = request.args.get("count")
-
-    # Обязательные параметры
-    if user_key is None:
-        return {"result": False, "description": "no enough values"}
-
-    # Необязательные параметры
-    if count is None:
-        count = 250
-    if search_str is None:
-        search_str = ""
-
-    # Проверка на пользователя
-    if mongo.get_users_auth({"key": user_key}) == 0:
-        return {"result": False, "description": "invalid auth key"}
-
-    # Получаем пользователей
-    users_list = mongo.get_users_search(user_key=user_key, name=search_str, limit=count)
-    return {"result": True, "body": users_list}
 
 
 @app.route("/writeMessage", methods=["GET"])
