@@ -36,10 +36,12 @@ public class RoomController {
         String roomName = data.get("room_name");
         String key = data.get("key");
 
-        //Проверка ключа
-        if (!userService.checkUserKey(key)){
+        //Получаем id создателя через key + проверка ключа
+        Optional<UserDBEntity> creatorUser = userService.findByKey(key);
+        //Если вдруг пользователь с key не найден
+        if (creatorUser.isEmpty()){
             map.put("result", false);
-            return new ResponseEntity(map, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
         }
 
         //Проверка на существование пользователей
@@ -48,14 +50,6 @@ public class RoomController {
                 map.put("result", false);
                 return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
             }
-        }
-
-        //Получаем id создателя через key
-        Optional<UserDBEntity> creatorUser = userService.findByKey(key);
-        //Если вдруг пользователь с key не найден
-        if (creatorUser.isEmpty()){
-            map.put("result", false);
-            return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         }
 
         String creatorId = creatorUser.get().getId();

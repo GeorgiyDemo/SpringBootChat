@@ -19,7 +19,8 @@ public class RoomDBEntity {
     @JsonProperty
     private String id;
     @JsonProperty
-    private String creator_id;
+    @Field(name = "creator_id")
+    private String creatorId;
     @JsonProperty
     private List<String> users;
     @JsonProperty
@@ -32,7 +33,7 @@ public class RoomDBEntity {
     public String toString() {
         return "RoomDBEntity{" +
                 "id='" + id + '\'' +
-                ", creator_id='" + creator_id + '\'' +
+                ", creatorId='" + creatorId + '\'' +
                 ", users=" + users +
                 ", name='" + name + '\'' +
                 ", timeCreated=" + timeCreated +

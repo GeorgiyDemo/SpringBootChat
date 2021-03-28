@@ -16,12 +16,15 @@ public class MessageDBEntity {
     @JsonProperty
     private String id;
     @JsonProperty
-    private String user_id;
+    @Field(name = "user_name")
+    private String userName;
     @JsonProperty
-    private String name;
+    @Field(name = "user_id")
+    private String userId;
     @JsonProperty
     private String text;
     @JsonProperty
+    @Field(name = "room_id")
     private String roomId;
     @JsonProperty
     @Field(name = "time_created")
@@ -31,8 +34,8 @@ public class MessageDBEntity {
     public String toString() {
         return "MessageDBEntity{" +
                 "id='" + id + '\'' +
-                ", user_id='" + user_id + '\'' +
-                ", name='" + name + '\'' +
+                ", userName='" + userName + '\'' +
+                ", userId='" + userId + '\'' +
                 ", text='" + text + '\'' +
                 ", roomId='" + roomId + '\'' +
                 ", timeCreated=" + timeCreated +

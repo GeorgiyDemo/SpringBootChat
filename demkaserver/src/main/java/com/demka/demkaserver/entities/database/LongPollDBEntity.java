@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
 @NoArgsConstructor
@@ -15,7 +16,8 @@ public class LongPollDBEntity {
     @JsonProperty
     private String id;
     @JsonProperty
-    private String user_id;
+    @Field(name = "user_id")
+    private String userId;
     @JsonProperty
     private String ts;
     @JsonProperty

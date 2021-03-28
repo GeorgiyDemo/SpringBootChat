@@ -47,7 +47,7 @@ public class RoomService {
         }
 
         RoomDBEntity newRoom = new RoomDBEntity();
-        newRoom.setCreator_id(creatorId);
+        newRoom.setCreatorId(creatorId);
         newRoom.setName(roomName);
         newRoom.setUsers(users);
         newRoom.setId(UUIDUtil.newId());
