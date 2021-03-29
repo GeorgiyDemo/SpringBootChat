@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -108,9 +110,13 @@ public class LongPollController {
         LongPollDBEntity currentPoll = currentPollOptional.get();
         currentPoll.getUserId();
 
-        //TODO: Собственно, суть
-        Long newTs = null;
-        List<MessageDBEntity> newMessages = null;
+        //TODO: ПРИ ПЕРЕЗАПУСКЕ СЕРВЕРА УДАЛИТЬ ВСЕ КОЛЛЕКЦИИ В LongPolls
+
+        //Время начала кручения в цикле (чтоб ловить таймауты)
+        Instant timeStarted = Instant.now();
+        Long newTs;
+        List<MessageDBEntity> newMessages;
+
         while (true){
 
             //Находим комнаты пользователя
@@ -121,17 +127,22 @@ public class LongPollController {
             Comparator<MessageDBEntity> bufComparator = Comparator.comparing(MessageDBEntity::getTimeCreated);
             Comparator<MessageDBEntity> MyComparator = bufComparator.reversed();
 
+            //Если есть какие-то обновления, то возвращаем эти обновления
             if (newMessages.size() != 0){
                 newMessages.sort(MyComparator);
-                System.out.println("Первый timecreated первого: "+newMessages.get(0).getTimeCreated());
-                System.out.println(newMessages.get(0).toString());
-                System.out.println("Первый timecreated последнего: "+newMessages.get(newMessages.size()-1).getTimeCreated());
-                System.out.println(newMessages.get(newMessages.size()-1).toString());
                 newTs = newMessages.get(0).getTimeCreated();
                 System.out.println("ЧЕТА ЕСТЬ");
                 break;
             }
 
+            //Если время кручения в цикле более одного часа - надо бы сделать переавторизацию клиента
+            if (Duration.between(timeStarted, Instant.now()).toMinutes() > 60){
+                map.put("result", false);
+                System.out.println("ВРЕМЯ ИСТЕКЛО, ПУСТЬ БУДЕТ РЕАВТОРИЗАЦИЯ");
+                return new ResponseEntity<>(map, HttpStatus.CONTINUE);
+            }
+
+            //Иначе просто крутимся в этом вечном цикле
             Thread.sleep(500);
             System.out.println("НОВЫХ СООБЩЕНИЙ НЕТ");
         }

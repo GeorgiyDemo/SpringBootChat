@@ -415,7 +415,7 @@ public class MyAPI implements SuperAPI {
                     MyLogger.logger.info("longpollListener - получили новые сообщения");
                 }
                 else{
-                    throw new LongpollListenerException("Ответ result == false. Нужна повторная авторизация");
+                    throw new LongpollListenerException("Ответ result = false. Нужна повторная авторизация (или же мы передали что-то некорректно");
                 }
             }
             else{
