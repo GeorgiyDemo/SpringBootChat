@@ -45,7 +45,7 @@ class DEMKACli:
     def create_room(self, friends_list: List, name: str = "RandomRoom"):
         """Создание комнаты для общения"""
         room = requests.post(
-            f"{self.URL}/room/create",json={"users": ','.join(friends_list), "room_name" : name, "key" : self.user_key }
+            f"{self.URL}/room/create",json={"users": ','.join(friends_list), "roomName" : name, "key" : self.user_key }
         ).json()
         print(room)
         if not room["result"]:
@@ -57,7 +57,7 @@ class DEMKACli:
 
     def write_message(self, message_text: str):
         """Отправка сообщения в комнату"""
-        message_result = requests.post(f"{self.URL}/messages/send", json={"key" : self.user_key, "text" : message_text , "room_id" : self.current_room}).json()
+        message_result = requests.post(f"{self.URL}/messages/send", json={"key" : self.user_key, "text" : message_text , "roomId" : self.current_room}).json()
         print(message_result)
         if not message_result["result"]:
             raise ValueError(

@@ -30,7 +30,7 @@ public class MessageController {
     private MessageService messageService;
 
     /**
-     * Отправка сообщения в опеределенную комнату room_id
+     * Отправка сообщения в опеределенную комнату roomId
      * @param data
      * @return
      */
@@ -40,7 +40,7 @@ public class MessageController {
         HashMap<String, Object> map = new HashMap<>();
         String key = data.get("key");
         String messageText = data.get("text");
-        String roomId = data.get("room_id");
+        String roomId = data.get("roomId");
 
         //Получаем объект пользователя через key + проверка ключа
         Optional<UserDBEntity> roomUserOptional = userService.findByKey(key);

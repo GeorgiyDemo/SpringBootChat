@@ -36,7 +36,7 @@ public class RoomController {
 
         HashMap<String, Object> map = new HashMap<>();
         List<String> users = Arrays.asList(data.get("users").split(","));
-        String roomName = data.get("room_name");
+        String roomName = data.get("roomName");
         String key = data.get("key");
 
         //Получаем id создателя через key + проверка ключа
