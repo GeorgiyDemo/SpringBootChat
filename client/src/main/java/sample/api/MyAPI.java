@@ -415,11 +415,11 @@ public class MyAPI implements SuperAPI {
                     MyLogger.logger.info("longpollListener - получили новые сообщения");
                 }
                 else{
-                    throw new LongpollListenerException("Что-то не так с лонгпулом. Ответ result == false");
+                    throw new LongpollListenerException("Ответ result == false. Нужна повторная авторизация");
                 }
             }
             else{
-                throw new LongpollListenerException("Лонгпул ничего не получил от сервера. Что-то сломалось или время ожидания истекло");
+                throw new LongpollListenerException("Лонгпул ничего не получил от сервера. Что-то сломалось");
             }
 
             return resultList;

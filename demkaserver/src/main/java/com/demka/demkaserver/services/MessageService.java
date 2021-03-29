@@ -54,7 +54,7 @@ public class MessageService {
     }
 
     /**
-     * Получение сообщний по каждой комнате, дата которых больше, чем ts
+     * Получение новых сообщний по каждой комнате, дата которых больше, чем ts
      * @param roomsList
      * @param ts
      * @return
@@ -63,10 +63,23 @@ public class MessageService {
         List<MessageDBEntity> messagesList = new ArrayList<MessageDBEntity>();
 
         for (RoomDBEntity room: roomsList) {
-            messagesList.addAll(messageRepo.getNewMessageByRoom(room.getId(), ts));
+            messagesList.addAll(messageRepo.getNewMessagesByRoom(room.getId(), ts));
         }
         return messagesList;
 
+    }
+
+    /**
+     * Получение всех сообщний по каждой комнате
+     * @param roomsList
+     * @return
+     */
+    public List<MessageDBEntity> getAllMessagesByRooms(List<RoomDBEntity> roomsList){
+        List<MessageDBEntity> messagesList = new ArrayList<MessageDBEntity>();
+        for (RoomDBEntity room: roomsList) {
+            messagesList.addAll(messageRepo.findAllByRoomId(room.getId()));
+        }
+        return messagesList;
     }
 
 

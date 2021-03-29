@@ -1,7 +1,7 @@
 from demka_cli import DEMKACli
 
-LOGIN = "mike@mail.ru"
-PASSWORD = "436436"
+LOGIN = "nick@mail.ru"
+PASSWORD = "nick"
 FIRENDS_LIST = ["903ccfc0d939478bbcd31e8f95ca87ad"]
 
 

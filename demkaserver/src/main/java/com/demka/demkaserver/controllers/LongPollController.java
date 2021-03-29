@@ -54,13 +54,23 @@ public class LongPollController {
         UserDBEntity user = userOptional.get();
         String userId = user.getId();
 
-        MessageDBEntity message = messageService.GetLastMessageByUser(userId);
-        if (message == null){
+        //Находим комнаты пользователя
+        List<RoomDBEntity> roomsList = roomService.findUserRooms(userId);
+
+
+        List<MessageDBEntity> messagesList = messageService.getAllMessagesByRooms(roomsList);
+
+        if (messagesList.size() == 0){
             map.put("result", false);
+            map.put("description", "Нельзя организовать лонгпул вообще без сообщений!");
             return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
         }
 
-        Long ts = message.getTimeCreated();
+        Comparator<MessageDBEntity> bufComparator = Comparator.comparing(MessageDBEntity::getTimeCreated);
+        Comparator<MessageDBEntity> MyComparator = bufComparator.reversed();
+        messagesList.sort(MyComparator);
+
+        Long ts = messagesList.get(0).getTimeCreated();
         LongPollDBEntity newPoll = longPollService.create(userId, ts);
         map.put("result", true);
         map.put("body", newPoll);
@@ -69,8 +79,15 @@ public class LongPollController {
     }
 
 
-    //TODO: Получение данных для лонгпула по определенному user_id и его user_key
-    @GetMapping(value = "/<url>")
+    /**
+     * Получение данных для лонгпула по определенному ключу
+     * @param url
+     * @param key
+     * @param ts
+     * @return
+     * @throws InterruptedException
+     */
+    @GetMapping(value = "/updates/{url}")
     public ResponseEntity<HashMap<String, Object>> longPoll(@PathVariable String url, @RequestParam String key, @RequestParam Long ts) throws InterruptedException {
 
         HashMap<String, Object> map = new HashMap<>();
@@ -98,16 +115,25 @@ public class LongPollController {
 
             //Находим комнаты пользователя
             List<RoomDBEntity> roomsList = roomService.findUserRooms(currentPoll.getUserId());
-            //Находим сообщения по каждой комнате
+            //Находим новые сообщения по каждой комнате
             newMessages = messageService.getNewMessagesByRooms(roomsList, ts);
             //Сортируем по новизне
-            newMessages.sort(Comparator.comparing(MessageDBEntity::getTimeCreated));
+            Comparator<MessageDBEntity> bufComparator = Comparator.comparing(MessageDBEntity::getTimeCreated);
+            Comparator<MessageDBEntity> MyComparator = bufComparator.reversed();
 
             if (newMessages.size() != 0){
+                newMessages.sort(MyComparator);
+                System.out.println("Первый timecreated первого: "+newMessages.get(0).getTimeCreated());
+                System.out.println(newMessages.get(0).toString());
+                System.out.println("Первый timecreated последнего: "+newMessages.get(newMessages.size()-1).getTimeCreated());
+                System.out.println(newMessages.get(newMessages.size()-1).toString());
                 newTs = newMessages.get(0).getTimeCreated();
+                System.out.println("ЧЕТА ЕСТЬ");
                 break;
             }
-            Thread.sleep(5000);
+
+            Thread.sleep(500);
+            System.out.println("НОВЫХ СООБЩЕНИЙ НЕТ");
         }
 
         HashMap<String, Object> bodyMap = new HashMap<>();

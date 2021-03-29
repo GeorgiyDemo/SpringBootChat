@@ -44,24 +44,20 @@ class DEMKACli:
 
     def create_room(self, friends_list: List, name: str = "RandomRoom"):
         """Создание комнаты для общения"""
-        room = requests.get(
-            f"{self.URL}/createRoom?creator_id={self.user_id}&users={','.join(friends_list)}&name={name}&user_key={self.user_key}"
+        room = requests.post(
+            f"{self.URL}/room/create",json={"users": ','.join(friends_list), "room_name" : name, "key" : self.user_key }
         ).json()
         print(room)
         if not room["result"]:
             raise ValueError("Не удалось создать комнату")
 
-        self.current_room = room["body"]["_id"]
+        self.current_room = room["body"]["id"]
         room_name = room["body"]["name"]
         print(f"Успешно создали комнату {room_name} с id {self.current_room}")
 
     def write_message(self, message_text: str):
         """Отправка сообщения в комнату"""
-        url = quote(
-            f"{self.URL}/writeMessage?user_from={self.user_id}&text={message_text}&room_id={self.current_room}&user_key={self.user_key}",
-            safe="/:?=&",
-        )
-        message_result = requests.get(url).json()
+        message_result = requests.post(f"{self.URL}/messages/send", json={"key" : self.user_key, "text" : message_text , "room_id" : self.current_room}).json()
         print(message_result)
         if not message_result["result"]:
             raise ValueError(
@@ -73,8 +69,10 @@ class DEMKACli:
     def get_longpoll_server(self):
         """Получение лонгпула"""
         poll = requests.get(
-            f"{self.URL}/getLongPollServer?user_id={self.user_id}&user_key={self.user_key}"
-        ).json()
+            f"{self.URL}/longpoll/getServer?key={self.user_key}"
+        )
+        print(poll.status_code)
+        poll = poll.json()
         print(poll)
         if not poll["result"]:
             raise ValueError("Не удалось получить начальные данные для лонгпула")
@@ -85,24 +83,12 @@ class DEMKACli:
         self.longpoll_key = credentials["key"]
         print("Успешно выставили начальные данные для пулинга")
 
-    def get_user_rooms(self):
-        """Получение списка комнат пользователя"""
-        rooms = requests.get(
-            f"{self.URL}/getUserRooms?user_id={self.user_id}&user_key={self.user_key}"
-        ).json()
-        print(rooms)
-        if not rooms["result"]:
-            raise ValueError(
-                f"Не удалось получить список комнат для пользователя {self.user_id}"
-            )
-        return rooms["body"]
-
     def longpoll_listener(self):
         """Слушатель лонгпула"""
         while True:
             print("Ждем обновлений кароч..")
             long_request = requests.get(
-                f"{self.URL}/{self.longpoll_sub_url}?key={self.longpoll_key}&ts={self.longpoll_ts}"
+                f"{self.URL}/longpoll/updates/{self.longpoll_sub_url}?key={self.longpoll_key}&ts={self.longpoll_ts}"
             ).json()
             print(long_request)
             if not long_request["result"]:
@@ -111,23 +97,36 @@ class DEMKACli:
             self.longpoll_ts = long_request["body"]["ts"]
             new_messages_list = long_request["body"]["updates"]
             for message in new_messages_list:
-                print(f"[USER #{message['user_from']}] -> {message['text']}")
+                print(f"[USER #{message['userId']}] -> {message['text']}")
             time.sleep(1)
 
     def search(self, search_str: str = None):
         """Поиск пользователей"""
         if search_str is not None:
             url = quote(
-                f"{self.URL}/search?user_key={self.user_key}&search_str={search_str}",
+                f"{self.URL}/user/search?key={self.user_key}&searchName={search_str}",
                 safe="/:?=&",
             )
         else:
-            url = quote(f"{self.URL}/search?user_key={self.user_key}", safe="/:?=&")
+            url = quote(f"{self.URL}/user/search?key={self.user_key}", safe="/:?=&")
+
+        print(url)
         message_result = requests.get(url).json()
         print(message_result)
         if not message_result["result"]:
             raise ValueError(f"Не удалось получить список пользователей")
 
+    def get_user_rooms(self):
+        """Получение списка комнат пользователя"""
+        rooms = requests.get(
+            f"{self.URL}/room/getByUser?key={self.user_key}"
+        ).json()
+        print(rooms)
+        if not rooms["result"]:
+            raise ValueError(
+                f"Не удалось получить список комнат для пользователя {self.user_id}"
+            )
+        return rooms["body"]
 
 if __name__ == "__main__":
     print(

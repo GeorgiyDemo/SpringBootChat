@@ -100,6 +100,28 @@ public class RoomController {
     }
 
 
-    //TODO: Получение всех комнат пользователя
+    /**
+     * Получение всех комнат, в которых состоит пользователь
+     * @param key
+     * @return
+     */
+    @GetMapping(value = "/getByUser")
+    public ResponseEntity<HashMap<String, Object>> getByUser(@RequestParam String key) {
+
+        HashMap<String, Object> map = new HashMap<>();
+
+        //Проверка ключа
+        Optional<UserDBEntity> currentUserOptional = userService.findByKey(key);
+        if (currentUserOptional.isEmpty()){
+            map.put("result", false);
+            return new ResponseEntity(map, HttpStatus.FORBIDDEN);
+        }
+
+        UserDBEntity currentUser = currentUserOptional.get();
+        List<RoomDBEntity> userRooms = roomService.findUserRooms(currentUser.getId());
+        map.put("result", true);
+        map.put("body", userRooms);
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
 
 }

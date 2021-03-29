@@ -17,7 +17,7 @@ public interface MessageRepository extends MongoRepository<MessageDBEntity, Stri
     public List<MessageDBEntity> findAllByUser(String userId, Pageable pageable);
 
     @Query("{ 'room_id': ?0, 'time_created': {'$gt': ?1}}")
-    public List<MessageDBEntity> getNewMessageByRoom(String roomId, Long ts);
+    public List<MessageDBEntity> getNewMessagesByRoom(String roomId, Long ts);
 
 
 }
