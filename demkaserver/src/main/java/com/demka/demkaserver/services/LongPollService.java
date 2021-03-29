@@ -44,7 +44,13 @@ public class LongPollService {
         longPollRepo.save(newObj);
     }
 
-    public void delete(LongPollDBEntity item) { longPollRepo.delete(item); }
+    public void delete(String pollId){
+        longPollRepo.deleteById(pollId);
+    }
+
+    public void deleteAll(){
+        longPollRepo.deleteAll();
+    }
 
     public List<LongPollDBEntity> findAll(){
         return longPollRepo.findAll();

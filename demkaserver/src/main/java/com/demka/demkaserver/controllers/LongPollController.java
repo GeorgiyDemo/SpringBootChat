@@ -9,7 +9,6 @@ import com.demka.demkaserver.services.MessageService;
 import com.demka.demkaserver.services.RoomService;
 import com.demka.demkaserver.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -108,11 +107,8 @@ public class LongPollController {
         }
 
         LongPollDBEntity currentPoll = currentPollOptional.get();
-        currentPoll.getUserId();
 
-        //TODO: ПРИ ПЕРЕЗАПУСКЕ СЕРВЕРА УДАЛИТЬ ВСЕ КОЛЛЕКЦИИ В LongPolls
-
-        //Время начала кручения в цикле (чтоб ловить таймауты)
+        //Время начала работы в цикле (чтоб ловить таймауты)
         Instant timeStarted = Instant.now();
         Long newTs;
         List<MessageDBEntity> newMessages;
@@ -131,20 +127,19 @@ public class LongPollController {
             if (newMessages.size() != 0){
                 newMessages.sort(MyComparator);
                 newTs = newMessages.get(0).getTimeCreated();
-                System.out.println("ЧЕТА ЕСТЬ");
                 break;
             }
 
             //Если время кручения в цикле более одного часа - надо бы сделать переавторизацию клиента
             if (Duration.between(timeStarted, Instant.now()).toMinutes() > 60){
                 map.put("result", false);
-                System.out.println("ВРЕМЯ ИСТЕКЛО, ПУСТЬ БУДЕТ РЕАВТОРИЗАЦИЯ");
-                return new ResponseEntity<>(map, HttpStatus.CONTINUE);
+                //Удаляем лонгпул с СУБД
+                longPollService.delete(currentPoll.getId());
+                return new ResponseEntity<>(map, HttpStatus.OK);
             }
 
             //Иначе просто крутимся в этом вечном цикле
             Thread.sleep(500);
-            System.out.println("НОВЫХ СООБЩЕНИЙ НЕТ");
         }
 
         HashMap<String, Object> bodyMap = new HashMap<>();
