@@ -104,6 +104,7 @@ class MongoDB:
         # По каждой комнате получаем сообщения
         messages_list = []
         messages_table = self.connection["Messages"]
+        
         for room in self.get_user_rooms(user_id):
             find_filter = {"room_id": room["_id"], "time_created": {"$gt": int(ts)}}
             print(find_filter)

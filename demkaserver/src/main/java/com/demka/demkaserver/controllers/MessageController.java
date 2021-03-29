@@ -46,7 +46,7 @@ public class MessageController {
         Optional<UserDBEntity> roomUserOptional = userService.findByKey(key);
         if (roomUserOptional.isEmpty()){
             map.put("result", false);
-            return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(map, HttpStatus.FORBIDDEN);
         }
 
         //Проверка на комнату
@@ -85,7 +85,7 @@ public class MessageController {
         //Проверка ключа
         if (!userService.checkUserKey(key)){
             map.put("result", false);
-            return new ResponseEntity(map, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity(map, HttpStatus.FORBIDDEN);
         }
 
         //Проверка на существование комнаты

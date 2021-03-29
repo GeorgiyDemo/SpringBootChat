@@ -2,7 +2,11 @@ package com.demka.demkaserver.services;
 
 import com.demka.demkaserver.entities.database.LongPollDBEntity;
 import com.demka.demkaserver.repos.LongPollRepository;
+import com.demka.demkaserver.utils.UUIDUtil;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,8 +18,25 @@ public class LongPollService {
     @Autowired
     private LongPollRepository longPollRepo;
 
-    public void create(LongPollDBEntity item){
-        longPollRepo.save(item);
+    public LongPollDBEntity create(String userId, Long ts){
+
+        LongPollDBEntity newPoll = new LongPollDBEntity();
+        newPoll.setId(UUIDUtil.newId());
+        newPoll.setTs(ts);
+        newPoll.setKey(UUIDUtil.newKey());
+        newPoll.setUserId(userId);
+        newPoll.setUrl(UUIDUtil.newURL());
+
+        longPollRepo.save(newPoll);
+        return newPoll;
+    }
+
+    public Optional<LongPollDBEntity> findByUrl(String url){
+        return  longPollRepo.findByUrl(url);
+    }
+
+    public Optional<LongPollDBEntity> findByKeyAndUrl(String key, String url){
+        return  longPollRepo.findByKeyAndUrl(key, url);
     }
 
     public void update(LongPollDBEntity oldObj, LongPollDBEntity newObj) {

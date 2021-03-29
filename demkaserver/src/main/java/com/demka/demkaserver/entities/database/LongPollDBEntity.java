@@ -16,7 +16,7 @@ public class LongPollDBEntity {
     @JsonProperty
     private String id;
     @JsonProperty
-    private String ts;
+    private Long ts;
     @JsonProperty
     private String key;
     @JsonProperty
@@ -24,6 +24,5 @@ public class LongPollDBEntity {
     @JsonProperty
     @Field(name = "user_id")
     private String userId;
-
 
 }

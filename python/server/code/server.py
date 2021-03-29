@@ -269,8 +269,10 @@ def longpoll(server):
     if current_poll.key != key:
         return {"result": False, "description": "invalid key"}
 
+    ####################
     new_ts = None
     result = None
+    
     while True:
         result = mongo.get_new_messages(current_poll.user_id, ts)
         if len(result) != 0:

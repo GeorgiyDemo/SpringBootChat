@@ -11,4 +11,8 @@ public class UUIDUtil {
     public static String newKey(){
         return UUID.randomUUID().toString().replace("-","");
     }
+
+    public static String newURL() {
+        return UUID.randomUUID().toString().replace("-","");
+    }
 }

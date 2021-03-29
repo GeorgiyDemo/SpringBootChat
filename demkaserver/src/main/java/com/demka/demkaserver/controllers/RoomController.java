@@ -44,7 +44,7 @@ public class RoomController {
         //Если вдруг пользователь с key не найден
         if (creatorUserOptional.isEmpty()){
             map.put("result", false);
-            return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(map, HttpStatus.FORBIDDEN);
         }
 
         //Проверка на существование пользователей
@@ -82,7 +82,7 @@ public class RoomController {
         //Проверка ключа
         if (!userService.checkUserKey(key)){
             map.put("result", false);
-            return new ResponseEntity(map, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity(map, HttpStatus.FORBIDDEN);
         }
 
         Optional<RoomDBEntity> roomResult = roomService.find(roomId);
@@ -98,5 +98,8 @@ public class RoomController {
         map.put("body", roomResult.get());
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
+
+
+    //TODO: Получение всех комнат пользователя
 
 }

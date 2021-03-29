@@ -26,6 +26,15 @@ public class RoomService {
         roomRepo.save(newObj);
     }
 
+    /**
+     * Отдаёт список комнат, в которых состоит пользователь
+     * @param userId
+     * @return
+     */
+    public List<RoomDBEntity> findUserRooms(String userId){
+        return roomRepo.findAllByUser(userId);
+    }
+
     public void delete(RoomDBEntity item) { roomRepo.delete(item); }
 
     public List<RoomDBEntity> findAll(){

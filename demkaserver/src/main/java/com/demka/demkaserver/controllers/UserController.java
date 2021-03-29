@@ -78,7 +78,7 @@ public class UserController {
         //Проверка ключа
         if (!userService.checkUserKey(key)){
             map.put("result", false);
-            return new ResponseEntity(map, HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity(map, HttpStatus.FORBIDDEN);
         }
 
         if (limit == null){
