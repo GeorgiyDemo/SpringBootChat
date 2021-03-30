@@ -35,9 +35,9 @@ public class MessageController {
      * @return
      */
     @PostMapping(value = "/send")
-    public ResponseEntity<HashMap<String, Object>> sendMessage(@RequestBody Map<String, String> data) {
+    public ResponseEntity<Map<String, Object>> sendMessage(@RequestBody Map<String, String> data) {
 
-        HashMap<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         String key = data.get("key");
         String messageText = data.get("text");
         String roomId = data.get("roomId");
@@ -84,9 +84,9 @@ public class MessageController {
      * @return
      */
     @GetMapping(value = "/get")
-    public ResponseEntity<HashMap<String, Object>> getMessagesByRoom(@RequestParam String key, @RequestParam String roomId) {
+    public ResponseEntity<Map<String, Object>> getMessagesByRoom(@RequestParam String key, @RequestParam String roomId) {
 
-        HashMap<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
 
         //Проверка ключа
         if (!userService.checkUserKey(key)){

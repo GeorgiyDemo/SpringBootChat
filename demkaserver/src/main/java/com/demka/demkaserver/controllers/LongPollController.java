@@ -8,6 +8,7 @@ import com.demka.demkaserver.services.LongPollService;
 import com.demka.demkaserver.services.MessageService;
 import com.demka.demkaserver.services.RoomService;
 import com.demka.demkaserver.services.UserService;
+import com.demka.demkaserver.utils.ResponseMapGen;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,10 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/longpoll")
@@ -42,14 +40,12 @@ public class LongPollController {
      * @return
      */
     @GetMapping(value = "/getServer")
-    public ResponseEntity<HashMap<String, Object>> getLongPollServer(@RequestParam String key) {
-        HashMap<String, Object> map = new HashMap<>();
+    public ResponseEntity<Map<String, Object>> getLongPollServer(@RequestParam String key) {
 
         //Получаем объект пользователя через key + проверка ключа
         Optional<UserDBEntity> userOptional = userService.findByKey(key);
         if (userOptional.isEmpty()){
-            map.put("result", false);
-            return new ResponseEntity<>(map, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(ResponseMapGen.ErrorResponse("Не удалось авторизоваться по указанному ключу"), HttpStatus.FORBIDDEN);
         }
 
         UserDBEntity user = userOptional.get();
@@ -62,9 +58,7 @@ public class LongPollController {
         List<MessageDBEntity> messagesList = messageService.getAllMessagesByRooms(roomsList);
 
         if (messagesList.size() == 0){
-            map.put("result", false);
-            map.put("description", "Нельзя организовать лонгпул вообще без сообщений!");
-            return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(ResponseMapGen.ErrorResponse("Нельзя организовать лонгпул без каких-либо существующих сообщений!"), HttpStatus.NOT_FOUND);
         }
 
         Comparator<MessageDBEntity> bufComparator = Comparator.comparing(MessageDBEntity::getTimeCreated);
@@ -73,10 +67,7 @@ public class LongPollController {
 
         Long ts = messagesList.get(0).getTimeCreated();
         LongPollDBEntity newPoll = longPollService.create(userId, ts);
-        map.put("result", true);
-        map.put("body", newPoll);
-
-        return new ResponseEntity<>(map, HttpStatus.OK);
+        return new ResponseEntity<>(ResponseMapGen.OKResponse(newPoll), HttpStatus.OK);
     }
 
 
@@ -89,21 +80,17 @@ public class LongPollController {
      * @throws InterruptedException
      */
     @GetMapping(value = "/updates/{url}")
-    public ResponseEntity<HashMap<String, Object>> longPoll(@PathVariable String url, @RequestParam String key, @RequestParam Long ts) throws InterruptedException {
-
-        HashMap<String, Object> map = new HashMap<>();
+    public ResponseEntity<Map<String, Object>> longPoll(@PathVariable String url, @RequestParam String key, @RequestParam Long ts) throws InterruptedException {
 
         //Проверка на существование url
         if (longPollService.findByUrl(url).isEmpty()){
-            map.put("result", false);
-            return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(ResponseMapGen.ErrorResponse("Указанного url не существует"), HttpStatus.NOT_FOUND);
         }
 
         //Проверка на существование ключа + url
         Optional<LongPollDBEntity> currentPollOptional = longPollService.findByKeyAndUrl(key, url);
         if (currentPollOptional.isEmpty()){
-            map.put("result", false);
-            return new ResponseEntity<>(map, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(ResponseMapGen.ErrorResponse("Не удалось авторизоваться по указанному ключу"), HttpStatus.FORBIDDEN);
         }
 
         LongPollDBEntity currentPoll = currentPollOptional.get();
@@ -132,10 +119,9 @@ public class LongPollController {
 
             //Если время кручения в цикле более одного часа - надо бы сделать переавторизацию клиента
             if (Duration.between(timeStarted, Instant.now()).toMinutes() > 60){
-                map.put("result", false);
                 //Удаляем лонгпул с СУБД
                 longPollService.delete(currentPoll.getId());
-                return new ResponseEntity<>(map, HttpStatus.OK);
+                return new ResponseEntity<>(ResponseMapGen.ErrorResponse("Необходимо обновить лонгпул через /getServer"), HttpStatus.OK);
             }
 
             //Иначе просто крутимся в этом вечном цикле
@@ -146,9 +132,7 @@ public class LongPollController {
         bodyMap.put("updates", newMessages);
         bodyMap.put("ts", newTs);
 
-        map.put("result", true);
-        map.put("body", bodyMap);
-        return new ResponseEntity<>(map, HttpStatus.OK);
+        return new ResponseEntity<>(ResponseMapGen.OKResponse(bodyMap), HttpStatus.OK);
 
     }
 

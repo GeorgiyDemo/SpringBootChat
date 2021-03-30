@@ -32,9 +32,9 @@ public class RoomController {
      * @return
      */
     @PostMapping("/create")
-    public ResponseEntity<HashMap<String, Object>> createRoom(@RequestBody Map<String, String> data) {
+    public ResponseEntity<Map<String, Object>> createRoom(@RequestBody Map<String, String> data) {
 
-        HashMap<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         String roomName = data.get("roomName");
         String key = data.get("key");
         String usersString = data.get("users");
@@ -83,9 +83,9 @@ public class RoomController {
      * @return
      */
     @GetMapping(value = "/get")
-    public ResponseEntity<HashMap<String, Object>> getRoomInfo(@RequestParam String key, @RequestParam String roomId) {
+    public ResponseEntity<Map<String, Object>> getRoomInfo(@RequestParam String key, @RequestParam String roomId) {
 
-        HashMap<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
 
         //Проверка ключа
         if (!userService.checkUserKey(key)){
@@ -114,9 +114,9 @@ public class RoomController {
      * @return
      */
     @GetMapping(value = "/getByUser")
-    public ResponseEntity<HashMap<String, Object>> getByUser(@RequestParam String key) {
+    public ResponseEntity<Map<String, Object>> getByUser(@RequestParam String key) {
 
-        HashMap<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
 
         //Проверка ключа
         Optional<UserDBEntity> currentUserOptional = userService.findByKey(key);

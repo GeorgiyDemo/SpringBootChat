@@ -30,8 +30,8 @@ public class UserController {
      * @return
      */
     @GetMapping("/auth")
-    public ResponseEntity<HashMap<String, Object>> auth(@RequestParam String login, @RequestParam String password) {
-        HashMap<String, Object> map = new HashMap<>();
+    public ResponseEntity<Map<String, Object>> auth(@RequestParam String login, @RequestParam String password) {
+        Map<String, Object> map = new HashMap<>();
         UserDBEntity result = userService.checkAuth(login, password);
 
         if (result != null){
@@ -50,8 +50,8 @@ public class UserController {
      * @return
      */
     @PostMapping("/register")
-    public ResponseEntity<HashMap<String, Object>> regUser(@RequestBody Map<String, String> data) {
-        HashMap<String, Object> map = new HashMap<>();
+    public ResponseEntity<Map<String, Object>> regUser(@RequestBody Map<String, String> data) {
+        Map<String, Object> map = new HashMap<>();
 
         String login = data.get("login");
         String password = data.get("password");
@@ -81,9 +81,9 @@ public class UserController {
      * @return
      */
     @GetMapping(value = "/search")
-    public ResponseEntity<HashMap<String, Object>> searchUser(@RequestParam String key, @RequestParam(required = false) String searchName, @RequestParam(required = false) Integer limit) {
+    public ResponseEntity<Map<String, Object>> searchUser(@RequestParam String key, @RequestParam(required = false) String searchName, @RequestParam(required = false) Integer limit) {
 
-        HashMap<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
 
         //Проверка ключа
         if (!userService.checkUserKey(key)){
