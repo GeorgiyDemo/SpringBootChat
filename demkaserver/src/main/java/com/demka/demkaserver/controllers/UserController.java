@@ -3,15 +3,16 @@ package com.demka.demkaserver.controllers;
 import com.demka.demkaserver.entities.converters.UserConverter;
 import com.demka.demkaserver.entities.converters.UserSearchConverter;
 import com.demka.demkaserver.entities.database.UserDBEntity;
+import com.demka.demkaserver.entities.response.UserAuthResponseEntity;
 import com.demka.demkaserver.entities.response.UserSearchResponseEntity;
 import com.demka.demkaserver.services.UserService;
+import com.demka.demkaserver.utils.GenResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,17 +32,14 @@ public class UserController {
      */
     @GetMapping("/auth")
     public ResponseEntity<Map<String, Object>> auth(@RequestParam String login, @RequestParam String password) {
-        Map<String, Object> map = new HashMap<>();
+
         UserDBEntity result = userService.checkAuth(login, password);
 
         if (result != null){
-            map.put("result", true);
-            map.put("body", UserConverter.convert(result));
+            UserAuthResponseEntity user = UserConverter.convert(result);
+            return new ResponseEntity<>(GenResponseUtil.ResponseOK(user), HttpStatus.OK);
         }
-        else{
-            map.put("result", false);
-        }
-        return new ResponseEntity<>(map, HttpStatus.OK);
+        return new ResponseEntity<>(GenResponseUtil.ResponseError("Не удалось войти с указанным логином/паролем"), HttpStatus.OK);
     }
 
     /**
@@ -54,28 +52,26 @@ public class UserController {
      */
     @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> regUser(@RequestBody Map<String, String> data) {
-        Map<String, Object> map = new HashMap<>();
 
         String login = data.get("login");
         String password = data.get("password");
         String username = data.get("username");
 
+        //Если клиент передал не все значения
         if ((login == null) || (password == null) || (username == null)){
-            map.put("result", false);
-            return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Не все значения были переданы"), HttpStatus.BAD_REQUEST);
         }
 
         UserDBEntity result = userService.create(login, password, username);
+        //Если все хорошо
         if (result != null) {
-            map.put("result", true);
-            map.put("body", UserConverter.convert(result));
+            UserAuthResponseEntity user = UserConverter.convert(result);
+            return new ResponseEntity<>(GenResponseUtil.ResponseOK(user), HttpStatus.OK);
         }
-        else{
-            map.put("result", false);
-        }
-        return new ResponseEntity<>(map, HttpStatus.OK);
+        //Если такой ник или e-mail занят
+        return new ResponseEntity<>(GenResponseUtil.ResponseError("Пользователь с таким ником или e-mail уже существует"), HttpStatus.OK);
     }
-    
+
     /**
      * Поиск пользователя в системе
      * @param key - ключ пользователя, выполняющего поиск
@@ -86,12 +82,9 @@ public class UserController {
     @GetMapping(value = "/search")
     public ResponseEntity<Map<String, Object>> searchUser(@RequestParam String key, @RequestParam(required = false) String searchName, @RequestParam(required = false) Integer limit) {
 
-        Map<String, Object> map = new HashMap<>();
-
         //Проверка ключа
         if (!userService.checkUserKey(key)){
-            map.put("result", false);
-            return new ResponseEntity(map, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Не удалось авторизоваться по указанному ключу"), HttpStatus.FORBIDDEN);
         }
 
         if ((limit == null) || (limit > 200)){
@@ -99,21 +92,12 @@ public class UserController {
         }
 
         List<UserDBEntity> bufList = userService.searchUsers(searchName, limit, key);
-
-        //Если нет результатов
-        if (bufList.size() == 0){
-            map.put("result", false);
-            return new ResponseEntity(map, HttpStatus.NOT_FOUND);
-        }
-
-        List<UserSearchResponseEntity> resultList = new ArrayList<UserSearchResponseEntity>();
+        List<UserSearchResponseEntity> resultList = new ArrayList<>();
         for (UserDBEntity item: bufList) {
             resultList.add(UserSearchConverter.convert(item));
         }
 
-        map.put("result", true);
-        map.put("body", resultList);
-        return new ResponseEntity(map, HttpStatus.OK);
+        return new ResponseEntity<>(GenResponseUtil.ResponseOK(resultList), HttpStatus.OK);
     }
 
 

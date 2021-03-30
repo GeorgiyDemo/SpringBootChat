@@ -1,11 +1,11 @@
 package com.demka.demkaserver.controllers;
 
-import com.demka.demkaserver.entities.converters.UserConverter;
 import com.demka.demkaserver.entities.database.RoomDBEntity;
 import com.demka.demkaserver.entities.database.UserDBEntity;
 import com.demka.demkaserver.services.MessageService;
 import com.demka.demkaserver.services.RoomService;
 import com.demka.demkaserver.services.UserService;
+import com.demka.demkaserver.utils.GenResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,15 +37,13 @@ public class RoomController {
     @PostMapping("/create")
     public ResponseEntity<Map<String, Object>> createRoom(@RequestBody Map<String, String> data) {
 
-        Map<String, Object> map = new HashMap<>();
         String key = data.get("key");
         String roomName = data.get("roomName");
         String usersString = data.get("users");
 
         //Проверка переданных полей
         if ((key == null) || (roomName == null) || (usersString == null)){
-            map.put("result", false);
-            return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Не все значения были переданы"), HttpStatus.BAD_REQUEST);
         }
 
         List<String> users = Arrays.asList(usersString.split(","));
@@ -54,15 +52,13 @@ public class RoomController {
         Optional<UserDBEntity> creatorUserOptional = userService.findByKey(key);
         //Если вдруг пользователь с key не найден
         if (creatorUserOptional.isEmpty()){
-            map.put("result", false);
-            return new ResponseEntity<>(map, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Не удалось авторизоваться по указанному ключу"), HttpStatus.FORBIDDEN);
         }
 
         //Проверка на существование пользователей
         for (String userId: users) {
             if (userService.find(userId).isEmpty()){
-                map.put("result", false);
-                return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(GenResponseUtil.ResponseError("Пользователя с id "+userId+" не существует"), HttpStatus.BAD_REQUEST);
             }
         }
 
@@ -74,9 +70,7 @@ public class RoomController {
         String messageText = "*Комната была создана*";
         messageService.create(creatorId,creatorUser.getName(), messageText, newRoom.getId());
 
-        map.put("result", true);
-        map.put("body", newRoom);
-        return new ResponseEntity<>(map, HttpStatus.OK);
+        return new ResponseEntity<>(GenResponseUtil.ResponseOK(newRoom), HttpStatus.OK);
     }
 
     /**
@@ -88,26 +82,20 @@ public class RoomController {
     @GetMapping(value = "/get")
     public ResponseEntity<Map<String, Object>> getRoomInfo(@RequestParam String key, @RequestParam String roomId) {
 
-        Map<String, Object> map = new HashMap<>();
 
         //Проверка ключа
         if (!userService.checkUserKey(key)){
-            map.put("result", false);
-            return new ResponseEntity(map, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Не удалось авторизоваться по указанному ключу"), HttpStatus.FORBIDDEN);
         }
 
         Optional<RoomDBEntity> roomResult = roomService.find(roomId);
-
         //Если комнаты с таким id не существует
         if (roomResult.isEmpty()){
-            map.put("result", false);
-            return new ResponseEntity<>(map, HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Комнаты с id "+roomId+" не существует"), HttpStatus.NOT_FOUND);
         }
 
         //Если существует
-        map.put("result", true);
-        map.put("body", roomResult.get());
-        return new ResponseEntity<>(map, HttpStatus.OK);
+        return new ResponseEntity<>(GenResponseUtil.ResponseOK(roomResult.get()), HttpStatus.OK);
     }
 
 
@@ -119,20 +107,16 @@ public class RoomController {
     @GetMapping(value = "/getByUser")
     public ResponseEntity<Map<String, Object>> getByUser(@RequestParam String key) {
 
-        Map<String, Object> map = new HashMap<>();
 
         //Проверка ключа
         Optional<UserDBEntity> currentUserOptional = userService.findByKey(key);
         if (currentUserOptional.isEmpty()){
-            map.put("result", false);
-            return new ResponseEntity(map, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Не удалось авторизоваться по указанному ключу"), HttpStatus.FORBIDDEN);
         }
 
         UserDBEntity currentUser = currentUserOptional.get();
         List<RoomDBEntity> userRooms = roomService.findUserRooms(currentUser.getId());
-        map.put("result", true);
-        map.put("body", userRooms);
-        return new ResponseEntity<>(map, HttpStatus.OK);
+        return new ResponseEntity<>(GenResponseUtil.ResponseOK(userRooms), HttpStatus.OK);
     }
 
 }

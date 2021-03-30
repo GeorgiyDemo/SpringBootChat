@@ -3,13 +3,13 @@ package com.demka.demkaserver.utils;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ResponseGenUtil {
+public class GenResponseUtil {
     /**
      * Генерирует HashMap для успешно обработанного запроса
      * @param bodyObject - любой объект, который надо передать в body
      * @return
      */
-    public static HashMap<String,Object> OKResponse(Object bodyObject){
+    public static HashMap<String,Object> ResponseOK(Object bodyObject){
         HashMap<String,Object> map = new HashMap<>();
         map.put("result", true);
         map.put("body", bodyObject);
@@ -21,7 +21,7 @@ public class ResponseGenUtil {
      * @param description - описание того, почему это некорректный запрос
      * @return
      */
-    public static HashMap<String,Object> ErrorResponse(String description){
+    public static HashMap<String,Object> ResponseError(String description){
         HashMap<String,Object> map = new HashMap<>();
         map.put("result", false);
         map.put("description", description);
