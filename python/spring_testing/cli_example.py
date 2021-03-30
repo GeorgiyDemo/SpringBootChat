@@ -5,7 +5,7 @@ from demka_cli import DEMKACli
 
 LOGIN = "demka@mail.ru"
 PASSWORD = "3845"
-FIRENDS_LIST = ["acee13e52aa94e1692320dc2aec8ce1f"]
+FIRENDS_LIST = ["acee13e52aa94e1692320dc2aec8ce1f", "903ccfc0d939478bbcd31e8f95ca87ad"]
 ROOM_ID = "9b9561a77c5444528ec558291f470592"
 
 
@@ -25,8 +25,9 @@ def main():
         #cli.search("mi")
         time.sleep(random.randint(1, 5))
 
-        #for room in cli.get_user_rooms():
-        #    print(room["_id"])
+        print("cli.get_user_rooms()")
+        r_rooms = cli.get_user_rooms()
+        print(r_rooms)
 
 
 if __name__ == "__main__":

@@ -19,5 +19,4 @@ public interface MessageRepository extends MongoRepository<MessageDBEntity, Stri
     @Query("{ 'room_id': ?0, 'time_created': {'$gt': ?1}}")
     public List<MessageDBEntity> getNewMessagesByRoom(String roomId, Long ts);
 
-
 }

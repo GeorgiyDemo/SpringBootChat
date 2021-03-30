@@ -11,11 +11,13 @@ import sample.utils.HTTPRequest;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface SuperAPI {
 
-    String ServerURL = "http://127.0.0.1:5000";
+    String ServerURL = "http://127.0.0.1:8080";
 
     /**
      * TODO: Регистрация пользователя в системе
@@ -27,8 +29,13 @@ public interface SuperAPI {
         login = URLEncoder.encode(login, StandardCharsets.UTF_8);
         password = URLEncoder.encode(password, StandardCharsets.UTF_8);
 
-        String URL = String.format("%s/register?name=%s&login=%s&password=%s", ServerURL, name, login, password);
-        String response = HTTPRequest.Get(URL);
+        String URL = String.format("%s/user/register", ServerURL);
+        Map<String,String> params = new HashMap<>();
+        params.put("login", login);
+        params.put("password", password);
+        params.put("username", name);
+
+        String response = HTTPRequest.sendPOST(URL, params);
         System.out.println(response);
     }
 

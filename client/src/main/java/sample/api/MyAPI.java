@@ -16,7 +16,9 @@ import sample.utils.MyLogger;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class MyAPI implements SuperAPI {
@@ -58,15 +60,15 @@ public class MyAPI implements SuperAPI {
         login = URLEncoder.encode(login, StandardCharsets.UTF_8);
         password = URLEncoder.encode(password, StandardCharsets.UTF_8);
 
-        String URL = String.format("%s/auth?login=%s&password=%s", ServerURL, login, password);
-        String response = HTTPRequest.Get(URL);
+        String URL = String.format("%s/user/auth?login=%s&password=%s", ServerURL, login, password);
+        String response = HTTPRequest.sendGET(URL);
         if (response != null) {
             JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
             boolean authResult = jsonResult.get("result").getAsBoolean();
             if (authResult) {
                 System.out.println(jsonResult);
                 JsonObject userData = jsonResult.get("body").getAsJsonObject();
-                this.userId = userData.get("_id").getAsString();
+                this.userId = userData.get("id").getAsString();
                 this.userKey = userData.get("key").getAsString();
                 this.userName = userData.get("name").getAsString();
                 MyLogger.logger.info("Auth - Авторизация прошла успешно");
@@ -93,8 +95,8 @@ public class MyAPI implements SuperAPI {
         List<Room> resultList = new ArrayList<Room>();
 
         //Запрашиваем данные по URL
-        String URL = String.format("%s/getUserRooms?user_id=%s&user_key=%s", ServerURL, userId, userKey);
-        String response = HTTPRequest.Get(URL);
+        String URL = String.format("%s/room/getByUser?key=%s", ServerURL, userKey);
+        String response = HTTPRequest.sendGET(URL);
         //Если ответ есть
         if (response != null) {
             JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
@@ -105,8 +107,8 @@ public class MyAPI implements SuperAPI {
                 for (int i = 0; i < bufList.size(); i++) {
                     JsonObject currentRoom = bufList.get(i).getAsJsonObject();
 
-                    String roomId = currentRoom.get("_id").getAsString();
-                    String creatorId = currentRoom.get("creator_id").getAsString();
+                    String roomId = currentRoom.get("id").getAsString();
+                    String creatorId = currentRoom.get("creatorId").getAsString();
                     String roomName = currentRoom.get("name").getAsString();
 
                     List<String> usersList = new ArrayList<>();
@@ -115,7 +117,7 @@ public class MyAPI implements SuperAPI {
                         usersList.add(usersArray.get(j).getAsString());
                     }
 
-                    int timeCreated = currentRoom.get("time_created").getAsInt();
+                    int timeCreated = currentRoom.get("timeCreated").getAsInt();
                     Room room = new Room(creatorId,roomName,timeCreated,usersList,roomId);
                     resultList.add(room);
                 }
@@ -141,22 +143,22 @@ public class MyAPI implements SuperAPI {
     public Room getRoomInfo(String roomId) throws RoomNotFoundException, EmptyAPIResponseException {
 
         //Запрашиваем данные по URL
-        String URL = String.format("%s/getRoomInfo?room_id=%s&user_key=%s", ServerURL, roomId, userKey);
-        String response = HTTPRequest.Get(URL);
+        String URL = String.format("%s/room/get?roomId=%s&key=%s", ServerURL, roomId, userKey);
+        String response = HTTPRequest.sendGET(URL);
         //Если ответ есть
         if (response != null) {
             JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
             if (jsonResult.get("result").getAsBoolean()) {
 
                 JsonObject currentRoom = jsonResult.get("body").getAsJsonObject();
-                String creatorId = currentRoom.get("creator_id").getAsString();
+                String creatorId = currentRoom.get("creatorId").getAsString();
                 String roomName = currentRoom.get("name").getAsString();
                 List<String> usersList = new ArrayList<>();
                 JsonArray usersArray  = currentRoom.get("users").getAsJsonArray();
                 for (int i = 0; i < usersArray.size(); i++) {
                     usersList.add(usersArray.get(i).getAsString());
                 }
-                int timeCreated = currentRoom.get("time_created").getAsInt();
+                int timeCreated = currentRoom.get("timeCreated").getAsInt();
                 MyLogger.logger.info("getRoomInfo - отдали данные для комнаты с id "+roomId);
                 return new Room(creatorId,roomName,timeCreated,usersList,roomId);
             }
@@ -177,12 +179,12 @@ public class MyAPI implements SuperAPI {
      */
     @Override
     public List<Message> getRoomMessagesHistory(String roomId) throws FalseServerFlagException, EmptyAPIResponseException {
-        //Список комнат, который метод отдаёт
+        //Список сообщений, который метод отдаёт
         List<Message> resultList = new ArrayList<Message>();
 
         //Запрашиваем данные по URL
-        String URL = String.format("%s/getRoomMessagesHistory?room_id=%s&user_key=%s", ServerURL, roomId, userKey);
-        String response = HTTPRequest.Get(URL);
+        String URL = String.format("%s/messages/get?roomId=%s&key=%s", ServerURL, roomId, userKey);
+        String response = HTTPRequest.sendGET(URL);
         //Если ответ есть
         if (response != null) {
             JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
@@ -193,12 +195,12 @@ public class MyAPI implements SuperAPI {
                 for (int i = 0; i < bufList.size(); i++) {
                     JsonObject currentMessage = bufList.get(i).getAsJsonObject();
 
-                    String messageId = currentMessage.get("_id").getAsString();
-                    String messageRoom = currentMessage.get("room_id").getAsString();
+                    String messageId = currentMessage.get("id").getAsString();
+                    String messageRoom = currentMessage.get("roomId").getAsString();
                     String messageText = currentMessage.get("text").getAsString();
-                    Integer messageTimeCreated = currentMessage.get("time_created").getAsInt();
-                    String messageUserId = currentMessage.get("user_id").getAsString();
-                    String messageUserName = currentMessage.get("user_name").getAsString();
+                    Integer messageTimeCreated = currentMessage.get("timeCreated").getAsInt();
+                    String messageUserId = currentMessage.get("userId").getAsString();
+                    String messageUserName = currentMessage.get("userName").getAsString();
 
                     Message bufMessage = new Message(messageUserId, messageUserName, messageText, messageRoom, messageTimeCreated, messageId );
                     resultList.add(bufMessage);
@@ -225,8 +227,14 @@ public class MyAPI implements SuperAPI {
     public boolean createRoom(String roomName, String usersString) throws FalseServerFlagException, EmptyAPIResponseException {
         //Запрашиваем данные по URL
         roomName = URLEncoder.encode(roomName, StandardCharsets.UTF_8);
-        String URL = String.format("%s/createRoom?creator_id=%s&user_key=%s&room_name=%s&users=%s", ServerURL, userId, userKey, roomName, usersString);
-        String response = HTTPRequest.Get(URL);
+        String URL = String.format("%s/room/create", ServerURL);
+
+        Map<String,String> params = new HashMap<>();
+        params.put("users", usersString);
+        params.put("roomName", roomName);
+        params.put("key", userKey);
+
+        String response = HTTPRequest.sendPOST(URL, params);
 
         //Если ответ есть
         if (response != null) {
@@ -257,12 +265,12 @@ public class MyAPI implements SuperAPI {
         List<User> resultList = new ArrayList<User>();
         String URL = "";
         if (searchString == null){
-            URL = String.format("%s/search?user_key=%s", ServerURL, userKey);
+            URL = String.format("%s/user/search?key=%s", ServerURL, userKey);
         }
         else{
-            URL = String.format("%s/search?user_key=%s&search_str=%s", ServerURL, userKey, searchString);
+            URL = String.format("%s/user/search?key=%s&searchName=%s", ServerURL, userKey, searchString);
         }
-        String response = HTTPRequest.Get(URL);
+        String response = HTTPRequest.sendGET(URL);
         //Если ответ есть
         if (response != null) {
             JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
@@ -272,9 +280,9 @@ public class MyAPI implements SuperAPI {
                 for (int i = 0; i < bufList.size(); i++) {
                     JsonObject currentUser = bufList.get(i).getAsJsonObject();
 
-                    String userId = currentUser.get("_id").getAsString();
+                    String userId = currentUser.get("id").getAsString();
                     String userName = currentUser.get("name").getAsString();
-                    Integer userTimeCreated = currentUser.get("time_created").getAsInt();
+                    Integer userTimeCreated = currentUser.get("timeCreated").getAsInt();
 
                     User bufUser = new User(userId, userName, userTimeCreated);
                     resultList.add(bufUser);
@@ -285,7 +293,6 @@ public class MyAPI implements SuperAPI {
             else{
                 throw  new FalseServerFlagException(URL,response, "getUsers - Не удалось отправить новое сообщение");
             }
-
         }
         else {
             throw  new EmptyAPIResponseException(mainApp, "getUsers - получили пустой ответ от сервера");
@@ -294,10 +301,17 @@ public class MyAPI implements SuperAPI {
 
     @Override
     public Message writeMessage(String text) throws FalseServerFlagException, EmptyAPIResponseException {
+
         text = URLEncoder.encode(text, StandardCharsets.UTF_8);
         //Запрашиваем данные по URL
-        String URL = String.format("%s/writeMessage?user_from=%s&text=%s&room_id=%s&user_key=%s", ServerURL, userId, text, currentRoomId, userKey);
-        String response = HTTPRequest.Get(URL);
+        String URL = String.format("%s/messages/send", ServerURL);
+
+        Map<String,String> params = new HashMap<>();
+        params.put("key", userKey);
+        params.put("text", text);
+        params.put("roomId", currentRoomId);
+
+        String response = HTTPRequest.sendPOST(URL, params);
         //Если ответ есть
         if (response != null) {
             JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
@@ -305,14 +319,12 @@ public class MyAPI implements SuperAPI {
 
                 JsonObject newMessageJsonObject = jsonResult.get("body").getAsJsonObject();
 
-
-                    String messageId = newMessageJsonObject.get("_id").getAsString();
-                    String roomId = newMessageJsonObject.get("room_id").getAsString();
+                    String messageId = newMessageJsonObject.get("id").getAsString();
+                    String roomId = newMessageJsonObject.get("roomId").getAsString();
                     String messageText = newMessageJsonObject.get("text").getAsString();
-                    Integer timeCreated = newMessageJsonObject.get("time_created").getAsInt();
-                    String messageUserId = newMessageJsonObject.get("user_id").getAsString();
-                    String messageUserName = newMessageJsonObject.get("user_name").getAsString();
-
+                    Integer timeCreated = newMessageJsonObject.get("timeCreated").getAsInt();
+                    String messageUserId = newMessageJsonObject.get("userId").getAsString();
+                    String messageUserName = newMessageJsonObject.get("userName").getAsString();
 
                     MyLogger.logger.info("writeMessage - Отправили новое сообщение "+messageText +" "+messageId);
                     return new Message(messageUserId, messageUserName, messageText,roomId,timeCreated,messageId);
@@ -338,8 +350,8 @@ public class MyAPI implements SuperAPI {
     @Override
     public void getLongpollServer() throws EmptyAPIResponseException, FalseServerFlagException {
         //Запрашиваем данные по URL
-        String URL = String.format("%s/getLongPollServer?user_id=%s&user_key=%s", ServerURL, userId, userKey);
-        String response = HTTPRequest.Get(URL);
+        String URL = String.format("%s/longpoll/getServer?key=%s", ServerURL, userKey);
+        String response = HTTPRequest.sendGET(URL);
         //Если ответ есть
         if (response != null) {
             JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
@@ -382,9 +394,9 @@ public class MyAPI implements SuperAPI {
             List<Message> resultList = new ArrayList<>();
 
             //Запрашиваем данные по URL
-            String URL = String.format("%s/%s?key=%s&ts=%s", ServerURL, longpollSubUrl, longpollKey, longpollTs);
+            String URL = String.format("%s/longpoll/updates/%s?key=%s&ts=%s", ServerURL, longpollSubUrl, longpollKey, longpollTs);
             MyLogger.logger.info("longpollListener - отправили запрос, ожидаем новые сообщения..");
-            String response = HTTPRequest.Get(URL);
+            String response = HTTPRequest.sendGET(URL);
 
             //Если ответ есть
             if (response != null) {
@@ -402,12 +414,12 @@ public class MyAPI implements SuperAPI {
 
                         JsonObject currentMessage = newMessages.get(i).getAsJsonObject();
 
-                        String messageId = currentMessage.get("_id").getAsString();
-                        String messageRoom = currentMessage.get("room_id").getAsString();
+                        String messageId = currentMessage.get("id").getAsString();
+                        String messageRoom = currentMessage.get("roomId").getAsString();
                         String messageText = currentMessage.get("text").getAsString();
-                        Integer messageTimeCreated = currentMessage.get("time_created").getAsInt();
-                        String messageUserId = currentMessage.get("user_id").getAsString();
-                        String messageUserName = currentMessage.get("user_name").getAsString();
+                        Integer messageTimeCreated = currentMessage.get("timeCreated").getAsInt();
+                        String messageUserId = currentMessage.get("userId").getAsString();
+                        String messageUserName = currentMessage.get("userName").getAsString();
 
                         Message bufMessage = new Message(messageUserId, messageUserName, messageText, messageRoom, messageTimeCreated, messageId);
                         resultList.add(bufMessage);

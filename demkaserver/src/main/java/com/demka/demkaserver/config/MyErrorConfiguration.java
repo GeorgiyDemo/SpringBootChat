@@ -15,7 +15,7 @@ public class MyErrorConfiguration {
 
     /**
      * Нужон, чтоб кастомный ErrorController использовать
-     * А он в свою очередь нужон, чтоб доп атрибут result при ошибке вводить
+     * А он в свою очередь нужон, чтоб доп атрибут result при ошибке выводить
      */
     @Bean
     public MyErrorController ErrorController(ErrorAttributes errorAttributes, ServerProperties serverProperties, ObjectProvider<List<ErrorViewResolver>> errorViewResolversProvider) {
