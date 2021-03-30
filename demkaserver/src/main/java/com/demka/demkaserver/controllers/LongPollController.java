@@ -8,7 +8,7 @@ import com.demka.demkaserver.services.LongPollService;
 import com.demka.demkaserver.services.MessageService;
 import com.demka.demkaserver.services.RoomService;
 import com.demka.demkaserver.services.UserService;
-import com.demka.demkaserver.utils.ResponseMapGen;
+import com.demka.demkaserver.utils.ResponseGenUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +36,7 @@ public class LongPollController {
 
     /**
      * Получение данных лонгпула для указанного ключа
-     * @param key
+     * @param key - ключ пользователя
      * @return
      */
     @GetMapping(value = "/getServer")
@@ -45,7 +45,7 @@ public class LongPollController {
         //Получаем объект пользователя через key + проверка ключа
         Optional<UserDBEntity> userOptional = userService.findByKey(key);
         if (userOptional.isEmpty()){
-            return new ResponseEntity<>(ResponseMapGen.ErrorResponse("Не удалось авторизоваться по указанному ключу"), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(ResponseGenUtil.ErrorResponse("Не удалось авторизоваться по указанному ключу"), HttpStatus.FORBIDDEN);
         }
 
         UserDBEntity user = userOptional.get();
@@ -58,7 +58,7 @@ public class LongPollController {
         List<MessageDBEntity> messagesList = messageService.getAllMessagesByRooms(roomsList);
 
         if (messagesList.size() == 0){
-            return new ResponseEntity<>(ResponseMapGen.ErrorResponse("Нельзя организовать лонгпул без каких-либо существующих сообщений!"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(ResponseGenUtil.ErrorResponse("Нельзя организовать лонгпул без каких-либо существующих сообщений!"), HttpStatus.NOT_FOUND);
         }
 
         Comparator<MessageDBEntity> bufComparator = Comparator.comparing(MessageDBEntity::getTimeCreated);
@@ -67,15 +67,15 @@ public class LongPollController {
 
         Long ts = messagesList.get(0).getTimeCreated();
         LongPollDBEntity newPoll = longPollService.create(userId, ts);
-        return new ResponseEntity<>(ResponseMapGen.OKResponse(newPoll), HttpStatus.OK);
+        return new ResponseEntity<>(ResponseGenUtil.OKResponse(newPoll), HttpStatus.OK);
     }
 
 
     /**
      * Получение данных для лонгпула по определенному ключу
-     * @param url
-     * @param key
-     * @param ts
+     * @param url - URL лонгпула
+     * @param key - ключ ЛОНГПУЛА (не пользователя)
+     * @param ts - значение ts, пполученное через /getServer
      * @return
      * @throws InterruptedException
      */
@@ -84,13 +84,13 @@ public class LongPollController {
 
         //Проверка на существование url
         if (longPollService.findByUrl(url).isEmpty()){
-            return new ResponseEntity<>(ResponseMapGen.ErrorResponse("Указанного url не существует"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(ResponseGenUtil.ErrorResponse("Указанного url не существует"), HttpStatus.NOT_FOUND);
         }
 
         //Проверка на существование ключа + url
         Optional<LongPollDBEntity> currentPollOptional = longPollService.findByKeyAndUrl(key, url);
         if (currentPollOptional.isEmpty()){
-            return new ResponseEntity<>(ResponseMapGen.ErrorResponse("Не удалось авторизоваться по указанному ключу"), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(ResponseGenUtil.ErrorResponse("Не удалось авторизоваться по указанному ключу"), HttpStatus.FORBIDDEN);
         }
 
         LongPollDBEntity currentPoll = currentPollOptional.get();
@@ -121,7 +121,7 @@ public class LongPollController {
             if (Duration.between(timeStarted, Instant.now()).toMinutes() > 60){
                 //Удаляем лонгпул с СУБД
                 longPollService.delete(currentPoll.getId());
-                return new ResponseEntity<>(ResponseMapGen.ErrorResponse("Необходимо обновить лонгпул через /getServer"), HttpStatus.OK);
+                return new ResponseEntity<>(ResponseGenUtil.ErrorResponse("Необходимо обновить лонгпул через /getServer"), HttpStatus.OK);
             }
 
             //Иначе просто крутимся в этом вечном цикле
@@ -132,7 +132,7 @@ public class LongPollController {
         bodyMap.put("updates", newMessages);
         bodyMap.put("ts", newTs);
 
-        return new ResponseEntity<>(ResponseMapGen.OKResponse(bodyMap), HttpStatus.OK);
+        return new ResponseEntity<>(ResponseGenUtil.OKResponse(bodyMap), HttpStatus.OK);
 
     }
 

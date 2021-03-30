@@ -31,7 +31,10 @@ public class MessageController {
 
     /**
      * Отправка сообщения в опеределенную комнату roomId
-     * @param data
+     * @param data - данные в JSON. Поля:
+     *             key - ключ пользователя
+     *             text - текст сообщения
+     *             roomId - id комнаты, куда отправляется сообщение
      * @return
      */
     @PostMapping(value = "/send")
@@ -79,8 +82,8 @@ public class MessageController {
 
     /**
      * Получение истории сообщений определенной комнаты
-     * @param key
-     * @param roomId
+     * @param key - ключ пользователя
+     * @param roomId - id комнаты
      * @return
      */
     @GetMapping(value = "/get")

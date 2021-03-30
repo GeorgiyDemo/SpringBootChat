@@ -7,6 +7,10 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter;
 @Configuration
 public class MyRequestLoggingConfig {
 
+    /**
+     * Это нужно для того, чтоб было доп логирование всех запросов,
+     * которые приходят на сервер
+     */
     @Bean
     public CommonsRequestLoggingFilter logFilter() {
         CommonsRequestLoggingFilter filter = new CommonsRequestLoggingFilter();

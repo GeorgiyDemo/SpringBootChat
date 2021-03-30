@@ -25,8 +25,8 @@ public class UserController {
 
     /**
      * Авторизация пользователя
-     * @param login
-     * @param password
+     * @param login - логин пользователя
+     * @param password - пароль пользователя
      * @return
      */
     @GetMapping("/auth")
@@ -46,7 +46,10 @@ public class UserController {
 
     /**
      * Регистрация пользователя
-     * @param data
+     * @param data - данные в JSON. Поля:
+     *             login - логин пользователя
+     *             password - пароль пользователя
+     *             username - ник пользователя
      * @return
      */
     @PostMapping("/register")
@@ -72,12 +75,12 @@ public class UserController {
         }
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
-
+    
     /**
      * Поиск пользователя в системе
-     * @param key
-     * @param searchName
-     * @param limit
+     * @param key - ключ пользователя, выполняющего поиск
+     * @param searchName - паттерн имени ника пользователя, которого ищем (необязательно)
+     * @param limit - кол-во пользователей, которое надо вернуть, макс 200 (необязательно)
      * @return
      */
     @GetMapping(value = "/search")
@@ -91,7 +94,7 @@ public class UserController {
             return new ResponseEntity(map, HttpStatus.FORBIDDEN);
         }
 
-        if (limit == null){
+        if ((limit == null) || (limit > 200)){
             limit = 200;
         }
 

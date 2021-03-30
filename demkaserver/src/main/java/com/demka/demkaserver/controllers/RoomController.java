@@ -28,15 +28,18 @@ public class RoomController {
 
     /**
      * Создание комнаты для общения пользователей
-     * @param data
+     * @param data - данные в JSON. Поля:
+     *             key - ключ пользователя
+     *             roomName - название комнаты
+     *             users - строка с id пользователей, состоящих в беседе
      * @return
      */
     @PostMapping("/create")
     public ResponseEntity<Map<String, Object>> createRoom(@RequestBody Map<String, String> data) {
 
         Map<String, Object> map = new HashMap<>();
-        String roomName = data.get("roomName");
         String key = data.get("key");
+        String roomName = data.get("roomName");
         String usersString = data.get("users");
 
         //Проверка переданных полей
@@ -78,8 +81,8 @@ public class RoomController {
 
     /**
      * Получение инфорации о комнате
-     * @param key
-     * @param roomId
+     * @param key - ключ пользователя
+     * @param roomId - id комнаты
      * @return
      */
     @GetMapping(value = "/get")
@@ -110,7 +113,7 @@ public class RoomController {
 
     /**
      * Получение всех комнат, в которых состоит пользователь
-     * @param key
+     * @param key - ключ пользователя
      * @return
      */
     @GetMapping(value = "/getByUser")
