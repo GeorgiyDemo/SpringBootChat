@@ -42,6 +42,12 @@ public class MessageController {
         String messageText = data.get("text");
         String roomId = data.get("roomId");
 
+        //Проверка переданных полей
+        if ((key == null) || (messageText == null) || (roomId == null)){
+            map.put("result", false);
+            return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+        }
+
         //Получаем объект пользователя через key + проверка ключа
         Optional<UserDBEntity> roomUserOptional = userService.findByKey(key);
         if (roomUserOptional.isEmpty()){

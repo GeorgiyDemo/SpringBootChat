@@ -82,14 +82,13 @@ public class UserService {
         Pageable pageLimit = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "time_created"));
 
         if (name != null){
-            //TODO: Проврека на то, чтоб не было ключа пользователя, собственно
             bufList.addAll(userRepo.findAllByNameLimit("^"+name, pageLimit));
         }
         else{
             bufList.addAll(userRepo.findAllLimit(pageLimit));
         }
 
-        //Выкидываем самого пользователя, который запросил данные
+        //Выкидываем самого пользователя, который запросил данные (чтоб не отображать ему самого себя)
         for (UserDBEntity item: bufList) {
             if (!item.getKey().equals(currentUserKey)){
                 resultList.add(item);

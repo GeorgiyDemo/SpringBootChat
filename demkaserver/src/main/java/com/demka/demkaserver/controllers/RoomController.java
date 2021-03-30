@@ -35,9 +35,17 @@ public class RoomController {
     public ResponseEntity<HashMap<String, Object>> createRoom(@RequestBody Map<String, String> data) {
 
         HashMap<String, Object> map = new HashMap<>();
-        List<String> users = Arrays.asList(data.get("users").split(","));
         String roomName = data.get("roomName");
         String key = data.get("key");
+        String usersString = data.get("users");
+
+        //Проверка переданных полей
+        if ((key == null) || (roomName == null) || (usersString == null)){
+            map.put("result", false);
+            return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+        }
+
+        List<String> users = Arrays.asList(usersString.split(","));
 
         //Получаем id создателя через key + проверка ключа
         Optional<UserDBEntity> creatorUserOptional = userService.findByKey(key);

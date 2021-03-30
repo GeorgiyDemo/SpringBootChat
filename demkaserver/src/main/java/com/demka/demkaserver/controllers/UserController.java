@@ -52,7 +52,17 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<HashMap<String, Object>> regUser(@RequestBody Map<String, String> data) {
         HashMap<String, Object> map = new HashMap<>();
-        UserDBEntity result = userService.create(data.get("login"), data.get("password"), data.get("username"));
+
+        String login = data.get("login");
+        String password = data.get("password");
+        String username = data.get("username");
+
+        if ((login == null) || (password == null) || (username == null)){
+            map.put("result", false);
+            return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+        }
+
+        UserDBEntity result = userService.create(login, password, username);
         if (result != null) {
             map.put("result", true);
             map.put("body", UserConverter.convert(result));
