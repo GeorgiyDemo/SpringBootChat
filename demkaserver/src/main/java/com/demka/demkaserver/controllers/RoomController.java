@@ -17,14 +17,16 @@ import java.util.*;
 @RequestMapping("/room")
 public class RoomController {
 
-    @Autowired
     private RoomService roomService;
-
-    @Autowired
     private UserService userService;
+    private MessageService messageService;
 
     @Autowired
-    private MessageService messageService;
+    public RoomController(RoomService roomService, UserService userService, MessageService messageService){
+        this.roomService = roomService;
+        this.userService = userService;
+        this.messageService = messageService;
+    }
 
     /**
      * Создание комнаты для общения пользователей
@@ -107,7 +109,6 @@ public class RoomController {
     @GetMapping(value = "/getByUser")
     public ResponseEntity<Map<String, Object>> getByUser(@RequestParam String key) {
 
-
         //Проверка ключа
         Optional<UserDBEntity> currentUserOptional = userService.findByKey(key);
         if (currentUserOptional.isEmpty()){
@@ -118,5 +119,4 @@ public class RoomController {
         List<RoomDBEntity> userRooms = roomService.findUserRooms(currentUser.getId());
         return new ResponseEntity<>(GenResponseUtil.ResponseOK(userRooms), HttpStatus.OK);
     }
-
 }

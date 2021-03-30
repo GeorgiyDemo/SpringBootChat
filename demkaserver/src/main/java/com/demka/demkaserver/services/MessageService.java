@@ -19,8 +19,12 @@ import java.util.Optional;
 @Service
 public class MessageService {
 
-    @Autowired
     private MessageRepository messageRepo;
+
+    @Autowired
+    public MessageService(MessageRepository messageRepo){
+        this.messageRepo = messageRepo;
+    }
 
     public MessageDBEntity GetLastMessageByUser(String userId){
 

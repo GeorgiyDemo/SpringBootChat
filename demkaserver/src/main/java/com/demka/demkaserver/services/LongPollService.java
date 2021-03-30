@@ -15,8 +15,12 @@ import java.util.Optional;
 @Service
 public class LongPollService {
 
-    @Autowired
     private LongPollRepository longPollRepo;
+
+    @Autowired
+    public LongPollService(LongPollRepository longPollRepo){
+        this.longPollRepo = longPollRepo;
+    }
 
     public LongPollDBEntity create(String userId, Long ts){
 

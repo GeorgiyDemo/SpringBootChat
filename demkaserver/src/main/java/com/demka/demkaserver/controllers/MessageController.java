@@ -20,14 +20,16 @@ import java.util.Optional;
 @RequestMapping("/messages")
 public class MessageController {
 
-    @Autowired
     private RoomService roomService;
-
-    @Autowired
     private UserService userService;
+    private MessageService messageService;
 
     @Autowired
-    private MessageService messageService;
+    public MessageController(RoomService roomService, UserService userService, MessageService messageService){
+        this.roomService = roomService;
+        this.userService = userService;
+        this.messageService = messageService;
+    }
 
     /**
      * Отправка сообщения в опеределенную комнату roomId

@@ -22,17 +22,18 @@ import java.util.*;
 @RequestMapping("/longpoll")
 public class LongPollController {
 
-    @Autowired
     private MessageService messageService;
-
-    @Autowired
     private UserService userService;
-
-    @Autowired
     private LongPollService longPollService;
+    private RoomService roomService;
 
     @Autowired
-    private RoomService roomService;
+    public LongPollController(MessageService messageService, UserService userService, LongPollService longPollService, RoomService roomService){
+        this.messageService = messageService;
+        this.userService = userService;
+        this.longPollService = longPollService;
+        this.roomService = roomService;
+    }
 
     /**
      * Получение данных лонгпула для указанного ключа

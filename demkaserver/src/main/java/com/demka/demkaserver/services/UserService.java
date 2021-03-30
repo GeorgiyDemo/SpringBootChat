@@ -17,9 +17,12 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    @Autowired
     private UserRepository userRepo;
 
+    @Autowired
+    public UserService(UserRepository userRepo){
+        this.userRepo = userRepo;
+    }
 
     public void update(UserDBEntity oldObj, UserDBEntity newObj) {
         userRepo.delete(oldObj);
