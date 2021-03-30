@@ -1,5 +1,9 @@
 package sample.utils;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
@@ -40,14 +44,18 @@ public class HTTPRequest {
         try {
             URL obj = new URL(urlString);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestProperty("Content-Type", "application/json; utf-8");
+            con.setRequestProperty("Accept", "application/json");
             con.setRequestMethod("POST");
+
+            Gson gsonObj = new Gson();
+
+            String jsonStr = gsonObj.toJson(paramsMap);
 
             con.setDoOutput(true);
             OutputStream stream = con.getOutputStream();
 
-            //Конвертируем параметры
-            String params = StringMapToString.convert(paramsMap);
-            stream.write(params.getBytes());
+            stream.write(jsonStr.getBytes("utf-8"));
             stream.flush();
             stream.close();
 

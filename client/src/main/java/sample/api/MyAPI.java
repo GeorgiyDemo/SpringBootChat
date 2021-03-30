@@ -226,7 +226,6 @@ public class MyAPI implements SuperAPI {
     @Override
     public boolean createRoom(String roomName, String usersString) throws FalseServerFlagException, EmptyAPIResponseException {
         //Запрашиваем данные по URL
-        roomName = URLEncoder.encode(roomName, StandardCharsets.UTF_8);
         String URL = String.format("%s/room/create", ServerURL);
 
         Map<String,String> params = new HashMap<>();
@@ -302,7 +301,6 @@ public class MyAPI implements SuperAPI {
     @Override
     public Message writeMessage(String text) throws FalseServerFlagException, EmptyAPIResponseException {
 
-        text = URLEncoder.encode(text, StandardCharsets.UTF_8);
         //Запрашиваем данные по URL
         String URL = String.format("%s/messages/send", ServerURL);
 

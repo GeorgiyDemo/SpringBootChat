@@ -26,8 +26,6 @@ public interface SuperAPI {
      * @param password
      */
     static void Registration(String name, String login, String password) {
-        login = URLEncoder.encode(login, StandardCharsets.UTF_8);
-        password = URLEncoder.encode(password, StandardCharsets.UTF_8);
 
         String URL = String.format("%s/user/register", ServerURL);
         Map<String,String> params = new HashMap<>();
