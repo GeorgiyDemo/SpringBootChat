@@ -19,7 +19,7 @@ import java.util.Optional;
 @Service
 public class MessageService {
 
-    private MessageRepository messageRepo;
+    private final MessageRepository messageRepo;
 
     @Autowired
     public MessageService(MessageRepository messageRepo){

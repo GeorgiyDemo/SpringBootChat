@@ -15,7 +15,7 @@ import java.util.Optional;
 @Service
 public class LongPollService {
 
-    private LongPollRepository longPollRepo;
+    private final LongPollRepository longPollRepo;
 
     @Autowired
     public LongPollService(LongPollRepository longPollRepo){

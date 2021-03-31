@@ -18,7 +18,7 @@ import java.util.Optional;
 @Service
 public class RoomService {
 
-    private RoomRepository roomRepo;
+    private final RoomRepository roomRepo;
 
     @Autowired
     public RoomService(RoomRepository roomRepo){

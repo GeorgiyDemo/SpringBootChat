@@ -22,10 +22,10 @@ import java.util.*;
 @RequestMapping("/longpoll")
 public class LongPollController {
 
-    private MessageService messageService;
-    private UserService userService;
-    private LongPollService longPollService;
-    private RoomService roomService;
+    private final MessageService messageService;
+    private final UserService userService;
+    private final LongPollService longPollService;
+    private final RoomService roomService;
 
     @Autowired
     public LongPollController(MessageService messageService, UserService userService, LongPollService longPollService, RoomService roomService){

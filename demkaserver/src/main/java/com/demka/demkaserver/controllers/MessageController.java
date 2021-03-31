@@ -20,9 +20,9 @@ import java.util.Optional;
 @RequestMapping("/messages")
 public class MessageController {
 
-    private RoomService roomService;
-    private UserService userService;
-    private MessageService messageService;
+    private final RoomService roomService;
+    private final UserService userService;
+    private final MessageService messageService;
 
     @Autowired
     public MessageController(RoomService roomService, UserService userService, MessageService messageService){

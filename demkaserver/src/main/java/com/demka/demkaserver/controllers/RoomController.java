@@ -17,9 +17,9 @@ import java.util.*;
 @RequestMapping("/room")
 public class RoomController {
 
-    private RoomService roomService;
-    private UserService userService;
-    private MessageService messageService;
+    private final RoomService roomService;
+    private final UserService userService;
+    private final MessageService messageService;
 
     @Autowired
     public RoomController(RoomService roomService, UserService userService, MessageService messageService){
