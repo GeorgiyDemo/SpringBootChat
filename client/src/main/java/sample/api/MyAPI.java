@@ -36,7 +36,7 @@ public class MyAPI implements SuperAPI {
 
     private boolean isAuthenticated;
 
-
+    //Авторизация через пару логин/пароль
     public MyAPI(String login, String password, Main mainApp) {
         this.mainApp = mainApp;
         try {
@@ -47,9 +47,20 @@ public class MyAPI implements SuperAPI {
         MyLogger.logger.info("Инициализировали MyAPI");
     }
 
+    //Авторизация через ключ
+    public MyAPI(String key, Main mainApp) {
+        this.mainApp = mainApp;
+        try {
+            isAuthenticated = this.Auth(key);
+        } catch (EmptyAPIResponseException e) {
+            e.printStackTrace();
+        }
+        MyLogger.logger.info("Инициализировали MyAPI");
+    }
 
     /**
      * Авторизация пользователя в системе
+     * с помощью пары логин-пароль
      * @param login
      * @param password
      * @return
@@ -66,17 +77,47 @@ public class MyAPI implements SuperAPI {
             JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
             boolean authResult = jsonResult.get("result").getAsBoolean();
             if (authResult) {
-                System.out.println(jsonResult);
                 JsonObject userData = jsonResult.get("body").getAsJsonObject();
                 this.userId = userData.get("id").getAsString();
                 this.userKey = userData.get("key").getAsString();
                 this.userName = userData.get("name").getAsString();
-                MyLogger.logger.info("Auth - Авторизация прошла успешно");
+                MyLogger.logger.info("Auth - Авторизация с помощью пары логин/пароль прошла успешно");
                 return true;
             }
-            MyLogger.logger.info("Auth - Авторизация не удалась");
+            MyLogger.logger.info("Auth - Авторизация с помощью пары логин/пароль не удалась");
             return false;
 
+        }
+        throw new EmptyAPIResponseException(mainApp, "Auth - получили пустой ответ от сервера");
+    }
+
+    /**
+     * Авторизация пользователя в системе
+     * с помощью ключа API
+     *
+     * @param key
+     * @return
+     * @throws EmptyAPIResponseException
+     */
+    @Override
+    public boolean Auth(String key) throws EmptyAPIResponseException {
+        key = URLEncoder.encode(key, StandardCharsets.UTF_8);
+
+        String URL = String.format("%s/user/auth?key=%s", ServerURL, key);
+        String response = HTTPRequest.sendGET(URL);
+        if (response != null) {
+            JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
+            boolean authResult = jsonResult.get("result").getAsBoolean();
+            if (authResult) {
+                JsonObject userData = jsonResult.get("body").getAsJsonObject();
+                this.userId = userData.get("id").getAsString();
+                this.userKey = userData.get("key").getAsString();
+                this.userName = userData.get("name").getAsString();
+                MyLogger.logger.info("Auth - Авторизация с помощью ключа API прошла успешно");
+                return true;
+            }
+            MyLogger.logger.info("Auth - Авторизация с помощью ключа API не удалась");
+            return false;
         }
         throw new EmptyAPIResponseException(mainApp, "Auth - получили пустой ответ от сервера");
     }
@@ -447,6 +488,10 @@ public class MyAPI implements SuperAPI {
 
     public String getUserName() {
         return userName;
+    }
+
+    public String getUserKey() {
+        return userKey;
     }
 
     public void setCurrentRoomId(String currentRoomId) {

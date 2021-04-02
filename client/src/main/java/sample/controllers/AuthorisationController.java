@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import sample.Main;
 import sample.api.MyAPI;
+import sample.utils.AuthUtil;
 import sample.utils.MyLogger;
 
 import java.io.IOException;
@@ -36,6 +37,11 @@ public class AuthorisationController extends SuperFullController {
             //Если удалось произвести авторизацию
             if (bufSession.getIsAuthenticated()) {
                 mainApp.setAPISession(bufSession);
+                //TODO: Если пользователь жмякнул ЗАПОМНИТЬ МЕНЯ
+                if (true) {
+                    AuthUtil authUtil = mainApp.getAuthUtil();
+                    authUtil.writeKey(bufSession.getUserKey());
+                }
                 mainApp.MainChat();
                 MyLogger.logger.info("Пользователь успешно авторизовался");
             }

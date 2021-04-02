@@ -29,12 +29,12 @@ public class UserController {
     }
 
     /**
-     * Авторизация пользователя
+     * Авторизация пользователя через пару логина/пароля
      * @param login - логин пользователя
      * @param password - пароль пользователя
      * @return
      */
-    @GetMapping("/auth")
+    @GetMapping(value = "/auth", params = { "login", "password"})
     public ResponseEntity<Map<String, Object>> auth(@RequestParam String login, @RequestParam String password) {
 
         UserDBEntity result = userService.checkAuth(login, password);
@@ -44,6 +44,22 @@ public class UserController {
             return new ResponseEntity<>(GenResponseUtil.ResponseOK(user), HttpStatus.OK);
         }
         return new ResponseEntity<>(GenResponseUtil.ResponseError("Не удалось войти с указанным логином/паролем"), HttpStatus.OK);
+    }
+
+    /**
+     * Авторизация пользователя через ключ API
+     * @param key - ключ API
+     * @return
+     */
+    @GetMapping(value = "/auth", params = {"key"})
+    public ResponseEntity<Map<String, Object>> auth(@RequestParam String key) {
+
+        UserDBEntity result = userService.checkAuth(key);
+        if (result != null){
+            UserAuthResponseEntity user = UserConverter.convert(result);
+            return new ResponseEntity<>(GenResponseUtil.ResponseOK(user), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(GenResponseUtil.ResponseError("Не удалось войти с указанным ключем API"), HttpStatus.OK);
     }
 
     /**

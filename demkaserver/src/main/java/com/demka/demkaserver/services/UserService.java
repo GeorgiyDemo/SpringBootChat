@@ -42,9 +42,16 @@ public class UserService {
     //Проверка на авторизацию пользователя
     public UserDBEntity checkAuth(String login, String password){
         Optional<UserDBEntity> result = userRepo.checkUserAuth(login, password);
-        if (result.isPresent()){
+        if (result.isPresent())
             return result.get();
-        }
+        return null;
+    }
+
+    //Проверка на авторизацию пользователя
+    public UserDBEntity checkAuth(String key){
+        Optional<UserDBEntity> result = userRepo.checkUserKey(key);
+        if (result.isPresent())
+            return result.get();
         return null;
     }
 
@@ -97,7 +104,6 @@ public class UserService {
                 resultList.add(item);
             }
         }
-
         return resultList;
     }
 

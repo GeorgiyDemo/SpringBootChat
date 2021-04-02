@@ -9,6 +9,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import sample.api.MyAPI;
 import sample.controllers.*;
+import sample.utils.AuthUtil;
 import sample.utils.MyLogger;
 
 import java.io.IOException;
@@ -19,6 +20,7 @@ public class Main extends Application {
     private Stage primaryStage;
     private BorderPane rootLayout;
     private MyAPI APISession;
+    private AuthUtil authUtil;
 
     /**
      * Точка входа в программу
@@ -47,29 +49,34 @@ public class Main extends Application {
         return rootLayout;
     }
 
+    public AuthUtil getAuthUtil() {
+        return authUtil;
+    }
+
     @Override
     public void start(Stage primaryStage) throws Exception {
 
         //Выставляем RootLayout
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Авторизация");
-        initRootLayout();
+        this.authUtil = new AuthUtil();
 
-        //TODO: ЭТО ХАРДКОД, ПОТОМ ВЫНЕСТИ В SQLITE или куда-то
-        //TODO: Проверка на всякое барахло по типу существующей авторизации и т д
-        String BUFFLOGIN = "demka@mail.ru";
-        String BUFFPASSWRD = "3845";
-        APISession = new MyAPI(BUFFLOGIN,BUFFPASSWRD, this);
+        initRootLayout();
+        //Читаем токен из файла
+        String key = authUtil.readKey();
+        if (key != null){
+            APISession = new MyAPI(key, this);
+        }
 
         //Если пользователь не авторизован
         if  (!APISession.getIsAuthenticated()){
+            authUtil.writeKey("");
             UserAuthorisation();
         }
         //Если уже успешно авторизовался
         else {
             this.primaryStage.setTitle("Сообщения ["+APISession.getUserName()+"]");
             MainChat();
-
         }
 
     }

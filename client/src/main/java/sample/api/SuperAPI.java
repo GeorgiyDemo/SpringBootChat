@@ -39,11 +39,22 @@ public interface SuperAPI {
 
     /**
      * Авторизация пользователя в системе
+     * с помощью пары логин-пароль
      * @param login
      * @param password
      * @return
+     * @throws EmptyAPIResponseException
      */
     boolean Auth(String login, String password) throws EmptyAPIResponseException;
+
+    /**
+     * Авторизация пользователя в системе
+     * с помощью ключа API
+     * @param key
+     * @return
+     * @throws EmptyAPIResponseException
+     */
+    boolean Auth(String key) throws EmptyAPIResponseException;
 
     /**
      * Получение всех чат-комнат пользователя
