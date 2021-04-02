@@ -1,5 +1,6 @@
 package sample.controllers;
 
+import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -20,6 +21,8 @@ public class AuthorisationController extends SuperFullController {
     private JFXTextField LoginTextField;
     @FXML
     private JFXTextField PasswordTextField;
+    @FXML
+    private JFXCheckBox AutoLoginCheckBox;
 
     @FXML
     public void mainButtonClick() throws IOException {
@@ -37,8 +40,8 @@ public class AuthorisationController extends SuperFullController {
             //Если удалось произвести авторизацию
             if (bufSession.getIsAuthenticated()) {
                 mainApp.setAPISession(bufSession);
-                //TODO: Если пользователь жмякнул ЗАПОМНИТЬ МЕНЯ
-                if (true) {
+                //Если пользователь выбрал "Запомнить меня"
+                if (AutoLoginCheckBox.isSelected()) {
                     AuthUtil authUtil = mainApp.getAuthUtil();
                     authUtil.writeKey(bufSession.getUserKey());
                 }
