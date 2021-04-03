@@ -37,6 +37,7 @@
                 <version>0.0.5</version>
                 <configuration>
                     <mainClass>org.demka.App</mainClass>
+                    <launcher>launch.sh</launcher>
                     <compress>2</compress>
                     <jlinkZipName>DEMKAChat</jlinkZipName>
                     <jlinkImageName>DEMKAChat</jlinkImageName>
