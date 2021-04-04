@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="640.0" styleClass="background" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.demka.controllers.AuthorisationController">
+    <children>
+      <JFXCheckBox fx:id="AutoLoginCheckBox" checkedColor="#2167e4" layoutX="261.0" layoutY="231.0" prefHeight="14.0" prefWidth="88.0" text="Запомнить меня" textFill="WHITE" unCheckedColor="WHITE">
+         <font>
+            <Font size="11.0" />
+         </font></JFXCheckBox>
+
+        <JFXTextField fx:id="LoginTextField" focusColor="WHITE" layoutX="245.0" layoutY="125.0" promptText="E-mail" unFocusColor="WHITE">
+            <font>
+                <Font name="Helvetica" size="13.0" />
+            </font>
+        </JFXTextField>
+        <JFXTextField fx:id="PasswordTextField" focusColor="WHITE" layoutX="245.0" layoutY="183.0" promptText="Пароль" unFocusColor="WHITE" />
+        <JFXButton fx:id="LoginButton" layoutX="246.0" layoutY="274.0" onAction="#mainButtonClick" prefHeight="40.0" prefWidth="143.0" ripplerFill="#2491bf" text="Войти" textFill="WHITE" />
+        <Label fx:id="AppName" layoutX="240.0" layoutY="59.0" text="DEMKA CHAT" textFill="WHITE">
+            <font>
+                <Font name="Helvetica" size="24.0" />
+            </font>
+        </Label>
+        <Label layoutX="227.0" layoutY="350.0" text="Регистрация" textFill="WHITE">
+            <font>
+                <Font size="11.0" />
+            </font>
+        </Label>
+        <Label layoutX="341.0" layoutY="350.0" text="Забыли пароль?" textFill="WHITE">
+            <font>
+                <Font size="11.0" />
+            </font>
+        </Label>
+        <Label fx:id="WrongAuth" layoutX="250.0" layoutY="99.0" opacity="0.0" text="Неверный логин/пароль!" textFill="WHITE">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Label>
+
+    </children>
+</AnchorPane>

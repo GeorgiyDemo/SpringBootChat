@@ -4,7 +4,14 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import org.demka.api.MyAPI;
+import org.demka.controllers.*;
+import org.demka.utils.AuthUtil;
+import org.demka.utils.MyLogger;
 
 import java.io.IOException;
 
@@ -13,26 +20,177 @@ import java.io.IOException;
  */
 public class App extends Application {
 
-    private static Scene scene;
+    private Stage primaryStage;
+    private BorderPane rootLayout;
+    private MyAPI APISession;
+    private AuthUtil authUtil;
+
+    /**
+     * Точка входа в программу
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+        MyLogger log = new MyLogger();
+        if (log.deploy())
+            launch(args);
+    }
+
+    public void setAPISession(MyAPI APISession) {
+        this.APISession = APISession;
+    }
+
+    public MyAPI getAPISession() {
+        return APISession;
+    }
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
+    public BorderPane getRootLayout() {
+        return rootLayout;
+    }
+
+    public AuthUtil getAuthUtil() {
+        return authUtil;
+    }
 
     @Override
-    public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"), 640, 480);
-        stage.setScene(scene);
-        stage.show();
+    public void start(Stage primaryStage) throws Exception {
+
+        //Выставляем RootLayout
+        this.primaryStage = primaryStage;
+        this.primaryStage.setTitle("Авторизация");
+        this.authUtil = new AuthUtil();
+
+        initRootLayout();
+        //Читаем токен из файла
+        String key = authUtil.readKey();
+        if (key != null){
+            APISession = new MyAPI(key, this);
+        }
+
+        //Если пользователь не авторизован
+        if  (!APISession.getIsAuthenticated()){
+            authUtil.writeKey("");
+            UserAuthorisation();
+        }
+        //Если уже успешно авторизовался
+        else {
+            this.primaryStage.setTitle("Сообщения ["+APISession.getUserName()+"]");
+            MainChat();
+        }
+
     }
 
-    static void setRoot(String fxml) throws IOException {
-        scene.setRoot(loadFXML(fxml));
+    /**
+     * Логика авторизации в программе
+     */
+    public void UserAuthorisation() {
+
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(App.class.getResource("views/LoginView.fxml"));
+            AnchorPane mainPage = loader.load();
+            rootLayout.setCenter(mainPage);
+            AuthorisationController controller = loader.getController();
+            controller.initialize(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private static Parent loadFXML(String fxml) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource(fxml + ".fxml"));
-        return fxmlLoader.load();
+    /**
+     * Логика регистрации в программе
+     */
+    public void UserRegistration() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(App.class.getResource("views/RegistrationView.fxml"));
+            AnchorPane mainPage = loader.load();
+            rootLayout.setCenter(mainPage);
+            RegistrationController controller = loader.getController();
+            controller.initialize(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public static void main(String[] args) {
-        launch();
+    /**
+     * Основное окно с чатами
+     */
+    public void MainChat() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(App.class.getResource("views/MainChatView.fxml"));
+            AnchorPane mainPage = loader.load();
+            rootLayout.setCenter(mainPage);
+            MainChatController controller = loader.getController();
+            controller.initialize(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Логика ошибки соединения
+     */
+    public void ConnectionError() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(App.class.getResource("views/ConnectionErrorView.fxml"));
+            AnchorPane mainPage = loader.load();
+            rootLayout.setCenter(mainPage);
+            ConnectionErrorController controller = loader.getController();
+            controller.initialize(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Окно создания новой комнаты
+     */
+    public void NewRoom(){
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(App.class.getResource("views/CreateNewRoomView.fxml"));
+            AnchorPane page = (AnchorPane) loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Создание диалога");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+            CreateNewRoomController controller = loader.getController();
+            controller.initialize(this, dialogStage);
+            dialogStage.showAndWait();;
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Базовый Layout
+     */
+    public void initRootLayout() {
+
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(App.class.getResource("views/RootLayoutView.fxml"));
+            rootLayout = loader.load();
+            Scene scene = new Scene(rootLayout);
+            primaryStage.setScene(scene);
+            RootLayoutController controller = loader.getController();
+            controller.initialize(this);
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 }

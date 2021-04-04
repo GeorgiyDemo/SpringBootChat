@@ -10,6 +10,8 @@
         <maven.compiler.target>15</maven.compiler.target>
     </properties>
     <dependencies>
+
+        <!--JavaFX -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -20,6 +22,38 @@
             <artifactId>javafx-fxml</artifactId>
             <version>15.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>15.0.1</version>
+        </dependency>
+
+        <!--Красивый интерфейс-->
+        <dependency>
+            <groupId>com.jfoenix</groupId>
+            <artifactId>jfoenix</artifactId>
+            <version>9.0.10</version>
+        </dependency>
+
+        <!--Работа с JSON-->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.6</version>
+        </dependency>
+
+        <!--Логирование-->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.14.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.14.0</version>
+        </dependency>
+
     </dependencies>
     <build>
         <plugins>
@@ -37,6 +71,10 @@
                 <version>0.0.5</version>
                 <configuration>
                     <mainClass>org.demka.App</mainClass>
+                    <options>
+                        <option>--add-opens</option>
+                        <option>java.base/java.lang.reflect=com.jfoenix</option>
+                    </options>
                     <launcher>launch.sh</launcher>
                     <compress>2</compress>
                     <jlinkZipName>DEMKAChat</jlinkZipName>
