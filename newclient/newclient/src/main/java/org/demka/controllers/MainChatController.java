@@ -11,13 +11,15 @@ import org.demka.models.Message;
 import org.demka.models.Room;
 import org.demka.api.LongPollRunnable;
 import org.demka.api.MyAPI;
-import org.demka.utils.MyLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class MainChatController extends SuperFullController {
     private ObservableList<Room> RoomData = FXCollections.observableArrayList();
     private ObservableList<Message> MessageData = FXCollections.observableArrayList();
+    private static final Logger logger = LoggerFactory.getLogger(MainChatController.class);
 
     private MyAPI APISession;
     @FXML
@@ -43,7 +45,7 @@ public class MainChatController extends SuperFullController {
     private void sendMessageButtonClicked(){
         String messageText = newMessageText.getText();
         if (messageText.equals("")){
-            MyLogger.logger.info("Поле отправки сообщения пустое");
+            logger.info("Поле отправки сообщения пустое");
         }
         else {
             //Отправляем сообщеньку
@@ -127,7 +129,7 @@ public class MainChatController extends SuperFullController {
 
         }
         RoomData.addAll(roomList);
-        MyLogger.logger.info("MainChatController - инициализировали все комнаты");
+        logger.info("MainChatController - инициализировали все комнаты");
 
         //Запускаем отдельный поток, который будет:
         // Добавлять новую комнату в RoomData, если пришло обновление по комнате, id которой нет в RoomData
@@ -135,7 +137,7 @@ public class MainChatController extends SuperFullController {
         LongPollRunnable runnable = new LongPollRunnable(RoomData, MessageData, APISession);
         Thread thread = new Thread(runnable, "LongPoll Thread");
         thread.start();
-        MyLogger.logger.info("MainChatController - стартанули LongPollRunnable");
+        logger.info("MainChatController - стартанули LongPollRunnable");
 
     }
 

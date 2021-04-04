@@ -1,13 +1,16 @@
 package org.demka.exceptions;
 
-import org.demka.utils.MyLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Обработка отрицательного ответа от сервера (response.result == false)
  */
 public class FalseServerFlagException extends  Exception{
+
+    private static final Logger logger = LoggerFactory.getLogger(FalseServerFlagException.class);
     public FalseServerFlagException(String URL, String serverResponse, String errorMessage) {
         super(errorMessage);
-        MyLogger.logger.error(errorMessage+"\n"+"URL: "+URL+"\n"+"Ответ: "+serverResponse);
+        logger.error(errorMessage+"\n"+"URL: "+URL+"\n"+"Ответ: "+serverResponse);
     }
 }

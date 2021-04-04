@@ -1,9 +1,7 @@
 package org.demka.controllers;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -11,10 +9,9 @@ import org.demka.App;
 import org.demka.api.MyAPI;
 import org.demka.exceptions.EmptyAPIResponseException;
 import org.demka.exceptions.FalseServerFlagException;
-import org.demka.models.Message;
-import org.demka.models.Room;
 import org.demka.models.User;
-import org.demka.utils.MyLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +35,8 @@ public class CreateNewRoomController extends SuperPartController {
     private Button CreateRoomButton;
     @FXML
     private TextField ChatName;
-
     private boolean CustomChatName = false;
+    private static final Logger logger = LoggerFactory.getLogger(CreateNewRoomController.class);
 
     @Override
     public void initialize(App mainApp, Stage dialogStage) {
@@ -134,7 +131,7 @@ public class CreateNewRoomController extends SuperPartController {
 
         for (int i = 0; i < selectedUsers.size(); i++) {
             User user = selectedUsers.get(i);
-            MyLogger.logger.info("addUserToChat - добавили пользователя " + user.getName());
+            logger.info("addUserToChat - добавили пользователя " + user.getName());
             AllUsersData.remove(user);
             ChatUsersData.add(user);
         }
@@ -156,7 +153,7 @@ public class CreateNewRoomController extends SuperPartController {
 
         for (int i = 0; i < selectedUsers.size(); i++) {
             User user = selectedUsers.get(i);
-            MyLogger.logger.info("addUserToChat - удалили пользователя " + user.getName());
+            logger.info("addUserToChat - удалили пользователя " + user.getName());
             ChatUsersData.remove(user);
             AllUsersData.add(user);
         }

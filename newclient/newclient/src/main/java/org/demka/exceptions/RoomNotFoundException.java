@@ -1,13 +1,15 @@
 package org.demka.exceptions;
 
-import org.demka.utils.MyLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Ошибка, если комната не найдена
  */
 public class RoomNotFoundException extends Exception {
+    private static final Logger logger = LoggerFactory.getLogger(RoomNotFoundException.class);
     public RoomNotFoundException(String errorMessage) {
         super(errorMessage);
-        MyLogger.logger.error(errorMessage);
+        logger.error(errorMessage);
     }
 }

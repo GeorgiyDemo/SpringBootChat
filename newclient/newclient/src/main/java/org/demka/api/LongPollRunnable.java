@@ -7,7 +7,8 @@ import org.demka.exceptions.LongpollListenerException;
 import org.demka.exceptions.RoomNotFoundException;
 import org.demka.models.Message;
 import org.demka.models.Room;
-import org.demka.utils.MyLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -16,6 +17,7 @@ public class LongPollRunnable implements Runnable{
     ObservableList<Room> roomData;
     ObservableList<Message> messageData;
     MyAPI apiSession;
+    private static final Logger logger = LoggerFactory.getLogger(LongPollRunnable.class);
 
     public LongPollRunnable(ObservableList<Room> roomData, ObservableList<Message> messageData, MyAPI apiSession) {
         this.roomData = roomData;
@@ -53,7 +55,7 @@ public class LongPollRunnable implements Runnable{
     public void run() {
 
         while (true) {
-            MyLogger.logger.info("LongPollRunnable - Работаем");
+            logger.info("LongPollRunnable - Работаем");
             //Пытаемся получить новые данные
             try {
                 List<Message> newMessages = apiSession.longpollListener();
@@ -67,7 +69,7 @@ public class LongPollRunnable implements Runnable{
                     if (existInt != -1){
                         //Добавляем сообщение
                         roomData.get(existInt).addMessage(msg);
-                        MyLogger.logger.info("Добавили сообщение '"+msg.getText()+"' для комнаты "+msg.getRoomId());
+                        logger.info("Добавили сообщение '"+msg.getText()+"' для комнаты "+msg.getRoomId());
                         //Если открыт уже диалог с текущей конференцией
                         if (messageRoomId.equals(apiSession.getCurrentRoomId())){
                             messageData.add(msg);
@@ -83,10 +85,10 @@ public class LongPollRunnable implements Runnable{
                             newRoom.addMessage(msg);
                             //Добавляем саму комнату
                             roomData.add(newRoom);
-                            MyLogger.logger.info("Получили новую комнату "+newRoom.getName()+" ["+newRoom.getId()+"]");
+                            logger.info("Получили новую комнату "+newRoom.getName()+" ["+newRoom.getId()+"]");
                         }
                         catch (RoomNotFoundException e){
-                            MyLogger.logger.error("Случилось странное: бек отдал сообщение с комнаты "+messageRoomId+", но её не существует");
+                            logger.error("Случилось странное: бек отдал сообщение с комнаты "+messageRoomId+", но её не существует");
                         } catch (EmptyAPIResponseException e) {
                             e.printStackTrace();
                         }
@@ -107,7 +109,7 @@ public class LongPollRunnable implements Runnable{
                 Thread.sleep(250);
             } catch (InterruptedException e) {
                 e.printStackTrace();
-                MyLogger.logger.error("LongPollRunnable - Прекратил работу");
+                logger.error("LongPollRunnable - Прекратил работу");
                 return;
             }
         }

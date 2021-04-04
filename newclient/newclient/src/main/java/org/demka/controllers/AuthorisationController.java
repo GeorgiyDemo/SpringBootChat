@@ -7,7 +7,8 @@ import javafx.scene.control.Label;
 import org.demka.App;
 import org.demka.api.MyAPI;
 import org.demka.utils.AuthUtil;
-import org.demka.utils.MyLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -23,16 +24,17 @@ public class AuthorisationController extends SuperFullController {
     private JFXTextField PasswordTextField;
     @FXML
     private JFXCheckBox AutoLoginCheckBox;
+    private static final Logger logger = LoggerFactory.getLogger(AuthorisationController.class);
 
     @FXML
     public void mainButtonClick() throws IOException {
 
-        MyLogger.logger.info("Нажатие на button авторизации в программе");
+        logger.info("Нажатие на button авторизации в программе");
         String login = LoginTextField.getText();
         String password = PasswordTextField.getText();
 
         if ((login.equals("")) || (password.equals(""))){
-            MyLogger.logger.info("Попытка входа без ввода данных");
+            logger.info("Попытка входа без ввода данных");
         }
         else{
             //Пытаемся авторизоваться
@@ -46,11 +48,11 @@ public class AuthorisationController extends SuperFullController {
                     authUtil.writeKey(bufSession.getUserKey());
                 }
                 mainApp.MainChat();
-                MyLogger.logger.info("Пользователь успешно авторизовался");
+                logger.info("Пользователь успешно авторизовался");
             }
             else{
                 WrongAuth.setOpacity(1);
-                MyLogger.logger.info("Не удалось авторизоваться");
+                logger.info("Не удалось авторизоваться");
             }
 
 

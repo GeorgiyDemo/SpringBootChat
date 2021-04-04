@@ -13,7 +13,6 @@ org/demka/api/SuperAPI.class
 org/demka/controllers/SuperPartController.class
 org/demka/api/LongPollRunnable.class
 org/demka/controllers/CreateNewRoomController.class
-org/demka/utils/MyLogger.class
 org/demka/utils/FileProcessing.class
 org/demka/exceptions/RoomNotFoundException.class
 org/demka/App.class

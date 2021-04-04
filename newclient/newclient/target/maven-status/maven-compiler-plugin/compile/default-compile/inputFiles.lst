@@ -16,7 +16,6 @@
 /Users/demg/Documents/Projects/SpringBootChat/newclient/newclient/src/main/java/org/demka/models/Room.java
 /Users/demg/Documents/Projects/SpringBootChat/newclient/newclient/src/main/java/org/demka/exceptions/EmptyAPIResponseException.java
 /Users/demg/Documents/Projects/SpringBootChat/newclient/newclient/src/main/java/org/demka/api/LongPollRunnable.java
-/Users/demg/Documents/Projects/SpringBootChat/newclient/newclient/src/main/java/org/demka/utils/MyLogger.java
 /Users/demg/Documents/Projects/SpringBootChat/newclient/newclient/src/main/java/org/demka/utils/HTTPRequest.java
 /Users/demg/Documents/Projects/SpringBootChat/newclient/newclient/src/main/java/org/demka/exceptions/RoomNotFoundException.java
 /Users/demg/Documents/Projects/SpringBootChat/newclient/newclient/src/main/java/org/demka/utils/AuthUtil.java

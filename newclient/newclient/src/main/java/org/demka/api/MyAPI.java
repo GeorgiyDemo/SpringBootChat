@@ -11,7 +11,8 @@ import org.demka.models.Message;
 import org.demka.models.Room;
 import org.demka.models.User;
 import org.demka.utils.HTTPRequest;
-import org.demka.utils.MyLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -35,6 +36,7 @@ public class MyAPI implements SuperAPI {
     private String currentRoomId;
 
     private boolean isAuthenticated;
+    private static final Logger logger = LoggerFactory.getLogger(MyAPI.class);
 
     //Авторизация через пару логин/пароль
     public MyAPI(String login, String password, App mainApp) {
@@ -44,7 +46,7 @@ public class MyAPI implements SuperAPI {
         } catch (EmptyAPIResponseException e) {
             e.printStackTrace();
         }
-        MyLogger.logger.info("Инициализировали MyAPI");
+        logger.info("Инициализировали MyAPI");
     }
 
     //Авторизация через ключ
@@ -55,7 +57,7 @@ public class MyAPI implements SuperAPI {
         } catch (EmptyAPIResponseException e) {
             e.printStackTrace();
         }
-        MyLogger.logger.info("Инициализировали MyAPI");
+        logger.info("Инициализировали MyAPI");
     }
 
     /**
@@ -81,10 +83,10 @@ public class MyAPI implements SuperAPI {
                 this.userId = userData.get("id").getAsString();
                 this.userKey = userData.get("key").getAsString();
                 this.userName = userData.get("name").getAsString();
-                MyLogger.logger.info("Auth - Авторизация с помощью пары логин/пароль прошла успешно");
+                logger.info("Auth - Авторизация с помощью пары логин/пароль прошла успешно");
                 return true;
             }
-            MyLogger.logger.info("Auth - Авторизация с помощью пары логин/пароль не удалась");
+            logger.info("Auth - Авторизация с помощью пары логин/пароль не удалась");
             return false;
 
         }
@@ -113,10 +115,10 @@ public class MyAPI implements SuperAPI {
                 this.userId = userData.get("id").getAsString();
                 this.userKey = userData.get("key").getAsString();
                 this.userName = userData.get("name").getAsString();
-                MyLogger.logger.info("Auth - Авторизация с помощью ключа API прошла успешно");
+                logger.info("Auth - Авторизация с помощью ключа API прошла успешно");
                 return true;
             }
-            MyLogger.logger.info("Auth - Авторизация с помощью ключа API не удалась");
+            logger.info("Auth - Авторизация с помощью ключа API не удалась");
             return false;
         }
         throw new EmptyAPIResponseException(mainApp, "Auth - получили пустой ответ от сервера");
@@ -163,7 +165,7 @@ public class MyAPI implements SuperAPI {
                     resultList.add(room);
                 }
 
-                MyLogger.logger.info("getUserRooms - Получили список комнат для пользователя "+userId);
+                logger.info("getUserRooms - Получили список комнат для пользователя "+userId);
                 return resultList;
             }
             else{
@@ -200,7 +202,7 @@ public class MyAPI implements SuperAPI {
                     usersList.add(usersArray.get(i).getAsString());
                 }
                 int timeCreated = currentRoom.get("timeCreated").getAsInt();
-                MyLogger.logger.info("getRoomInfo - отдали данные для комнаты с id "+roomId);
+                logger.info("getRoomInfo - отдали данные для комнаты с id "+roomId);
                 return new Room(creatorId,roomName,timeCreated,usersList,roomId);
             }
             else {
@@ -246,7 +248,7 @@ public class MyAPI implements SuperAPI {
                     Message bufMessage = new Message(messageUserId, messageUserName, messageText, messageRoom, messageTimeCreated, messageId );
                     resultList.add(bufMessage);
                 }
-                MyLogger.logger.info("getRoomMessagesHistory - Получили список сообщений для комнаты "+roomId);
+                logger.info("getRoomMessagesHistory - Получили список сообщений для комнаты "+roomId);
                 return resultList;
             }
             else {
@@ -280,7 +282,7 @@ public class MyAPI implements SuperAPI {
         if (response != null) {
             JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
             if (jsonResult.get("result").getAsBoolean()) {
-                MyLogger.logger.info("createRoom - Успешно создали новую комнату");
+                logger.info("createRoom - Успешно создали новую комнату");
                 return  true;
             }
             else {
@@ -327,7 +329,7 @@ public class MyAPI implements SuperAPI {
                     User bufUser = new User(userId, userName, userTimeCreated);
                     resultList.add(bufUser);
                 }
-                MyLogger.logger.info("getUsers - получили "+resultList.size()+" пользователей");
+                logger.info("getUsers - получили "+resultList.size()+" пользователей");
                 return resultList;
             }
             else{
@@ -365,7 +367,7 @@ public class MyAPI implements SuperAPI {
                     String messageUserId = newMessageJsonObject.get("userId").getAsString();
                     String messageUserName = newMessageJsonObject.get("userName").getAsString();
 
-                    MyLogger.logger.info("writeMessage - Отправили новое сообщение "+messageText +" "+messageId);
+                    logger.info("writeMessage - Отправили новое сообщение "+messageText +" "+messageId);
                     return new Message(messageUserId, messageUserName, messageText,roomId,timeCreated,messageId);
             }
 
@@ -401,7 +403,7 @@ public class MyAPI implements SuperAPI {
                 this.longpollTs = credentials.get("ts").getAsString();
                 this.longpollSubUrl = credentials.get("url").getAsString();
                 this.longpollKey = credentials.get("key").getAsString();
-                MyLogger.logger.info("getLongpollServer - получили конфиг, инициализировались");
+                logger.info("getLongpollServer - получили конфиг, инициализировались");
             }
             else {
                 throw new FalseServerFlagException(URL,response,"getLongpollServer - Не удалось получить конфиг, не инициализировались");
@@ -422,7 +424,7 @@ public class MyAPI implements SuperAPI {
 
         //Если лонгпул не инициализирован
         if (longpollKey == null || longpollTs == null || longpollSubUrl == null){
-            MyLogger.logger.error("longpollListener - LongPool не инициалзирован");
+            logger.error("longpollListener - LongPool не инициалзирован");
             throw new LongpollListenerException("Лонгпул не был иницилизирован! Нужно использовать метод getLongpollServer для иницализации");
         }
 
@@ -434,7 +436,7 @@ public class MyAPI implements SuperAPI {
 
             //Запрашиваем данные по URL
             String URL = String.format("%s/longpoll/updates/%s?key=%s&ts=%s", ServerURL, longpollSubUrl, longpollKey, longpollTs);
-            MyLogger.logger.info("longpollListener - отправили запрос, ожидаем новые сообщения..");
+            logger.info("longpollListener - отправили запрос, ожидаем новые сообщения..");
             String response = HTTPRequest.sendGET(URL);
 
             //Если ответ есть
@@ -463,7 +465,7 @@ public class MyAPI implements SuperAPI {
                         Message bufMessage = new Message(messageUserId, messageUserName, messageText, messageRoom, messageTimeCreated, messageId);
                         resultList.add(bufMessage);
                     }
-                    MyLogger.logger.info("longpollListener - получили новые сообщения");
+                    logger.info("longpollListener - получили новые сообщения");
                 }
                 else{
                     throw new LongpollListenerException("Ответ result = false. Нужна повторная авторизация (или же мы передали что-то некорректно");

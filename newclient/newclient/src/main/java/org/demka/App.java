@@ -2,7 +2,6 @@ package org.demka;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -11,7 +10,6 @@ import javafx.stage.Stage;
 import org.demka.api.MyAPI;
 import org.demka.controllers.*;
 import org.demka.utils.AuthUtil;
-import org.demka.utils.MyLogger;
 
 import java.io.IOException;
 
@@ -31,9 +29,7 @@ public class App extends Application {
      * @param args
      */
     public static void main(String[] args) {
-        MyLogger log = new MyLogger();
-        if (log.deploy())
-            launch(args);
+        launch(args);
     }
 
     public void setAPISession(MyAPI APISession) {
