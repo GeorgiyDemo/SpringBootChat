@@ -17,7 +17,7 @@ import java.util.Map;
 
 public interface SuperAPI {
 
-    String ServerURL = "http://127.0.0.1:8080";
+    String ServerURL = "http://149.248.54.195:8080";
 
     /**
      * TODO: Регистрация пользователя в системе

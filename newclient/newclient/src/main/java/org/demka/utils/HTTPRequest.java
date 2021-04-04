@@ -14,8 +14,8 @@ public class HTTPRequest {
     public static String sendGET(String urlString) {
 
         try {
-            URL obj = new URL(urlString);
-            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            URL url = new URL(urlString);
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             int responseCode = con.getResponseCode();
 

@@ -2,16 +2,23 @@ package org.demka.utils;
 
 import com.google.gson.Gson;
 
-import java.io.IOException;
-import java.net.URL;
+import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class AuthUtil {
 
-    private FileProcessing fileProcessing;
+    private final FileProcessing fileProcessing;
 
     public AuthUtil(){
-        URL fileName = getClass().getResource("/org/demka/storage/data.json");
-        this.fileProcessing = new FileProcessing(fileName.getPath());
+
+        Path paths = null;
+        try {
+            paths = Paths.get(this.getClass().getResource("/org/demka/data.json").toURI());
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        this.fileProcessing = new FileProcessing(paths);
     }
 
     public String readKey(){
