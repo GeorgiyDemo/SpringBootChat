@@ -1,6 +1,7 @@
 package org.demka.controllers;
 
 import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -21,7 +22,7 @@ public class AuthorisationController extends SuperFullController {
     @FXML
     private JFXTextField LoginTextField;
     @FXML
-    private JFXTextField PasswordTextField;
+    private JFXPasswordField PasswordTextField;
     @FXML
     private JFXCheckBox AutoLoginCheckBox;
     private static final Logger logger = LoggerFactory.getLogger(AuthorisationController.class);

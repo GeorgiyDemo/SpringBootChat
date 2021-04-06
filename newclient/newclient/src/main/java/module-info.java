@@ -4,6 +4,7 @@ module org.demka {
     requires com.jfoenix;
     requires com.google.gson;
     requires org.slf4j;
+    requires com.github.oshi;
 
     opens org.demka to javafx.fxml;
     opens org.demka.controllers to javafx.fxml;

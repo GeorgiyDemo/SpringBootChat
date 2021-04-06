@@ -17,7 +17,7 @@
                 <Font name="Helvetica" size="13.0" />
             </font>
         </JFXTextField>
-        <JFXTextField fx:id="PasswordTextField" focusColor="WHITE" layoutX="245.0" layoutY="183.0" promptText="Пароль" unFocusColor="WHITE" />
+        <JFXPasswordField fx:id="PasswordTextField" focusColor="WHITE" layoutX="245.0" layoutY="183.0" promptText="Пароль" unFocusColor="WHITE" />
         <JFXButton fx:id="LoginButton" layoutX="246.0" layoutY="274.0" onAction="#mainButtonClick" prefHeight="40.0" prefWidth="143.0" ripplerFill="#2491bf" text="Войти" textFill="WHITE" />
         <Label fx:id="AppName" layoutX="240.0" layoutY="59.0" text="DEMKA CHAT" textFill="WHITE">
             <font>
