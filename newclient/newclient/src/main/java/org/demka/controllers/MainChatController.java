@@ -145,7 +145,6 @@ public class MainChatController extends SuperFullController {
         Thread thread2 = new Thread(runnable2, "Check internet connection thread");
         thread2.start();
         logger.info("MainChatController - стартанули CheckInternetRunnable");
-
     }
 
     /**

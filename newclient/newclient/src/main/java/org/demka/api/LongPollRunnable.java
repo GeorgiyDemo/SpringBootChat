@@ -15,16 +15,17 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class LongPollRunnable implements Runnable{
+public class LongPollRunnable extends SuperRunnable{
 
-    ObservableList<Room> roomData;
-    ObservableList<Message> messageData;
-    MyAPI apiSession;
-    App app;
+    private ObservableList<Room> roomData;
+    private ObservableList<Message> messageData;
+    private MyAPI apiSession;
+    private App app;
 
     private static final Logger logger = LoggerFactory.getLogger(LongPollRunnable.class);
 
     public LongPollRunnable(ObservableList<Room> roomData, ObservableList<Message> messageData, MyAPI apiSession, App app) {
+        SuperRunnable.runnableList.add(this);
         this.roomData = roomData;
         this.apiSession = apiSession;
         this.messageData = messageData;
@@ -60,7 +61,7 @@ public class LongPollRunnable implements Runnable{
     @Override
     public void run() {
 
-        while (true) {
+        while (!exit) {
             logger.info("LongPollRunnable - Работаем");
             //Пытаемся получить новые данные
 
@@ -127,12 +128,13 @@ public class LongPollRunnable implements Runnable{
             //Если находились в ConnectionErrorController, но при этом не получили ошибки, то обратно переходим в чат
             if ((!exceptionFlag) && (ConnectionErrorController.isActive)){
                 ConnectionErrorController.isActive = false;
+                Platform.runLater(() -> app.myStart(app.getPrimaryStage()));
+                this.stopAll();
                 break;
             }
         }
 
         //Переходим отбратно в чат, а данный поток завершает свою работу
-        Platform.runLater(() -> app.myStart(app.getPrimaryStage()));
         logger.info("Поток '"+Thread.currentThread().getName()+"' завершил свою работу");
     }
 }

@@ -8,15 +8,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class CheckInternetRunnable implements Runnable {
+public class CheckInternetRunnable extends SuperRunnable {
+
 
       private static final Logger logger = LoggerFactory.getLogger(CheckInternetRunnable.class);
-      App app;
+      private App app;
       public CheckInternetRunnable(App app){
+            SuperRunnable.runnableList.add(this);
             this.app = app;
       }
       /**
@@ -32,8 +33,12 @@ public class CheckInternetRunnable implements Runnable {
        */
       @Override
       public void run() {
-            while (true){
+
+            System.out.println(exit);
+
+            while (!exit){
                   //Проверяем интернет
+
 
                   boolean exceptionFlag = false;
                   try {
@@ -68,12 +73,13 @@ public class CheckInternetRunnable implements Runnable {
                   //Если интернет появился, то обратно переходим в чат
                   if ((!exceptionFlag) && (ConnectionErrorController.isActive)){
                         ConnectionErrorController.isActive = false;
+                        Platform.runLater(() -> app.myStart(app.getPrimaryStage()));
+                        this.stopAll();
                         break;
                   }
             }
 
             //Переходим отбратно в чат, а данный поток завершает свою работу
-            Platform.runLater(() -> app.myStart(app.getPrimaryStage()));
             logger.info("Поток '"+Thread.currentThread().getName()+"' завершил свою работу");
       }
 }
