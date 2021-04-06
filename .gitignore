@@ -6,3 +6,4 @@ other/.env
 database/
 .env
 newclient/newclient/target/
+newclient/newclient/.tempdata

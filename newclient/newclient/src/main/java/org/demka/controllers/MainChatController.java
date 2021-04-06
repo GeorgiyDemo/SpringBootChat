@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.demka.App;
+import org.demka.api.CheckInternetRunnable;
 import org.demka.exceptions.EmptyAPIResponseException;
 import org.demka.exceptions.FalseServerFlagException;
 import org.demka.models.Message;
@@ -134,10 +135,16 @@ public class MainChatController extends SuperFullController {
         //Запускаем отдельный поток, который будет:
         // Добавлять новую комнату в RoomData, если пришло обновление по комнате, id которой нет в RoomData
         // Добавлять в определенный элемент room.addMessage() новое сообщение, которое прилетело через лонгпул
-        LongPollRunnable runnable = new LongPollRunnable(RoomData, MessageData, APISession,mainApp);
-        Thread thread = new Thread(runnable, "LongPoll Thread");
-        thread.start();
+        LongPollRunnable runnable1 = new LongPollRunnable(RoomData, MessageData, APISession,mainApp);
+        Thread thread1 = new Thread(runnable1, "LongPoll thread");
+        thread1.start();
         logger.info("MainChatController - стартанули LongPollRunnable");
+
+        //Поток, который проверяет доступонсть интернета
+        CheckInternetRunnable runnable2 = new CheckInternetRunnable();
+        Thread thread2 = new Thread(runnable2, "Check internet connection thread");
+        thread2.start();
+        logger.info("MainChatController - стартанули CheckInternetRunnable");
 
     }
 

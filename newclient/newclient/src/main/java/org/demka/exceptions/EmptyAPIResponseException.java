@@ -20,4 +20,6 @@ public class EmptyAPIResponseException extends Exception {
         //Это синхронизация с main JavaFX потоком, чтоб там отрисовать эту сцену
         Platform.runLater(mainApp::ConnectionError);
     }
+
+
 }

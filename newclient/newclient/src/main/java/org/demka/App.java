@@ -62,7 +62,7 @@ public class App extends Application {
         //Выставляем RootLayout
         System.out.println(String2Hash.convert("3845"));
         this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("Авторизация");
+        this.primaryStage.setTitle("DEMKAChat - Авторизация");
         this.authUtil = new AuthUtil();
         initRootLayout();
         //Читаем токен из файла
@@ -78,7 +78,7 @@ public class App extends Application {
         }
         //Если уже успешно авторизовался
         else {
-            this.primaryStage.setTitle("Сообщения ["+APISession.getUserName()+"]");
+            this.primaryStage.setTitle("DEMKAChat - Сообщения ["+APISession.getUserName()+"]");
             MainChat();
         }
     }

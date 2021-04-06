@@ -48,6 +48,8 @@ public class AuthorisationController extends SuperFullController {
                     AuthUtil authUtil = mainApp.getAuthUtil();
                     authUtil.writeKey(bufSession.getUserKey());
                 }
+
+                mainApp.getPrimaryStage().setTitle("DEMKAChat - Сообщения ["+bufSession.getUserName()+"]");
                 mainApp.MainChat();
                 logger.info("Пользователь успешно авторизовался");
             }

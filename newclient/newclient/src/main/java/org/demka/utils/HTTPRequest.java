@@ -18,6 +18,7 @@ public class HTTPRequest {
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
             int responseCode = con.getResponseCode();
+            System.out.println(responseCode);
 
             //Если все хорошо
             if (responseCode == HttpURLConnection.HTTP_OK) {

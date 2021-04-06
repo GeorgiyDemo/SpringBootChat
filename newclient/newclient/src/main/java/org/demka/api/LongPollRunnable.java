@@ -21,26 +21,18 @@ public class LongPollRunnable implements Runnable{
     ObservableList<Message> messageData;
     MyAPI apiSession;
     App app;
+
+    public static  boolean IsInternetAvailable;
     private static final Logger logger = LoggerFactory.getLogger(LongPollRunnable.class);
 
     public LongPollRunnable(ObservableList<Room> roomData, ObservableList<Message> messageData, MyAPI apiSession, App app) {
+        LongPollRunnable.IsInternetAvailable = true;
         this.roomData = roomData;
         this.apiSession = apiSession;
         this.messageData = messageData;
         this.app = app;
     }
 
-    /**
-     * When an object implementing interface {@code Runnable} is used
-     * to create a thread, starting the thread causes the object's
-     * {@code run} method to be called in that separately executing
-     * thread.
-     * <p>
-     * The general contract of the method {@code run} is that it may
-     * take any action whatsoever.
-     *
-     * @see Thread#run()
-     */
 
     /***
      * Проверка на существование комнаты по её id
@@ -56,6 +48,17 @@ public class LongPollRunnable implements Runnable{
         return -1;
     }
 
+    /**
+     * When an object implementing interface {@code Runnable} is used
+     * to create a thread, starting the thread causes the object's
+     * {@code run} method to be called in that separately executing
+     * thread.
+     * <p>
+     * The general contract of the method {@code run} is that it may
+     * take any action whatsoever.
+     *
+     * @see Thread#run()
+     */
     @Override
     public void run() {
 
@@ -101,6 +104,16 @@ public class LongPollRunnable implements Runnable{
                         }
                     }
                 }
+
+                //Если поток CheckInternetRunnable поменял переменную
+                if (!LongPollRunnable.IsInternetAvailable){
+                    throw new EmptyAPIResponseException(app, "нет интернет-соединения");
+                }
+            }
+
+            //Нет интернета
+            catch (EmptyAPIResponseException e){
+                exceptionFlag = true;
             }
 
             //Если необходимо заново пройти авторизацию - проходим
