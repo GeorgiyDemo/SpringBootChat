@@ -11,6 +11,7 @@ import org.demka.models.Message;
 import org.demka.models.Room;
 import org.demka.models.User;
 import org.demka.utils.HTTPRequest;
+import org.demka.utils.String2Hash;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,7 +72,7 @@ public class MyAPI implements SuperAPI {
     @Override
     public boolean Auth(String login, String password) throws EmptyAPIResponseException {
         login = URLEncoder.encode(login, StandardCharsets.UTF_8);
-        password = URLEncoder.encode(password, StandardCharsets.UTF_8);
+        password = String2Hash.convert(password);
 
         String URL = String.format("%s/user/auth?login=%s&password=%s", ServerURL, login, password);
         String response = HTTPRequest.sendGET(URL);

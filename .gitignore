@@ -5,3 +5,4 @@ other/database/mongodbdata/
 other/.env
 database/
 .env
+newclient/newclient/target/

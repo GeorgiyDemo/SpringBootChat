@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 import org.demka.api.MyAPI;
 import org.demka.controllers.*;
 import org.demka.utils.AuthUtil;
+import org.demka.utils.String2Hash;
 
 import java.io.IOException;
 
@@ -54,7 +55,6 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
         //Выставляем RootLayout
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Авторизация");

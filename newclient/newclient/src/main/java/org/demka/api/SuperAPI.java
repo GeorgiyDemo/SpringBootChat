@@ -8,6 +8,7 @@ import org.demka.models.Message;
 import org.demka.models.Room;
 import org.demka.models.User;
 import org.demka.utils.HTTPRequest;
+import org.demka.utils.String2Hash;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -30,7 +31,7 @@ public interface SuperAPI {
         String URL = String.format("%s/user/register", ServerURL);
         Map<String,String> params = new HashMap<>();
         params.put("login", login);
-        params.put("password", password);
+        params.put("password", String2Hash.convert(password));
         params.put("username", name);
 
         String response = HTTPRequest.sendPOST(URL, params);
