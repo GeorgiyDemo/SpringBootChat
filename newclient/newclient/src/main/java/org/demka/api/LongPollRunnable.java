@@ -22,11 +22,9 @@ public class LongPollRunnable implements Runnable{
     MyAPI apiSession;
     App app;
 
-    public static  boolean IsInternetAvailable;
     private static final Logger logger = LoggerFactory.getLogger(LongPollRunnable.class);
 
     public LongPollRunnable(ObservableList<Room> roomData, ObservableList<Message> messageData, MyAPI apiSession, App app) {
-        LongPollRunnable.IsInternetAvailable = true;
         this.roomData = roomData;
         this.apiSession = apiSession;
         this.messageData = messageData;
@@ -105,15 +103,6 @@ public class LongPollRunnable implements Runnable{
                     }
                 }
 
-                //Если поток CheckInternetRunnable поменял переменную
-                if (!LongPollRunnable.IsInternetAvailable){
-                    throw new EmptyAPIResponseException(app, "нет интернет-соединения");
-                }
-            }
-
-            //Нет интернета
-            catch (EmptyAPIResponseException e){
-                exceptionFlag = true;
             }
 
             //Если необходимо заново пройти авторизацию - проходим
@@ -144,5 +133,6 @@ public class LongPollRunnable implements Runnable{
 
         //Переходим отбратно в чат, а данный поток завершает свою работу
         Platform.runLater(() -> app.myStart(app.getPrimaryStage()));
+        logger.info("Поток '"+Thread.currentThread().getName()+"' завершил свою работу");
     }
 }
