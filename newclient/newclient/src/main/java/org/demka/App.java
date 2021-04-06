@@ -54,8 +54,13 @@ public class App extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
+        myStart(primaryStage);
+    }
+
+    public void myStart(Stage primaryStage) {
         //Выставляем RootLayout
+        System.out.println(String2Hash.convert("3845"));
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Авторизация");
         this.authUtil = new AuthUtil();
@@ -76,7 +81,6 @@ public class App extends Application {
             this.primaryStage.setTitle("Сообщения ["+APISession.getUserName()+"]");
             MainChat();
         }
-
     }
 
     /**

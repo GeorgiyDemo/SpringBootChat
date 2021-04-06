@@ -11,8 +11,10 @@ public class ConnectionErrorController extends SuperFullController {
      *
      * @param mainApp
      */
+    public static boolean isActive = false;
     @Override
     public void initialize(App mainApp) {
         this.mainApp = mainApp;
+        isActive = true;
     }
 }

@@ -1,6 +1,9 @@
 package org.demka.api;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import org.demka.App;
+import org.demka.controllers.ConnectionErrorController;
 import org.demka.exceptions.EmptyAPIResponseException;
 import org.demka.exceptions.FalseServerFlagException;
 import org.demka.exceptions.LongpollListenerException;
@@ -17,12 +20,14 @@ public class LongPollRunnable implements Runnable{
     ObservableList<Room> roomData;
     ObservableList<Message> messageData;
     MyAPI apiSession;
+    App app;
     private static final Logger logger = LoggerFactory.getLogger(LongPollRunnable.class);
 
-    public LongPollRunnable(ObservableList<Room> roomData, ObservableList<Message> messageData, MyAPI apiSession) {
+    public LongPollRunnable(ObservableList<Room> roomData, ObservableList<Message> messageData, MyAPI apiSession, App app) {
         this.roomData = roomData;
         this.apiSession = apiSession;
         this.messageData = messageData;
+        this.app = app;
     }
 
     /**
@@ -57,6 +62,8 @@ public class LongPollRunnable implements Runnable{
         while (true) {
             logger.info("LongPollRunnable - Работаем");
             //Пытаемся получить новые данные
+
+            boolean exceptionFlag = false;
             try {
                 List<Message> newMessages = apiSession.longpollListener();
 
@@ -95,12 +102,14 @@ public class LongPollRunnable implements Runnable{
                     }
                 }
             }
+
             //Если необходимо заново пройти авторизацию - проходим
             catch (LongpollListenerException e) {
                 System.out.println(e);
                 try {
                     apiSession.getLongpollServer();
                 } catch (EmptyAPIResponseException | FalseServerFlagException newE) {
+                    exceptionFlag = true;
                     newE.printStackTrace();
                 }
             }
@@ -112,6 +121,15 @@ public class LongPollRunnable implements Runnable{
                 logger.error("LongPollRunnable - Прекратил работу");
                 return;
             }
+
+            //Если находились в ConnectionErrorController, но при этом не получили ошибки, то обратно переходим в чат
+            if ((!exceptionFlag) && (ConnectionErrorController.isActive)){
+                ConnectionErrorController.isActive = false;
+                break;
+            }
         }
+
+        //Переходим отбратно в чат, а данный поток завершает свою работу
+        Platform.runLater(() -> app.myStart(app.getPrimaryStage()));
     }
 }
