@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class LongPollRunnable extends SuperRunnable{
+public class LongPollRunnable implements Runnable{
 
     private ObservableList<Room> roomData;
     private ObservableList<Message> messageData;
@@ -25,7 +25,6 @@ public class LongPollRunnable extends SuperRunnable{
     private static final Logger logger = LoggerFactory.getLogger(LongPollRunnable.class);
 
     public LongPollRunnable(ObservableList<Room> roomData, ObservableList<Message> messageData, MyAPI apiSession, App app) {
-        SuperRunnable.runnableList.add(this);
         this.roomData = roomData;
         this.apiSession = apiSession;
         this.messageData = messageData;
@@ -61,7 +60,7 @@ public class LongPollRunnable extends SuperRunnable{
     @Override
     public void run() {
 
-        while (!exit) {
+        while (!Thread.currentThread().isInterrupted()) {
             logger.info("LongPollRunnable - Работаем");
             //Пытаемся получить новые данные
 
@@ -120,8 +119,8 @@ public class LongPollRunnable extends SuperRunnable{
             try {
                 Thread.sleep(250);
             } catch (InterruptedException e) {
-                e.printStackTrace();
-                logger.error("LongPollRunnable - Прекратил работу");
+                Thread.currentThread().interrupt();
+                logger.error("Поток '"+Thread.currentThread().getName()+"' с id "+Thread.currentThread().getId()+" убит");
                 return;
             }
 
@@ -129,12 +128,12 @@ public class LongPollRunnable extends SuperRunnable{
             if ((!exceptionFlag) && (ConnectionErrorController.isActive)){
                 ConnectionErrorController.isActive = false;
                 Platform.runLater(() -> app.myStart(app.getPrimaryStage()));
-                this.stopAll();
+                RunnableManager.interruptAll();
                 break;
             }
         }
 
         //Переходим отбратно в чат, а данный поток завершает свою работу
-        logger.info("Поток '"+Thread.currentThread().getName()+"' завершил свою работу");
+        logger.error("Поток '"+Thread.currentThread().getName()+"' с id "+Thread.currentThread().getId()+" завершил работу");
     }
 }

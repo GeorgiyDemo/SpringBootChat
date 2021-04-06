@@ -11,15 +11,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class CheckInternetRunnable extends SuperRunnable {
+public class CheckInternetRunnable implements Runnable {
 
 
       private static final Logger logger = LoggerFactory.getLogger(CheckInternetRunnable.class);
       private App app;
       public CheckInternetRunnable(App app){
-            SuperRunnable.runnableList.add(this);
             this.app = app;
       }
+
       /**
        * When an object implementing interface {@code Runnable} is used
        * to create a thread, starting the thread causes the object's
@@ -34,9 +34,8 @@ public class CheckInternetRunnable extends SuperRunnable {
       @Override
       public void run() {
 
-            System.out.println(exit);
 
-            while (!exit){
+            while (!Thread.currentThread().isInterrupted()){
                   //Проверяем интернет
 
 
@@ -65,8 +64,8 @@ public class CheckInternetRunnable extends SuperRunnable {
                   try {
                         Thread.sleep(1000);
                   } catch (InterruptedException e) {
-                        e.printStackTrace();
-                        logger.error("CheckInternetRunnable - Прекратил работу");
+                        Thread.currentThread().interrupt();
+                        logger.error("Поток '"+Thread.currentThread().getName()+"' с id "+Thread.currentThread().getId()+" убит");
                         return;
                   }
 
@@ -74,12 +73,12 @@ public class CheckInternetRunnable extends SuperRunnable {
                   if ((!exceptionFlag) && (ConnectionErrorController.isActive)){
                         ConnectionErrorController.isActive = false;
                         Platform.runLater(() -> app.myStart(app.getPrimaryStage()));
-                        this.stopAll();
+                        RunnableManager.interruptAll();
                         break;
                   }
             }
 
             //Переходим отбратно в чат, а данный поток завершает свою работу
-            logger.info("Поток '"+Thread.currentThread().getName()+"' завершил свою работу");
+            logger.error("Поток '"+Thread.currentThread().getName()+"' с id "+Thread.currentThread().getId()+" завершил работу");
       }
 }
