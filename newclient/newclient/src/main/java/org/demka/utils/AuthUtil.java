@@ -1,7 +1,7 @@
 package org.demka.utils;
 
-import com.google.gson.Gson;
-
+import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,13 +12,15 @@ public class AuthUtil {
 
     public AuthUtil(){
 
-        Path paths = null;
+        //Получаем путь файла, где хранится авторизация
+        String pathStr = null;
         try {
-            paths = Paths.get(this.getClass().getResource("/org/demka/data.json").toURI());
-        } catch (URISyntaxException e) {
+            pathStr = new File(".tempdata").getCanonicalPath();
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        this.fileProcessing = new FileProcessing(paths);
+
+        this.fileProcessing = new FileProcessing(pathStr);
     }
 
     public String readKey(){

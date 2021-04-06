@@ -10,7 +10,6 @@ import javafx.stage.Stage;
 import org.demka.api.MyAPI;
 import org.demka.controllers.*;
 import org.demka.utils.AuthUtil;
-import org.demka.utils.ComputerIdentifier;
 
 import java.io.IOException;
 
@@ -59,7 +58,6 @@ public class App extends Application {
         //Выставляем RootLayout
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Авторизация");
-        System.out.println(ComputerIdentifier.generateLicenseKey());
         this.authUtil = new AuthUtil();
         initRootLayout();
         //Читаем токен из файла

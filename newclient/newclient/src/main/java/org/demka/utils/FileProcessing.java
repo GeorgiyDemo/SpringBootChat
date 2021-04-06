@@ -8,17 +8,34 @@ import java.util.stream.Collectors;
 // Класс для работы с файлами
 public class FileProcessing {
 
-    Path filePath;
+    String fileName;
 
-    public FileProcessing(Path filePath) {
-        this.filePath = filePath;
+    public FileProcessing(String fileName) {
+        this.fileName = fileName;
+
+
+        File tempFile = new File(fileName);
+        //Если файла не существует - создаем его
+        if (!tempFile.exists()){
+            try {
+                //Создаем новый файл, если его не существует
+                tempFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     //Чтение данных
     public String DataRead(){
+
         try {
-            return new String(Files.readAllBytes(filePath));
-        } catch (IOException e) {
+            BufferedReader reader = new BufferedReader(new FileReader(this.fileName));
+            String lines = reader.lines().collect(Collectors.joining());
+            reader.close();
+            return lines;
+        }
+        catch (IOException e){
             e.printStackTrace();
             return null;
         }
@@ -26,10 +43,12 @@ public class FileProcessing {
 
     //Запись данных
     public void DataWrite(String data){
-        byte[] strToBytes = data.getBytes();
         try {
-            Files.write(filePath, strToBytes);
-        } catch (IOException e) {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(this.fileName));
+            writer.write(data);
+            writer.close();
+        }
+        catch (IOException e){
             e.printStackTrace();
         }
     }
