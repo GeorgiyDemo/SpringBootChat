@@ -1,4 +1,4 @@
-package org.demka.api;
+package org.demka.runnable;
 
 import javafx.application.Platform;
 import org.demka.App;
@@ -41,11 +41,10 @@ public class CheckInternetRunnable implements Runnable {
 
                   boolean exceptionFlag = false;
                   try {
-                        URL url = new URL("http://www.google.com");
+                        URL url = new URL("https://ya.ru");
                         URLConnection connection = url.openConnection();
                         connection.setConnectTimeout(2000);
                         connection.connect();
-                        logger.info("Интернет есть, все хорошо");
                   } catch (IOException e) {
                         logger.info("Интернета нет, все плохо");
                         try {
@@ -58,7 +57,6 @@ public class CheckInternetRunnable implements Runnable {
                               emptyAPIResponseException.printStackTrace();
                         }
                   }
-
 
                   //Спим
                   try {

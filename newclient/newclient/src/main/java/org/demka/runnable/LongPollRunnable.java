@@ -1,8 +1,9 @@
-package org.demka.api;
+package org.demka.runnable;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import org.demka.App;
+import org.demka.api.MyAPI;
 import org.demka.controllers.ConnectionErrorController;
 import org.demka.exceptions.EmptyAPIResponseException;
 import org.demka.exceptions.FalseServerFlagException;
