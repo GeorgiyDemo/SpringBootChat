@@ -37,6 +37,11 @@ public class MainChatController extends SuperFullController {
     private TableColumn<Message, String> MessageTextColumn;
 
     @FXML
+    private Menu AboutMenuItem;
+    @FXML
+    private Menu ExitMenuItem;
+
+    @FXML
     private Button sendMessageButton;
     @FXML
     private TextField newMessageText;
@@ -149,6 +154,14 @@ public class MainChatController extends SuperFullController {
         thread2.start();
         logger.info("MainChatController - стартанули CheckInternetRunnable с id "+thread2.getId());
 
+        //TODO: Биндим действия к AboutMenuItem и ExitMenuItem
+
+
+    }
+
+    @FXML
+    private void AboutMenuItemClicked(){
+        logger.info("БЫЛО НАЖАТИЕ НА BUTTON 'О ПРОГРАММЕ'");
     }
 
     /**

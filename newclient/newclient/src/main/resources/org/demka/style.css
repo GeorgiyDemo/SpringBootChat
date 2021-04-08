@@ -27,9 +27,29 @@
     -fx-prompt-text-fill: gray;
 }
 
-.menu-bar{
+
+.menu-bar {
     -fx-background-color: #393f51;
+    -fx-border-width: 2.0;
+
 }
+.menu-bar .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.menu-bar .menu-button:hover, .menu-bar .menu-button:focused, .menu-bar .menu-button:showing {
+    -fx-background: #393f51;
+    -fx-text-fill: white;
+}
+
+.menu-bar .menu-button:hover, .menu-bar .menu-button:focused, .menu-bar .menu-button:showing {
+    -fx-background: #202234;
+    -fx-opacity: 0.5;
+    -fx-border-radius: 3em;
+    -fx-background-radius: 3em;
+}
+
 
 
 /*
