@@ -8,6 +8,7 @@ import org.demka.App;
  */
 public abstract class SuperPartController {
     protected App mainApp;
+    protected Stage dialogStage;
 
     /**
      * Метод инициализации (вызывается с Main)

@@ -102,7 +102,7 @@ public class App extends Application {
     }
 
     /**
-     * Логика регистрации в программе
+     * Показывает окно регистрации в программе
      */
     public void UserRegistration() {
         try {
@@ -114,6 +114,30 @@ public class App extends Application {
             RegistrationController controller = loader.getController();
             controller.initialize(this);
         } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Показывает информацию о программе и авторе
+     */
+    public void AboutMe() {
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(App.class.getResource("views/AboutMeView.fxml"));
+            AnchorPane page = (AnchorPane) loader.load();
+
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("О программе");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+            AboutMeController controller = loader.getController();
+            controller.initialize(this, dialogStage);
+            dialogStage.showAndWait();;
+
+        }catch(IOException e){
             e.printStackTrace();
         }
     }

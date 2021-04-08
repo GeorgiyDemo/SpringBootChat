@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateNewRoomController extends SuperPartController {
-    private Stage dialogStage;
 
     private ObservableList<User> AllUsersData = FXCollections.observableArrayList();
     private ObservableList<User> ChatUsersData = FXCollections.observableArrayList();
