@@ -13,6 +13,8 @@ import org.demka.models.Message;
 import org.demka.models.Room;
 import org.demka.runnable.LongPollRunnable;
 import org.demka.api.MyAPI;
+import org.demka.utils.AuthUtil;
+import org.demka.utils.MyActionClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +42,8 @@ public class MainChatController extends SuperFullController {
     private Menu AboutMenuItem;
     @FXML
     private Menu ExitMenuItem;
+    @FXML
+    private MenuBar MainMenuBar;
 
     @FXML
     private Button sendMessageButton;
@@ -154,14 +158,31 @@ public class MainChatController extends SuperFullController {
         thread2.start();
         logger.info("MainChatController - стартанули CheckInternetRunnable с id "+thread2.getId());
 
-        //TODO: Биндим действия к AboutMenuItem и ExitMenuItem
-
-
+        //Биндим действия к AboutMenuItem и ExitMenuItem
+        MyActionClass.onAction(AboutMenuItem);
+        MyActionClass.onAction(ExitMenuItem);
     }
 
+    /** TODO
+     * Нажатие на пункт "О программе"
+     */
     @FXML
     private void AboutMenuItemClicked(){
         logger.info("БЫЛО НАЖАТИЕ НА BUTTON 'О ПРОГРАММЕ'");
+    }
+
+    /**
+     * Нажатие на выход из аккаунта пользователя
+     */
+    @FXML
+    private void ExitMenuItemClicked(){
+        //Останавливаем все потоки (лонгпул и проверка интернета)
+        RunnableManager.interruptAll();
+        //Удаляем ключ авторизации
+        mainApp.getAuthUtil().writeKey("");
+        MainMenuBar.setDisable(true);
+        logger.info("Осуществлен выход из профиля");
+        mainApp.myStart(mainApp.getPrimaryStage());
     }
 
     /**

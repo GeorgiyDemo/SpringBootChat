@@ -7,11 +7,11 @@
 
 <AnchorPane prefHeight="300.0" prefWidth="600.0" styleClass="background" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.demka.controllers.MainChatController">
     <children>
-        <MenuBar prefHeight="27.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" >
+        <MenuBar fx:id="MainMenuBar" prefHeight="27.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" >
             <menus>
-                <Menu fx:id="AboutMenuItem" mnemonicParsing="false" text="?" onAction="#AboutMenuItemClicked">
+                <Menu fx:id="AboutMenuItem" mnemonicParsing="false" text="О программе" onAction="#AboutMenuItemClicked">
                 </Menu>
-                <Menu fx:id="ExitMenuItem" mnemonicParsing="false" text="Выход">
+                <Menu fx:id="ExitMenuItem" mnemonicParsing="false" text="Выход" onAction="#ExitMenuItemClicked">
                 </Menu>
             </menus>
         </MenuBar>
