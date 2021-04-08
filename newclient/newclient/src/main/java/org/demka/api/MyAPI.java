@@ -37,7 +37,6 @@ public class MyAPI implements SuperAPI {
     private String currentRoomId;
 
     private boolean isAuthenticated;
-    private static final Logger logger = LoggerFactory.getLogger(MyAPI.class);
 
     //Авторизация через пару логин/пароль
     public MyAPI(String login, String password, App mainApp) {

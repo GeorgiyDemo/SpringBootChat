@@ -17,7 +17,7 @@
 
         <JFXButton fx:id="BackButton" layoutX="14.0" layoutY="36.0" prefHeight="46.0" prefWidth="40.0" ripplerFill="#2491bf" text="&lt;-" textFill="WHITE" onAction="#backButtonClicked"/>
 
-        <Label fx:id="WrongAuth" layoutX="251.0" layoutY="104.0" text="Неверный логин/пароль!" textFill="WHITE">
+        <Label fx:id="ErrorDescription" layoutX="251.0" layoutY="104.0" text="ОПИСАНИЕ ОШИБКИ" textFill="WHITE">
             <font>
                 <Font size="11.0" />
             </font>

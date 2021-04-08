@@ -4,9 +4,16 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import org.demka.App;
+import org.demka.api.MyAPI;
+import org.demka.api.SuperAPI;
+import org.demka.utils.String2Hash;
+import org.demka.utils.Validators;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Map;
 
 public class RegistrationController extends SuperFullController {
 
@@ -22,18 +29,17 @@ public class RegistrationController extends SuperFullController {
     @FXML
     private JFXPasswordField PasswordTextField;
 
+    @FXML
+    private Label ErrorDescription;
+
     private static final Logger logger = LoggerFactory.getLogger(RegistrationController.class);
     private String regErrorString;
 
     private Boolean dataValidator(String userName, String email, String password){
-        //Пароль должен быть не меньше 8 символов
+
+        //Проверка на пустоту
         if ((userName == null) || (userName.equals(""))){
             regErrorString = "Ник не может быть пустым";
-            return false;
-        }
-
-        if (userName.length() > 14){
-            regErrorString = "Ник слишком длинный";
             return false;
         }
 
@@ -42,9 +48,27 @@ public class RegistrationController extends SuperFullController {
             return false;
         }
 
-        if (())
+        if ((password == null) || (password.equals(""))) {
+            regErrorString = "Пароль не может быть пустым";
+            return false;
+        }
 
 
+        if (userName.length() > 14){
+            regErrorString = "Ник слишком длинный";
+            return false;
+        }
+
+        if (!Validators.emailValidator(email)){
+            regErrorString = "Некорректный e-mail";
+            return false;
+        }
+
+        if (password.length() < 8){
+            regErrorString = "Пароль должен быть не менее 8 символов";
+            return false;
+        }
+        return true;
     }
 
     @FXML
@@ -55,13 +79,27 @@ public class RegistrationController extends SuperFullController {
         String userPassword = PasswordTextField.getText();
         if (dataValidator(userName, userEmail, userPassword)){
             logger.info("Валидация данных со стороны клиента прошла успешно");
+            //Хеширование пароля
+            userPassword = String2Hash.convert(userPassword);
+            //Получаем ответ от сервера
+            Map<String,Object> regResult = SuperAPI.Registration(userName, userEmail, userPassword);
+            if ((boolean) regResult.get("result")){
+                ErrorDescription.setText("ВСЕ ОК");
+            }
+            else{
+                regErrorString = (String) regResult.get("error");
+                ErrorDescription.setText(regErrorString);
+            }
 
         }
         else{
-            logger.info("Валидация данных со стороны клиента не прошла успешно");
+            logger.info("Валидация данных со стороны клиента не прошла успешно: "+regErrorString);
+            ErrorDescription.setText(regErrorString);
         }
 
+        ErrorDescription.setOpacity(1.0);
     }
+
 
     @FXML
     private void backButtonClicked(){
@@ -76,5 +114,6 @@ public class RegistrationController extends SuperFullController {
     @Override
     public void initialize(App mainApp) {
         this.mainApp = mainApp;
+        ErrorDescription.setOpacity(0.0);
     }
 }

@@ -1,5 +1,7 @@
 package org.demka.api;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.demka.exceptions.EmptyAPIResponseException;
 import org.demka.exceptions.FalseServerFlagException;
 import org.demka.exceptions.LongpollListenerException;
@@ -9,6 +11,8 @@ import org.demka.models.Room;
 import org.demka.models.User;
 import org.demka.utils.HTTPRequest;
 import org.demka.utils.String2Hash;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -18,6 +22,8 @@ import java.util.Map;
 
 public interface SuperAPI {
 
+    //Да, логгер публичный и в интерфейсе, и что ты мне сделаешь?
+    Logger logger = LoggerFactory.getLogger(MyAPI.class);
     String ServerURL = "http://149.248.54.195:8080";
 
     /**
@@ -26,16 +32,38 @@ public interface SuperAPI {
      * @param login
      * @param password
      */
-    static void Registration(String name, String login, String password) {
+    static Map<String, Object> Registration(String name, String login, String password) {
 
         String URL = String.format("%s/user/register", ServerURL);
         Map<String,String> params = new HashMap<>();
         params.put("login", login);
         params.put("password", String2Hash.convert(password));
         params.put("username", name);
-
         String response = HTTPRequest.sendPOST(URL, params);
-        System.out.println(response);
+        Map<String, Object> resultMap = new HashMap<>();
+
+        //TODO: ОЧЕНЬ ОПАСНАЯ ЛОГИКА, ЕСЛИ ИНЕТ ПОЯВИТСЯ, ТО СМЕРТЬ СМЕРТЬ (?)
+        if (response == null){
+            resultMap.put("result", false);
+            resultMap.put("error","Нет ответа от сервера");
+            logger.error("Не получили ответ от сервера во время регистрации пользователя "+name);
+            return resultMap;
+        }
+
+        //Парсим результат
+        JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
+        Boolean authResult = jsonResult.get("result").getAsBoolean();
+        resultMap.put("result", authResult);
+
+        if (!authResult) {
+            String errDescription = jsonResult.get("description").getAsString();
+            resultMap.put("error", errDescription);
+            logger.info("Сервер возвратил ошибку регистрации: "+errDescription);
+            return resultMap;
+        }
+
+        logger.info("Пользователь "+name+" успешно зарегистрировался");
+        return resultMap;
     }
 
     /**
