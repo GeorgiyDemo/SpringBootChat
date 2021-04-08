@@ -89,6 +89,7 @@ public class App extends Application {
     public void UserAuthorisation() {
 
         try {
+            this.primaryStage.setTitle("DEMKAChat - Авторизация");
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(App.class.getResource("views/LoginView.fxml"));
             AnchorPane mainPage = loader.load();
@@ -105,6 +106,7 @@ public class App extends Application {
      */
     public void UserRegistration() {
         try {
+            this.primaryStage.setTitle("DEMKAChat - Регистрация");
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(App.class.getResource("views/RegistrationView.fxml"));
             AnchorPane mainPage = loader.load();

@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
+<?import com.jfoenix.controls.JFXPasswordField?>
 <AnchorPane prefHeight="400.0" prefWidth="640.0" styleClass="background" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.demka.controllers.RegistrationController">
     <children>
         <Label fx:id="AppName" layoutX="240.0" layoutY="59.0" text="DEMKA CHAT" textFill="WHITE">
@@ -14,7 +15,7 @@
             </font>
         </Label>
 
-        <JFXButton fx:id="BackButton" layoutX="14.0" layoutY="36.0" prefHeight="46.0" prefWidth="40.0" ripplerFill="#2491bf" text="&lt;-" textFill="WHITE" />
+        <JFXButton fx:id="BackButton" layoutX="14.0" layoutY="36.0" prefHeight="46.0" prefWidth="40.0" ripplerFill="#2491bf" text="&lt;-" textFill="WHITE" onAction="#backButtonClicked"/>
 
         <Label fx:id="WrongAuth" layoutX="251.0" layoutY="104.0" text="Неверный логин/пароль!" textFill="WHITE">
             <font>
@@ -24,7 +25,7 @@
 
         <JFXTextField fx:id="UserNameTextField" focusColor="WHITE" layoutX="243.0" layoutY="139.0" promptText="Ник" unFocusColor="WHITE" />
         <JFXTextField fx:id="EmailTextField" focusColor="WHITE" layoutX="245.0" layoutY="202.0" promptText="E-mail" unFocusColor="WHITE"/>
-        <JFXTextField fx:id="PasswordTextField" focusColor="WHITE" layoutX="247.0" layoutY="265.0" promptText="Пароль" unFocusColor="WHITE" />
-        <JFXButton fx:id="RegButton" layoutX="239.0" layoutY="324.0" prefHeight="40.0" prefWidth="158.0" ripplerFill="#2491bf" text="Зарегистрироваться" textFill="WHITE" />
+        <JFXPasswordField fx:id="PasswordTextField" focusColor="WHITE" layoutX="247.0" layoutY="265.0" promptText="Пароль" unFocusColor="WHITE" />
+        <JFXButton fx:id="RegButton" layoutX="239.0" layoutY="324.0" prefHeight="40.0" prefWidth="158.0" ripplerFill="#2491bf" text="Зарегистрироваться" onAction="#regButtonClicked" textFill="WHITE" />
     </children>
 </AnchorPane>

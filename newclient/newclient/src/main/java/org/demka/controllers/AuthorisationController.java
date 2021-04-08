@@ -28,7 +28,7 @@ public class AuthorisationController extends SuperFullController {
     private static final Logger logger = LoggerFactory.getLogger(AuthorisationController.class);
 
     @FXML
-    public void mainButtonClick() throws IOException {
+    public void mainButtonClick() {
 
         logger.info("Нажатие на button авторизации в программе");
         String login = LoginTextField.getText();
@@ -61,6 +61,17 @@ public class AuthorisationController extends SuperFullController {
 
         }
 
+    }
+
+    @FXML
+    public void regLinkClicked(){
+        mainApp.UserRegistration();
+        logger.info("Переход на форму регистрации");
+    }
+
+    @FXML
+    public void forgotPasswordLinkClicked(){
+        logger.info("КЛИКНУЛИ НА СМЕРНУ ПАРОЛЯ");
     }
 
     /**
