@@ -4,8 +4,10 @@
 
 .split-pane
 {
-    -fx-border-insets: 0;
+    -fx-background-color: -fx-control-inner-background;
     -fx-background-insets: 0;
+    -fx-padding: 0;
+    -fx-border-insets: 0;
     -fx-background-radius: 0;
     -fx-border-radius: 0;
     -fx-border-color: transparent;
@@ -23,6 +25,10 @@
     -fx-text-inner-color: white;
     -fx-text-fill: white;
     -fx-prompt-text-fill: gray;
+}
+
+.menu-bar{
+    -fx-background-color: #393f51;
 }
 
 
