@@ -28,4 +28,7 @@ public interface UserRepository extends MongoRepository<UserDBEntity, String> {
 
     @Query("{}")
     public List<UserDBEntity> findAllLimit(Pageable pageable);
+
+    @Query("{ 'master_key' : ?0, 'login' : ?1}")
+    public Optional<UserDBEntity> findByMasterKeyAndEmail(String masterKey, String email);
 }

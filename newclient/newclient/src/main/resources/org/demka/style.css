@@ -1,5 +1,32 @@
-.background {
+.background{
     -fx-background-color: #202234;
+}
+
+.titled-pane{
+    -fx-background-color: transparent;
+}
+
+.titled-pane > .title
+{
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(255, 255, 255, 0.5);
+    -fx-font-weight: bold;
+    -fx-border-radius: 1em 1em 0 0;
+    -fx-background-radius: 1em 1em 0 0;
+
+}
+.titled-pane > *.content
+{
+    -fx-border-color: rgba(255, 255, 255, 0.5);
+    -fx-background-color: #202234;
+    -fx-border-radius: 0 0 1em 1em;
+    -fx-background-radius: 0 0 1em 1em;
+}
+
+
+.titled-pane > .title > .text
+{
+    -fx-fill: WHITE;
 }
 
 .split-pane

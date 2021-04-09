@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane prefHeight="300.0" prefWidth="600.0" styleClass="background" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.demka.controllers.CreateNewRoomController">
+<AnchorPane prefHeight="650.0" prefWidth="700.0" styleClass="background" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.demka.controllers.CreateNewRoomController">
     <children>
         <SplitPane dividerPositions="0.5" layoutX="183.0" layoutY="42.0" prefHeight="258.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="42.0">
             <items>

@@ -1,6 +1,7 @@
 package com.demka.demkaserver.services;
 
 import com.demka.demkaserver.entities.database.UserDBEntity;
+import com.demka.demkaserver.entities.request.UpdatePasswordEntity;
 import com.demka.demkaserver.repos.UserRepository;
 import com.demka.demkaserver.utils.TimeUtil;
 import com.demka.demkaserver.utils.UUIDUtil;
@@ -24,12 +25,14 @@ public class UserService {
         this.userRepo = userRepo;
     }
 
-    public void update(UserDBEntity oldObj, UserDBEntity newObj) {
-        userRepo.delete(oldObj);
-        userRepo.save(newObj);
+    public void update(UserDBEntity user, UpdatePasswordEntity newData) {
+        user.setPassword(newData.getNewPassword());
+        userRepo.save(user);
     }
 
-    public void delete(UserDBEntity item) { userRepo.delete(item); }
+    public void delete(UserDBEntity item) {
+        userRepo.delete(item);
+    }
 
     public List<UserDBEntity> findAll(){
         return userRepo.findAll();
@@ -39,24 +42,24 @@ public class UserService {
         return userRepo.findById(id);
     }
 
+    public Optional<UserDBEntity> findByMasterKeyAndEmail(String masterKey, String email){
+        return userRepo.findByMasterKeyAndEmail(masterKey, email);
+    }
+
     //Проверка на авторизацию пользователя
     public UserDBEntity checkAuth(String login, String password){
         Optional<UserDBEntity> result = userRepo.checkUserAuth(login, password);
-        if (result.isPresent())
-            return result.get();
-        return null;
+        return result.orElse(null);
     }
 
     //Проверка на авторизацию пользователя
     public UserDBEntity checkAuth(String key){
         Optional<UserDBEntity> result = userRepo.checkUserKey(key);
-        if (result.isPresent())
-            return result.get();
-        return null;
+        return result.orElse(null);
     }
 
     //Регистрация пользователя
-    public UserDBEntity create(String login, String password, String username){
+    public UserDBEntity create(String login, String password, String username, String masterPassword){
 
         //Проверяем на то, не зарегался ли уже пользователь с таким email или именем
         if ((userRepo.findByLogin(login).isPresent()) || (userRepo.findByName(username).isPresent())){
@@ -69,6 +72,7 @@ public class UserService {
 
         newUser.setLogin(login);
         newUser.setPassword(password);
+        newUser.setMasterKey(masterPassword);
         newUser.setName(username);
 
         newUser.setKey(UUIDUtil.newKey());

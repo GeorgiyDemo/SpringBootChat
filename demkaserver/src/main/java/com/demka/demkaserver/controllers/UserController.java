@@ -3,6 +3,7 @@ package com.demka.demkaserver.controllers;
 import com.demka.demkaserver.entities.converters.UserConverter;
 import com.demka.demkaserver.entities.converters.UserSearchConverter;
 import com.demka.demkaserver.entities.database.UserDBEntity;
+import com.demka.demkaserver.entities.request.UpdatePasswordEntity;
 import com.demka.demkaserver.entities.response.UserAuthResponseEntity;
 import com.demka.demkaserver.entities.response.UserSearchResponseEntity;
 import com.demka.demkaserver.services.UserService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 
 @RestController
@@ -24,22 +26,23 @@ public class UserController {
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService){
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
     /**
      * Авторизация пользователя через пару логина/пароля
-     * @param login - логин пользователя
+     *
+     * @param login    - логин пользователя
      * @param password - пароль пользователя
      * @return
      */
-    @GetMapping(value = "/auth", params = { "login", "password"})
+    @GetMapping(value = "/auth", params = {"login", "password"})
     public ResponseEntity<Map<String, Object>> auth(@RequestParam String login, @RequestParam String password) {
 
         UserDBEntity result = userService.checkAuth(login, password);
 
-        if (result != null){
+        if (result != null) {
             UserAuthResponseEntity user = UserConverter.convert(result);
             return new ResponseEntity<>(GenResponseUtil.ResponseOK(user), HttpStatus.OK);
         }
@@ -48,6 +51,7 @@ public class UserController {
 
     /**
      * Авторизация пользователя через ключ API
+     *
      * @param key - ключ API
      * @return
      */
@@ -55,7 +59,7 @@ public class UserController {
     public ResponseEntity<Map<String, Object>> auth(@RequestParam String key) {
 
         UserDBEntity result = userService.checkAuth(key);
-        if (result != null){
+        if (result != null) {
             UserAuthResponseEntity user = UserConverter.convert(result);
             return new ResponseEntity<>(GenResponseUtil.ResponseOK(user), HttpStatus.OK);
         }
@@ -64,6 +68,7 @@ public class UserController {
 
     /**
      * Регистрация пользователя
+     *
      * @param data - данные в JSON. Поля:
      *             login - логин пользователя
      *             password - пароль пользователя
@@ -76,13 +81,14 @@ public class UserController {
         String login = data.get("login");
         String password = data.get("password");
         String username = data.get("username");
+        String masterPassword = data.get("masterPassword");
 
         //Если клиент передал не все значения
-        if ((login == null) || (password == null) || (username == null)){
+        if ((login == null) || (password == null) || (username == null) || (masterPassword == null)) {
             return new ResponseEntity<>(GenResponseUtil.ResponseError("Не все значения были переданы"), HttpStatus.BAD_REQUEST);
         }
 
-        UserDBEntity result = userService.create(login, password, username);
+        UserDBEntity result = userService.create(login, password, username, masterPassword);
         //Если все хорошо
         if (result != null) {
             UserAuthResponseEntity user = UserConverter.convert(result);
@@ -94,26 +100,27 @@ public class UserController {
 
     /**
      * Поиск пользователя в системе
-     * @param key - ключ пользователя, выполняющего поиск
+     *
+     * @param key        - ключ пользователя, выполняющего поиск
      * @param searchName - паттерн имени ника пользователя, которого ищем (необязательно)
-     * @param limit - кол-во пользователей, которое надо вернуть, макс 200 (необязательно)
+     * @param limit      - кол-во пользователей, которое надо вернуть, макс 200 (необязательно)
      * @return
      */
     @GetMapping(value = "/search")
     public ResponseEntity<Map<String, Object>> searchUser(@RequestParam String key, @RequestParam(required = false) String searchName, @RequestParam(required = false) Integer limit) {
 
         //Проверка ключа
-        if (!userService.checkUserKey(key)){
+        if (!userService.checkUserKey(key)) {
             return new ResponseEntity<>(GenResponseUtil.ResponseError("Не удалось авторизоваться по указанному ключу"), HttpStatus.FORBIDDEN);
         }
 
-        if ((limit == null) || (limit > 200)){
+        if ((limit == null) || (limit > 200)) {
             limit = 200;
         }
 
         List<UserDBEntity> bufList = userService.searchUsers(searchName, limit, key);
         List<UserSearchResponseEntity> resultList = new ArrayList<>();
-        for (UserDBEntity item: bufList) {
+        for (UserDBEntity item : bufList) {
             resultList.add(UserSearchConverter.convert(item));
         }
 
@@ -121,4 +128,16 @@ public class UserController {
     }
 
 
+    @PutMapping("/reset")
+    public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordEntity updateItem) {
+
+        Optional<UserDBEntity> searchResult = userService.findByMasterKeyAndEmail(updateItem.getMasterKey(),updateItem.getEmail());
+        //Если не нашли пользователей, которые связаны с переданным e-mail и мастер-ключем
+        if (searchResult.isEmpty()){
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Не удалось сменить пароль. Проверьте данные"), HttpStatus.FORBIDDEN);
+        }
+        UserDBEntity currentUser = searchResult.get();
+        userService.update(currentUser, updateItem);
+        return new ResponseEntity<>(GenResponseUtil.ResponseOK(UserSearchConverter.convert(currentUser)), HttpStatus.OK);
+    }
 }

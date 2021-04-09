@@ -27,6 +27,9 @@ public class UserDBEntity {
     @JsonProperty
     private String key;
     @JsonProperty
+    @Field(name = "master_key")
+    private String masterKey;
+    @JsonProperty
     @Field(name = "time_created")
     private Long timeCreated;
 
@@ -37,6 +40,7 @@ public class UserDBEntity {
                 ", name='" + name + '\'' +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
+                ", masterKey='" + masterKey + '\'' +
                 ", key='" + key + '\'' +
                 ", timeCreated=" + timeCreated +
                 '}';

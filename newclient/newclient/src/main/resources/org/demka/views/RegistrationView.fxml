@@ -1,31 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXTextField?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<?import com.jfoenix.controls.JFXPasswordField?>
-<AnchorPane prefHeight="400.0" prefWidth="640.0" styleClass="background" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.demka.controllers.RegistrationController">
+<AnchorPane prefHeight="650.0" prefWidth="700.0" styleClass="background" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.demka.controllers.RegistrationController">
     <children>
-        <Label fx:id="AppName" layoutX="240.0" layoutY="59.0" text="DEMKA CHAT" textFill="WHITE">
+        <Label fx:id="AppName" alignment="CENTER" layoutX="206.0" layoutY="53.0" text="DEMKA CHAT - Регистрация" textFill="WHITE">
             <font>
                 <Font name="Helvetica" size="24.0" />
             </font>
         </Label>
 
-        <JFXButton fx:id="BackButton" layoutX="14.0" layoutY="36.0" prefHeight="46.0" prefWidth="40.0" ripplerFill="#2491bf" text="&lt;-" textFill="WHITE" onAction="#backButtonClicked"/>
+        <JFXButton fx:id="BackButton" layoutX="14.0" layoutY="36.0" onAction="#backButtonClicked" prefHeight="46.0" prefWidth="40.0" ripplerFill="#2491bf" text="&lt;-" textFill="WHITE" />
 
-        <Label fx:id="ErrorDescription" layoutX="251.0" layoutY="104.0" text="ОПИСАНИЕ ОШИБКИ" textFill="WHITE">
+        <Label fx:id="ErrorDescription" alignment="CENTER" layoutX="310.0" layoutY="103.0" text="ОПИСАНИЕ ОШИБКИ" textFill="WHITE">
             <font>
                 <Font size="11.0" />
             </font>
         </Label>
-
-        <JFXTextField fx:id="UserNameTextField" focusColor="WHITE" layoutX="243.0" layoutY="139.0" promptText="Ник" unFocusColor="WHITE" />
-        <JFXTextField fx:id="EmailTextField" focusColor="WHITE" layoutX="245.0" layoutY="202.0" promptText="E-mail" unFocusColor="WHITE"/>
-        <JFXPasswordField fx:id="PasswordTextField" focusColor="WHITE" layoutX="247.0" layoutY="265.0" promptText="Пароль" unFocusColor="WHITE" />
-        <JFXButton fx:id="RegButton" layoutX="239.0" layoutY="324.0" prefHeight="40.0" prefWidth="158.0" ripplerFill="#2491bf" text="Зарегистрироваться" onAction="#regButtonClicked" textFill="WHITE" />
+        <JFXButton fx:id="RegButton" layoutX="289.0" layoutY="564.0" onAction="#regButtonClicked" prefHeight="40.0" prefWidth="158.0" ripplerFill="#2491bf" text="Зарегистрироваться" textFill="WHITE" />
+        <TitledPane animated="false" collapsible="false" layoutX="62.0" layoutY="361.0" prefHeight="173.0" prefWidth="533.0" text="Пароли">
+            <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                    <children>
+                    <JFXPasswordField fx:id="PasswordTextField" focusColor="WHITE" layoutX="14.0" layoutY="30.0" promptText="Пароль" unFocusColor="WHITE" />
+                  <JFXPasswordField fx:id="PasswordTextField1" focusColor="WHITE" layoutX="14.0" layoutY="90.0" promptText="Мастер-пароль" unFocusColor="WHITE" />
+                  <Label fx:id="ErrorDescription111" layoutX="179.0" layoutY="37.0" prefHeight="14.0" prefWidth="193.0" text="Используется для входа в систему" textFill="WHITE">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="ErrorDescription1111" layoutX="179.0" layoutY="97.0" prefHeight="14.0" prefWidth="240.0" text="Используется для воззстановления данных" textFill="WHITE">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Label>
+                    </children>
+                </AnchorPane>
+            </content>
+        </TitledPane>
+      <TitledPane animated="false" collapsible="false" layoutX="62.0" layoutY="151.0" prefHeight="186.0" prefWidth="533.0" text="Данные">
+         <content>
+            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+               <children>
+            
+                    <JFXTextField fx:id="UserNameTextField" focusColor="WHITE" layoutX="14.0" layoutY="32.0" promptText="Ник" unFocusColor="WHITE" />
+                    <JFXTextField fx:id="EmailTextField" focusColor="WHITE" layoutX="14.0" layoutY="95.0" promptText="E-mail" unFocusColor="WHITE" />
+                  <Label fx:id="ErrorDescription1" layoutX="174.0" layoutY="39.0" prefHeight="14.0" prefWidth="212.0" text="Отображается другим пользователям" textFill="WHITE">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="ErrorDescription11" layoutX="174.0" layoutY="102.0" prefHeight="14.0" prefWidth="194.0" text="Используется для входа в систему" textFill="WHITE">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+         </content>
+      </TitledPane>
     </children>
 </AnchorPane>
