@@ -20,19 +20,21 @@
                 <Font size="11.0" />
             </font>
         </Label>
+
         <JFXButton fx:id="RegButton" layoutX="289.0" layoutY="564.0" onAction="#regButtonClicked" prefHeight="40.0" prefWidth="158.0" ripplerFill="#2491bf" text="Зарегистрироваться" textFill="WHITE" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0" />
+
         <TitledPane animated="false" collapsible="false" layoutX="62.0" layoutY="361.0" prefHeight="173.0" prefWidth="533.0" text="Пароли" AnchorPane.leftAnchor="65.0" AnchorPane.rightAnchor="65.0">
             <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                     <children>
                     <JFXPasswordField fx:id="PasswordTextField" focusColor="WHITE" layoutX="14.0" layoutY="30.0" promptText="Пароль" unFocusColor="WHITE" />
                   <JFXPasswordField fx:id="MasterKey" focusColor="WHITE" layoutX="14.0" layoutY="90.0" promptText="Мастер-пароль" unFocusColor="WHITE" />
-                  <Label fx:id="ErrorDescription111" layoutX="179.0" layoutY="37.0" prefHeight="14.0" prefWidth="193.0" text="Используется для входа в систему" textFill="WHITE" AnchorPane.rightAnchor="145.0">
+                  <Label layoutX="179.0" layoutY="37.0" prefHeight="14.0" prefWidth="193.0" text="Используется для входа в систему" textFill="WHITE" AnchorPane.rightAnchor="145.0">
                      <font>
                         <Font size="11.0" />
                      </font>
                   </Label>
-                  <Label fx:id="ErrorDescription1111" layoutX="179.0" layoutY="97.0" prefHeight="14.0" prefWidth="240.0" text="Используется для восстановления пароля" textFill="WHITE" AnchorPane.rightAnchor="145.0">
+                  <Label layoutX="179.0" layoutY="97.0" prefHeight="14.0" prefWidth="240.0" text="Используется для восстановления пароля" textFill="WHITE" AnchorPane.rightAnchor="145.0">
                      <font>
                         <Font size="11.0" />
                      </font>
@@ -41,19 +43,19 @@
                 </AnchorPane>
             </content>
         </TitledPane>
+
       <TitledPane animated="false" collapsible="false" layoutX="62.0" layoutY="151.0" prefHeight="186.0" prefWidth="533.0" text="Данные" AnchorPane.leftAnchor="65.0" AnchorPane.rightAnchor="65.0">
          <content>
             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                <children>
-            
                     <JFXTextField fx:id="UserNameTextField" focusColor="WHITE" layoutX="14.0" layoutY="32.0" promptText="Ник" unFocusColor="WHITE" AnchorPane.leftAnchor="15.0" />
                     <JFXTextField fx:id="EmailTextField" focusColor="WHITE" layoutX="14.0" layoutY="95.0" promptText="E-mail" unFocusColor="WHITE" AnchorPane.leftAnchor="15.0" />
-                  <Label fx:id="ErrorDescription1" layoutX="174.0" layoutY="39.0" prefHeight="14.0" prefWidth="212.0" text="Отображается другим пользователям" textFill="WHITE" AnchorPane.rightAnchor="145.0">
+                  <Label layoutX="174.0" layoutY="39.0" prefHeight="14.0" prefWidth="212.0" text="Отображается другим пользователям" textFill="WHITE" AnchorPane.rightAnchor="145.0">
                      <font>
                         <Font size="11.0" />
                      </font>
                   </Label>
-                  <Label fx:id="ErrorDescription11" layoutX="174.0" layoutY="102.0" prefHeight="14.0" prefWidth="194.0" text="Используется для входа в систему" textFill="WHITE" AnchorPane.rightAnchor="145.0">
+                  <Label layoutX="174.0" layoutY="102.0" prefHeight="14.0" prefWidth="194.0" text="Используется для входа в систему" textFill="WHITE" AnchorPane.rightAnchor="145.0">
                      <font>
                         <Font size="11.0" />
                      </font>
@@ -62,5 +64,6 @@
             </AnchorPane>
          </content>
       </TitledPane>
+
     </children>
 </AnchorPane>

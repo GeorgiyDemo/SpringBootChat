@@ -11,9 +11,7 @@ import org.demka.utils.AuthUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
-public class AuthorisationController extends SuperFullController {
+public class LoginController extends SuperFullController {
 
     @FXML
     private Label AppName;
@@ -25,7 +23,7 @@ public class AuthorisationController extends SuperFullController {
     private JFXPasswordField PasswordTextField;
     @FXML
     private JFXCheckBox AutoLoginCheckBox;
-    private static final Logger logger = LoggerFactory.getLogger(AuthorisationController.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @FXML
     public void mainButtonClick() {
@@ -71,7 +69,8 @@ public class AuthorisationController extends SuperFullController {
 
     @FXML
     public void forgotPasswordLinkClicked(){
-        logger.info("КЛИКНУЛИ НА СМЕРНУ ПАРОЛЯ");
+        mainApp.ForgotPassword();
+        logger.info("Переход на форму восстановления пароля");
     }
 
     /**

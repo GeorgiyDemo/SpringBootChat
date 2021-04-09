@@ -96,7 +96,7 @@ public class App extends Application {
             loader.setLocation(App.class.getResource("views/LoginView.fxml"));
             AnchorPane mainPage = loader.load();
             rootLayout.setCenter(mainPage);
-            AuthorisationController controller = loader.getController();
+            LoginController controller = loader.getController();
             controller.initialize(this);
         } catch (IOException e) {
             e.printStackTrace();
@@ -114,6 +114,23 @@ public class App extends Application {
             AnchorPane mainPage = loader.load();
             rootLayout.setCenter(mainPage);
             RegistrationController controller = loader.getController();
+            controller.initialize(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Показывает окно смены пароля в программе
+     */
+    public void ForgotPassword() {
+        try {
+            this.primaryStage.setTitle("DEMKAChat - Забыли пароль");
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(App.class.getResource("views/ForgotPasswordView.fxml"));
+            AnchorPane mainPage = loader.load();
+            rootLayout.setCenter(mainPage);
+            ForgotPasswordController controller = loader.getController();
             controller.initialize(this);
         } catch (IOException e) {
             e.printStackTrace();
@@ -219,7 +236,6 @@ public class App extends Application {
      * Базовый Layout
      */
     public void initRootLayout() {
-
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(App.class.getResource("views/RootLayoutView.fxml"));
@@ -232,7 +248,5 @@ public class App extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
-
 }
