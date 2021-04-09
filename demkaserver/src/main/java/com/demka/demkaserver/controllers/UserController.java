@@ -81,14 +81,14 @@ public class UserController {
         String login = data.get("login");
         String password = data.get("password");
         String username = data.get("username");
-        String masterPassword = data.get("masterPassword");
+        String masterKey = data.get("masterKey");
 
         //Если клиент передал не все значения
-        if ((login == null) || (password == null) || (username == null) || (masterPassword == null)) {
+        if ((login == null) || (password == null) || (username == null) || (masterKey == null)) {
             return new ResponseEntity<>(GenResponseUtil.ResponseError("Не все значения были переданы"), HttpStatus.BAD_REQUEST);
         }
 
-        UserDBEntity result = userService.create(login, password, username, masterPassword);
+        UserDBEntity result = userService.create(login, password, username, masterKey);
         //Если все хорошо
         if (result != null) {
             UserAuthResponseEntity user = UserConverter.convert(result);
