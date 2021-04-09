@@ -9,6 +9,7 @@ import com.demka.demkaserver.services.MessageService;
 import com.demka.demkaserver.services.RoomService;
 import com.demka.demkaserver.services.UserService;
 import com.demka.demkaserver.utils.GenResponseUtil;
+import com.demka.demkaserver.utils.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,12 +55,13 @@ public class LongPollController {
 
         //Находим комнаты пользователя
         List<RoomDBEntity> roomsList = roomService.findUserRooms(userId);
-
-
         List<MessageDBEntity> messagesList = messageService.getAllMessagesByRooms(roomsList);
 
+        //Если нет сообщений пользователя, то возвращаем текущее время
         if (messagesList.size() == 0){
-            return new ResponseEntity<>(GenResponseUtil.ResponseError("Нельзя организовать лонгпул без каких-либо существующих сообщений!"), HttpStatus.NOT_FOUND);
+            Long ts = TimeUtil.unixTime();
+            LongPollDBEntity newPoll = longPollService.create(userId, ts);
+            return new ResponseEntity<>(GenResponseUtil.ResponseOK(newPoll), HttpStatus.OK);
         }
 
         Comparator<MessageDBEntity> bufComparator = Comparator.comparing(MessageDBEntity::getTimeCreated);
