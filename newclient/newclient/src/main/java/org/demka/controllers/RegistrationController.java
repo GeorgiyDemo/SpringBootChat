@@ -79,25 +79,29 @@ public class RegistrationController extends SuperFullController {
         String userPassword = PasswordTextField.getText();
         if (dataValidator(userName, userEmail, userPassword)){
             logger.info("Валидация данных со стороны клиента прошла успешно");
-            //Хеширование пароля
-            userPassword = String2Hash.convert(userPassword);
             //Получаем ответ от сервера
             Map<String,Object> regResult = SuperAPI.Registration(userName, userEmail, userPassword);
             if ((boolean) regResult.get("result")){
-                ErrorDescription.setText("ВСЕ ОК");
+                ErrorDescription.setOpacity(0.0);
+                ErrorDescription.setText("");
+                logger.info("Успешно зарегистрировали пользователя");
+                mainApp.SuccessUserRegistration();
             }
             else{
                 regErrorString = (String) regResult.get("error");
                 ErrorDescription.setText(regErrorString);
+                logger.info("Валидация со стороны сервера не прошла: "+regErrorString);
+                ErrorDescription.setOpacity(1.0);
             }
 
         }
         else{
-            logger.info("Валидация данных со стороны клиента не прошла успешно: "+regErrorString);
+            logger.info("Валидация данных со стороны клиента не прошла: "+regErrorString);
             ErrorDescription.setText(regErrorString);
+            ErrorDescription.setOpacity(1.0);
         }
 
-        ErrorDescription.setOpacity(1.0);
+
     }
 
 

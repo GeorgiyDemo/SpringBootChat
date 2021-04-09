@@ -60,6 +60,8 @@ public class App extends Application {
 
     public void myStart(Stage primaryStage) {
         //Выставляем RootLayout
+
+
         System.out.println(String2Hash.convert("3845"));
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("DEMKAChat - Авторизация");
@@ -112,6 +114,21 @@ public class App extends Application {
             AnchorPane mainPage = loader.load();
             rootLayout.setCenter(mainPage);
             RegistrationController controller = loader.getController();
+            controller.initialize(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void SuccessUserRegistration() {
+        try {
+            this.primaryStage.setTitle("DEMKAChat - Успешная регистрация");
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(App.class.getResource("views/SuccessRegistrationView.fxml"));
+            AnchorPane mainPage = loader.load();
+            rootLayout.setCenter(mainPage);
+            SuccessRegistrationController controller = loader.getController();
             controller.initialize(this);
         } catch (IOException e) {
             e.printStackTrace();
