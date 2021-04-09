@@ -1,44 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXCheckBox?>
-<?import com.jfoenix.controls.JFXPasswordField?>
-<?import com.jfoenix.controls.JFXTextField?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.text.Font?>
+<?import com.jfoenix.controls.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<?import javafx.scene.control.Hyperlink?>
-<AnchorPane prefHeight="650.0" prefWidth="700.0" styleClass="background" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.demka.controllers.AuthorisationController">
+<AnchorPane prefHeight="650.0" prefWidth="700.0" styleClass="background" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.demka.controllers.AuthorisationController">
     <children>
-      <JFXCheckBox fx:id="AutoLoginCheckBox" checkedColor="#2167e4" layoutX="262.0" layoutY="234.0" prefHeight="14.0" prefWidth="88.0" text="Запомнить меня" textFill="WHITE" unCheckedColor="WHITE">
+      <JFXCheckBox fx:id="AutoLoginCheckBox" alignment="CENTER" checkedColor="#2167e4" layoutX="280.0" layoutY="338.0" prefHeight="14.0" prefWidth="88.0" text="Запомнить меня" textFill="WHITE" unCheckedColor="WHITE" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0">
          <font>
             <Font size="11.0" />
          </font></JFXCheckBox>
 
-        <JFXTextField fx:id="LoginTextField" focusColor="WHITE" layoutX="245.0" layoutY="125.0" promptText="E-mail" unFocusColor="WHITE">
+        <JFXTextField fx:id="LoginTextField" focusColor="WHITE" layoutX="263.0" layoutY="229.0" promptText="E-mail" unFocusColor="WHITE" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0">
             <font>
                 <Font name="Helvetica" size="13.0" />
             </font>
         </JFXTextField>
-        <JFXPasswordField fx:id="PasswordTextField" focusColor="WHITE" layoutX="245.0" layoutY="183.0" promptText="Пароль" unFocusColor="WHITE" />
-        <JFXButton fx:id="LoginButton" layoutX="246.0" layoutY="274.0" onAction="#mainButtonClick" prefHeight="40.0" prefWidth="143.0" ripplerFill="#2491bf" text="Войти" textFill="WHITE" />
-        <Label fx:id="AppName" layoutX="240.0" layoutY="59.0" text="DEMKA CHAT" textFill="WHITE">
+        <JFXPasswordField fx:id="PasswordTextField" focusColor="WHITE" layoutX="263.0" layoutY="287.0" promptText="Пароль" unFocusColor="WHITE" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0" />
+        <JFXButton fx:id="LoginButton" layoutX="264.0" layoutY="378.0" onAction="#mainButtonClick" prefHeight="40.0" prefWidth="143.0" ripplerFill="#2491bf" text="Войти" textFill="WHITE" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0" />
+        <Label fx:id="AppName" alignment="CENTER" contentDisplay="CENTER" layoutX="258.0" layoutY="163.0" text="DEMKA CHAT" textFill="WHITE" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="150.0">
             <font>
                 <Font name="Helvetica" size="24.0" />
             </font>
         </Label>
-        <Hyperlink layoutX="227.0" layoutY="350.0" text="Регистрация" onAction="#regLinkClicked" textFill="WHITE">
+        <Hyperlink layoutX="245.0" layoutY="445.0" onAction="#regLinkClicked" text="Регистрация" textFill="WHITE" AnchorPane.leftAnchor="250.0">
             <font>
                 <Font size="11.0" />
             </font>
         </Hyperlink>
-        <Hyperlink layoutX="341.0" layoutY="350.0" text="Забыли пароль?"  onAction="#forgotPasswordLinkClicked" textFill="WHITE">
+        <Hyperlink alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="346.0" layoutY="445.0" onAction="#forgotPasswordLinkClicked" text="Забыли пароль?" textFill="WHITE" AnchorPane.rightAnchor="250.0">
             <font>
                 <Font size="11.0" />
             </font>
         </Hyperlink>
-        <Label fx:id="WrongAuth" layoutX="250.0" layoutY="99.0" opacity="0.0" text="Неверный логин/пароль!" textFill="WHITE">
+        <Label fx:id="WrongAuth" alignment="CENTER" contentDisplay="CENTER" layoutX="268.0" layoutY="203.0" opacity="0.0" text="Неверный логин/пароль!" textFill="WHITE" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0">
          <font>
             <Font size="11.0" />
          </font>
