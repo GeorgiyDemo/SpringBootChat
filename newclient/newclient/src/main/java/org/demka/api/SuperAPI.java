@@ -24,25 +24,27 @@ public interface SuperAPI {
 
     //Да, логгер публичный и в интерфейсе, и что ты мне сделаешь?
     Logger logger = LoggerFactory.getLogger(MyAPI.class);
-    String ServerURL = "http://149.248.54.195:8080";
+    String ServerURL = "http://127.0.0.1:8080";
 
     /**
-     * TODO: Регистрация пользователя в системе
-     * @param name
-     * @param login
-     * @param password
+     * Регистрация пользователя в системе
+     * @param name - ник
+     * @param login - логин (e-mail) пользователя
+     * @param password - пароль пользователя
+     * @param masterKey - мастер-пароль пользователя
+     * @return
      */
-    static Map<String, Object> Registration(String name, String login, String password) {
+    static Map<String, Object> Registration(String name, String login, String password, String masterKey) {
 
         String URL = String.format("%s/user/register", ServerURL);
         Map<String,String> params = new HashMap<>();
         params.put("login", login);
-        params.put("password", String2Hash.convert(password));
         params.put("username", name);
+        params.put("password", String2Hash.convert(password));
+        params.put("masterKey", String2Hash.convert(masterKey));
         String response = HTTPRequest.sendPOST(URL, params);
         Map<String, Object> resultMap = new HashMap<>();
 
-        //TODO: ОЧЕНЬ ОПАСНАЯ ЛОГИКА, ЕСЛИ ИНЕТ ПОЯВИТСЯ, ТО СМЕРТЬ СМЕРТЬ (?)
         if (response == null){
             resultMap.put("result", false);
             resultMap.put("error","Нет ответа от сервера");

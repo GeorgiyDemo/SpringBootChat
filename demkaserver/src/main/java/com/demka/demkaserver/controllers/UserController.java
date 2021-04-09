@@ -13,10 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 
 @RestController
@@ -87,6 +84,7 @@ public class UserController {
         if ((login == null) || (password == null) || (username == null) || (masterKey == null)) {
             return new ResponseEntity<>(GenResponseUtil.ResponseError("Не все значения были переданы"), HttpStatus.BAD_REQUEST);
         }
+        login = login.toLowerCase(Locale.ROOT);
 
         UserDBEntity result = userService.create(login, password, username, masterKey);
         //Если все хорошо
