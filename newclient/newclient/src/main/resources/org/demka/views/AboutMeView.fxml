@@ -1,14 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
+<?import com.jfoenix.controls.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="org.demka.controllers.AboutMeController"
-            prefHeight="650.0" prefWidth="700.0">
+<AnchorPane prefHeight="250.0" prefWidth="400.0" styleClass="background" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.demka.controllers.AboutMeController">
+    <children>
 
+        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="60.0" layoutY="110.0" text="Чат с использованием LongPoll" textFill="WHITE" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0">
+            <font>
+                <Font name="Helvetica" size="19.0" />
+            </font>
+        </Label>
+
+        <Hyperlink fx:id="SiteLink" alignment="CENTER" contentDisplay="CENTER" layoutX="145.0" layoutY="186.0" onAction="#siteLinkClicked" text="http://georgiydemo.github.io/" textFill="WHITE" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="120.0">
+            <font>
+                <Font name="Helvetica" size="13.0" />
+            </font>
+        </Hyperlink>
+
+        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="60.0" layoutY="110.0" text="Деменчук Георгий, ПИ19-4" textFill="WHITE" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="90.0">
+            <font>
+                <Font name="Helvetica" size="13.0" />
+            </font>
+        </Label>
+
+        <JFXButton fx:id="OkButton" layoutX="250.0" layoutY="380.0" onAction="#okButtonClicked" prefHeight="40.0" prefWidth="158.0" ripplerFill="#2491bf" text="Ок" textFill="WHITE" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" />
+
+    </children>
 </AnchorPane>

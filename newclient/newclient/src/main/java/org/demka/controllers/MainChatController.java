@@ -167,7 +167,8 @@ public class MainChatController extends SuperFullController {
      */
     @FXML
     private void AboutMenuItemClicked(){
-        logger.info("БЫЛО НАЖАТИЕ НА BUTTON 'О ПРОГРАММЕ'");
+        logger.info("Нажатие на button 'О программе'");
+        mainApp.AboutMe();
     }
 
     /**

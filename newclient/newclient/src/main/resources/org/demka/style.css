@@ -29,6 +29,11 @@
     -fx-fill: WHITE;
 }
 
+.hyperlink {
+    -fx-border-color: transparent;
+    -fx-padding: 4 0 4 0;
+}
+
 .split-pane
 {
     -fx-background-color: -fx-control-inner-background;
