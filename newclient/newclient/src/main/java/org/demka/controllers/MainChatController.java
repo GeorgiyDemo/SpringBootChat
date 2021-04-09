@@ -163,8 +163,7 @@ public class MainChatController extends SuperFullController {
         MyActionClass.onAction(ExitMenuItem);
     }
 
-    /** TODO
-     * Нажатие на пункт "О программе"
+    /** TODO: Нажатие на пункт "О программе"
      */
     @FXML
     private void AboutMenuItemClicked(){

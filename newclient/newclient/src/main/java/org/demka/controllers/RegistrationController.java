@@ -28,6 +28,8 @@ public class RegistrationController extends SuperFullController {
     private JFXTextField EmailTextField;
     @FXML
     private JFXPasswordField PasswordTextField;
+    @FXML
+    private JFXPasswordField MasterKey;
 
     @FXML
     private Label ErrorDescription;
@@ -35,7 +37,7 @@ public class RegistrationController extends SuperFullController {
     private static final Logger logger = LoggerFactory.getLogger(RegistrationController.class);
     private String regErrorString;
 
-    private Boolean dataValidator(String userName, String email, String password){
+    private Boolean dataValidator(String userName, String email, String password, String masterKey){
 
         //Проверка на пустоту
         if ((userName == null) || (userName.equals(""))){
@@ -53,6 +55,10 @@ public class RegistrationController extends SuperFullController {
             return false;
         }
 
+        if ((masterKey == null) || (masterKey.equals(""))) {
+            regErrorString = "Мастер-пароль не может быть пустым";
+            return false;
+        }
 
         if (userName.length() > 14){
             regErrorString = "Ник слишком длинный";
@@ -68,6 +74,17 @@ public class RegistrationController extends SuperFullController {
             regErrorString = "Пароль должен быть не менее 8 символов";
             return false;
         }
+
+        if (masterKey.length() < 8){
+            regErrorString = "Мастер-пароль должен быть не менее 8 символов";
+            return false;
+        }
+
+        if (masterKey.equals(password)){
+            regErrorString = "Пароль и мастер-пароль не болжны совпадать";
+            return false;
+        }
+
         return true;
     }
 
@@ -77,10 +94,11 @@ public class RegistrationController extends SuperFullController {
         String userName = UserNameTextField.getText();
         String userEmail = EmailTextField.getText();
         String userPassword = PasswordTextField.getText();
-        if (dataValidator(userName, userEmail, userPassword)){
+        String masterKey = MasterKey.getText();
+        if (dataValidator(userName, userEmail, userPassword, masterKey)){
             logger.info("Валидация данных со стороны клиента прошла успешно");
             //Получаем ответ от сервера
-            Map<String,Object> regResult = SuperAPI.Registration(userName, userEmail, userPassword);
+            Map<String,Object> regResult = SuperAPI.Registration(userName, userEmail, userPassword, masterKey);
             if ((boolean) regResult.get("result")){
                 ErrorDescription.setOpacity(0.0);
                 ErrorDescription.setText("");
