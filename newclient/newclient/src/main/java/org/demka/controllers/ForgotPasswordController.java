@@ -36,6 +36,7 @@ public class ForgotPasswordController extends SuperFullController {
      */
     @Override
     public void initialize(App mainApp) {
+        ErrorDescription.setOpacity(0.0);
         this.mainApp = mainApp;
     }
 

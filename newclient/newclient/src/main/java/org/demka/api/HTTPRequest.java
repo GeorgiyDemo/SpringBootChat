@@ -82,22 +82,17 @@ public class HTTPRequest {
         }
     }
 
-    public static String sendPUT(String urlString, Map<String, String> paramsMap) {
+    public static String sendPUT(String urlString, String jsonString) {
         try {
             URL obj = new URL(urlString);
             HttpURLConnection con = (HttpURLConnection) obj.openConnection();
             con.setRequestProperty("Content-Type", "application/json; utf-8");
             con.setRequestProperty("Accept", "application/json");
             con.setRequestMethod("PUT");
-
-            Gson gsonObj = new Gson();
-
-            String jsonStr = gsonObj.toJson(paramsMap);
-
             con.setDoOutput(true);
             OutputStream stream = con.getOutputStream();
 
-            stream.write(jsonStr.getBytes(StandardCharsets.UTF_8));
+            stream.write(jsonString.getBytes(StandardCharsets.UTF_8));
             stream.flush();
             stream.close();
 

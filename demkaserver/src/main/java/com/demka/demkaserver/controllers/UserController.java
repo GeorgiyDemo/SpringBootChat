@@ -136,7 +136,7 @@ public class UserController {
         Optional<UserDBEntity> searchResult = userService.findByMasterKeyAndEmail(updateItem.getMasterKey(),updateItem.getEmail());
         //Если не нашли пользователей, которые связаны с переданным e-mail и мастер-ключем
         if (searchResult.isEmpty()){
-            return new ResponseEntity<>(GenResponseUtil.ResponseError("Не удалось сменить пароль. Проверьте данные"), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Не удалось сменить пароль."), HttpStatus.OK);
         }
         UserDBEntity currentUser = searchResult.get();
         userService.update(currentUser, updateItem);

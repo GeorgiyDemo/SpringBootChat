@@ -1,5 +1,6 @@
 package org.demka.api;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.demka.exceptions.EmptyAPIResponseException;
@@ -29,7 +30,10 @@ public interface SuperAPI {
         params.put("email", login);
         params.put("newPassword", String2Hash.convert(newPassword));
         params.put("masterKey", String2Hash.convert(masterKey));
-        String response = HTTPRequest.sendPUT(URL, params);
+
+        Gson gson = new Gson();
+        String jsonString = gson.toJson(params);
+        String response = HTTPRequest.sendPUT(URL, jsonString);
         Map<String, Object> resultMap = new HashMap<>();
 
         if (response == null){
