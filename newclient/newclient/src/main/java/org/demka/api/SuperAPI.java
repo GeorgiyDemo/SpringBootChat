@@ -9,13 +9,10 @@ import org.demka.exceptions.RoomNotFoundException;
 import org.demka.models.Message;
 import org.demka.models.Room;
 import org.demka.models.User;
-import org.demka.utils.HTTPRequest;
 import org.demka.utils.String2Hash;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +29,7 @@ public interface SuperAPI {
         params.put("email", login);
         params.put("newPassword", String2Hash.convert(newPassword));
         params.put("masterKey", String2Hash.convert(masterKey));
-        String response = HTTPRequest.sendPOST(URL, params);
+        String response = HTTPRequest.sendPUT(URL, params);
         Map<String, Object> resultMap = new HashMap<>();
 
         if (response == null){

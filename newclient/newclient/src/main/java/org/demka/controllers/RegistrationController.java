@@ -99,12 +99,14 @@ public class RegistrationController extends SuperFullController {
             logger.info("Валидация данных со стороны клиента прошла успешно");
             //Получаем ответ от сервера
             Map<String,Object> regResult = SuperAPI.Registration(userName, userEmail, userPassword, masterKey);
+
             if ((boolean) regResult.get("result")){
                 ErrorDescription.setOpacity(0.0);
                 ErrorDescription.setText("");
                 logger.info("Успешно зарегистрировали пользователя");
-                mainApp.SuccessUserRegistration();
+                mainApp.SuccessUserAction("Успешная регистрация", "Регистрация прошла успешно!");
             }
+
             else{
                 errorString = (String) regResult.get("error");
                 ErrorDescription.setText(errorString);

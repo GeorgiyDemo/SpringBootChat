@@ -138,14 +138,16 @@ public class App extends Application {
     }
 
 
-    public void SuccessUserRegistration() {
+
+    public void SuccessUserAction(String windowTitle, String mainText) {
         try {
-            this.primaryStage.setTitle("DEMKAChat - Успешная регистрация");
+            this.primaryStage.setTitle("DEMKAChat - "+windowTitle);
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(App.class.getResource("views/SuccessRegistrationView.fxml"));
+            loader.setLocation(App.class.getResource("views/SuccessActionView.fxml"));
             AnchorPane mainPage = loader.load();
             rootLayout.setCenter(mainPage);
-            SuccessRegistrationController controller = loader.getController();
+            SuccessActionController controller = loader.getController();
+            controller.setMainText(mainText);
             controller.initialize(this);
         } catch (IOException e) {
             e.printStackTrace();
