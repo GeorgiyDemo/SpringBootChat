@@ -34,9 +34,12 @@ public class MainChatController extends SuperFullController {
     @FXML
     private TableView<Message> MessageTable;
     @FXML
+    private TableColumn<Message, String> MessageTimeColumn;
+    @FXML
     private TableColumn<Message, String> MessageUserColumn;
     @FXML
     private TableColumn<Message, String> MessageTextColumn;
+
 
     @FXML
     private Menu AboutMenuItem;
@@ -102,6 +105,7 @@ public class MainChatController extends SuperFullController {
         //Отображение имени комнаты в таблице
         RoomColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
         //Отображение сообщений в таблице
+        MessageTimeColumn.setCellValueFactory(cellData -> cellData.getValue().getTimeCreatedProperty());
         MessageUserColumn.setCellValueFactory(cellData -> cellData.getValue().getUserNameProperty());
         MessageTextColumn.setCellValueFactory(cellData -> cellData.getValue().getTextProperty());
 
