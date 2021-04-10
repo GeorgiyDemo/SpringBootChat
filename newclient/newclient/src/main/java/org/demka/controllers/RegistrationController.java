@@ -35,53 +35,53 @@ public class RegistrationController extends SuperFullController {
     private Label ErrorDescription;
 
     private static final Logger logger = LoggerFactory.getLogger(RegistrationController.class);
-    private String regErrorString;
+    private String errorString;
 
-    private Boolean dataValidator(String userName, String email, String password, String masterKey){
+    private Boolean dataValidator(String userName, String eMail, String password, String masterKey){
 
         //Проверка на пустоту
         if ((userName == null) || (userName.equals(""))){
-            regErrorString = "Ник не может быть пустым";
+            errorString = "Ник не может быть пустым";
             return false;
         }
 
-        if ((email == null) || (email.equals(""))) {
-            regErrorString = "E-mail не может быть пустым";
+        if ((eMail == null) || (eMail.equals(""))) {
+            errorString = "E-mail не может быть пустым";
             return false;
         }
 
         if ((password == null) || (password.equals(""))) {
-            regErrorString = "Пароль не может быть пустым";
+            errorString = "Пароль не может быть пустым";
             return false;
         }
 
         if ((masterKey == null) || (masterKey.equals(""))) {
-            regErrorString = "Мастер-пароль не может быть пустым";
+            errorString = "Мастер-пароль не может быть пустым";
             return false;
         }
 
         if (userName.length() > 14){
-            regErrorString = "Ник слишком длинный";
+            errorString = "Ник слишком длинный";
             return false;
         }
 
-        if (!Validators.emailValidator(email)){
-            regErrorString = "Некорректный e-mail";
+        if (!Validators.emailValidator(eMail)){
+            errorString = "Некорректный e-mail";
             return false;
         }
 
         if (password.length() < 8){
-            regErrorString = "Пароль должен быть не менее 8 символов";
+            errorString = "Пароль должен быть не менее 8 символов";
             return false;
         }
 
         if (masterKey.length() < 8){
-            regErrorString = "Мастер-пароль должен быть не менее 8 символов";
+            errorString = "Мастер-пароль должен быть не менее 8 символов";
             return false;
         }
 
         if (masterKey.equals(password)){
-            regErrorString = "Пароль и мастер-пароль не болжны совпадать";
+            errorString = "Пароль и мастер-пароль не болжны совпадать";
             return false;
         }
 
@@ -106,16 +106,16 @@ public class RegistrationController extends SuperFullController {
                 mainApp.SuccessUserRegistration();
             }
             else{
-                regErrorString = (String) regResult.get("error");
-                ErrorDescription.setText(regErrorString);
-                logger.info("Валидация со стороны сервера не прошла: "+regErrorString);
+                errorString = (String) regResult.get("error");
+                ErrorDescription.setText(errorString);
+                logger.info("Валидация со стороны сервера не прошла: "+errorString);
                 ErrorDescription.setOpacity(1.0);
             }
 
         }
         else{
-            logger.info("Валидация данных со стороны клиента не прошла: "+regErrorString);
-            ErrorDescription.setText(regErrorString);
+            logger.info("Валидация данных со стороны клиента не прошла: "+errorString);
+            ErrorDescription.setText(errorString);
             ErrorDescription.setOpacity(1.0);
         }
 

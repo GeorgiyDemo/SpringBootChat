@@ -26,6 +26,36 @@ public interface SuperAPI {
     Logger logger = LoggerFactory.getLogger(MyAPI.class);
     String ServerURL = "http://127.0.0.1:8080";
 
+    static Map<String, Object> ResetPassword(String login, String newPassword, String masterKey){
+        String URL = String.format("%s/user/reset", ServerURL);
+        Map<String,String> params = new HashMap<>();
+        params.put("email", login);
+        params.put("newPassword", String2Hash.convert(newPassword));
+        params.put("masterKey", String2Hash.convert(masterKey));
+        String response = HTTPRequest.sendPOST(URL, params);
+        Map<String, Object> resultMap = new HashMap<>();
+
+        if (response == null){
+            resultMap.put("result", false);
+            resultMap.put("error","Нет ответа от сервера");
+            logger.error("Не получили ответ от сервера во время смены пароля пользователя с логином "+login);
+            return resultMap;
+        }
+
+        //Парсим результат
+        JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
+        Boolean authResult = jsonResult.get("result").getAsBoolean();
+        resultMap.put("result", authResult);
+
+        if (!authResult) {
+            String errDescription = jsonResult.get("description").getAsString();
+            resultMap.put("error", errDescription);
+            logger.info("Сервер возвратил ошибку при смене пароля: "+errDescription);
+            return resultMap;
+        }
+        logger.info("Пользователь "+login+" успешно сменил пароль");
+        return resultMap;
+    }
     /**
      * Регистрация пользователя в системе
      * @param name - ник

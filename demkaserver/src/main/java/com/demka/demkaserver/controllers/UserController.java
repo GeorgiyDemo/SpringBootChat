@@ -125,7 +125,11 @@ public class UserController {
         return new ResponseEntity<>(GenResponseUtil.ResponseOK(resultList), HttpStatus.OK);
     }
 
-
+    /**
+     * Восстановление (обновление) пароля пользователя по мастер-ключу
+     * @param updateItem
+     * @return
+     */
     @PutMapping("/reset")
     public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordEntity updateItem) {
 
