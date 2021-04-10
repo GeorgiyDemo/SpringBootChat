@@ -52,6 +52,18 @@
     -fx-background-radius: 5em;
 }
 
+.special-button{
+
+    -fx-background-color: transparent;
+    -fx-background-image: url('images/group-icon.png');
+    -fx-background-size: 30px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.special-button:hover{
+    -fx-background-color: red;
+}
 
 .text-field {
     -fx-text-inner-color: white;
