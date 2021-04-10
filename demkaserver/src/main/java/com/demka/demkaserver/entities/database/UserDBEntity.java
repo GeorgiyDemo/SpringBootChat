@@ -9,9 +9,12 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+/**
+ * Сущность пользователя в MongoDB
+ */
 @Data
 @NoArgsConstructor
-@Document(collection="Users")
+@Document(collection = "Users")
 public class UserDBEntity {
 
     @Id
@@ -20,7 +23,7 @@ public class UserDBEntity {
     @JsonProperty
     private String name;
     @JsonProperty
-    @Indexed(unique=true)
+    @Indexed(unique = true)
     private String login;
     @JsonProperty
     private String password;
@@ -40,8 +43,8 @@ public class UserDBEntity {
                 ", name='" + name + '\'' +
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
-                ", masterKey='" + masterKey + '\'' +
                 ", key='" + key + '\'' +
+                ", masterKey='" + masterKey + '\'' +
                 ", timeCreated=" + timeCreated +
                 '}';
     }

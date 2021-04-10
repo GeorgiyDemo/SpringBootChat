@@ -7,9 +7,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+/**
+ * Сущность сообщения пользователя в MongoDB
+ */
 @Data
 @NoArgsConstructor
-@Document(collection="Messages")
+@Document(collection = "Messages")
 public class MessageDBEntity {
 
     @Id

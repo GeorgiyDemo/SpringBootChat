@@ -16,13 +16,18 @@ public class MyErrorController extends BasicErrorController {
         super(errorAttributes, errorProperties, errorViewResolvers);
     }
 
+
     /**
      * Переопределение полей, которые отдаются при ошибке обработки запроса
+     *
+     * @param request
+     * @param options
+     * @return
      */
     @Override
     protected Map<String, Object> getErrorAttributes(HttpServletRequest request, ErrorAttributeOptions options) {
         Map<String, Object> errorAttributes = super.getErrorAttributes(request, options);
-        errorAttributes.put("result",false);
+        errorAttributes.put("result", false);
         return errorAttributes;
     }
 

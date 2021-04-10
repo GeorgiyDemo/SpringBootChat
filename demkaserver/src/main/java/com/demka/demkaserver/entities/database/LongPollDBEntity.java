@@ -7,9 +7,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+/**
+ * Сущность Лонгпула в MongoDB
+ */
 @Data
 @NoArgsConstructor
-@Document(collection="LongPolls")
+@Document(collection = "LongPolls")
 public class LongPollDBEntity {
 
     @Id
@@ -25,4 +28,14 @@ public class LongPollDBEntity {
     @Field(name = "user_id")
     private String userId;
 
+    @Override
+    public String toString() {
+        return "LongPollDBEntity{" +
+                "id='" + id + '\'' +
+                ", ts=" + ts +
+                ", key='" + key + '\'' +
+                ", url='" + url + '\'' +
+                ", userId='" + userId + '\'' +
+                '}';
+    }
 }

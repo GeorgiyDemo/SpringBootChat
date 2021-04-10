@@ -11,7 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/room")
@@ -22,7 +25,7 @@ public class RoomController {
     private final MessageService messageService;
 
     @Autowired
-    public RoomController(RoomService roomService, UserService userService, MessageService messageService){
+    public RoomController(RoomService roomService, UserService userService, MessageService messageService) {
         this.roomService = roomService;
         this.userService = userService;
         this.messageService = messageService;
@@ -30,6 +33,7 @@ public class RoomController {
 
     /**
      * Создание комнаты для общения пользователей
+     *
      * @param data - данные в JSON. Поля:
      *             key - ключ пользователя
      *             roomName - название комнаты
@@ -44,7 +48,7 @@ public class RoomController {
         String usersString = data.get("users");
 
         //Проверка переданных полей
-        if ((key == null) || (roomName == null) || (usersString == null)){
+        if ((key == null) || (roomName == null) || (usersString == null)) {
             return new ResponseEntity<>(GenResponseUtil.ResponseError("Не все значения были переданы"), HttpStatus.BAD_REQUEST);
         }
 
@@ -53,14 +57,14 @@ public class RoomController {
         //Получаем id создателя через key + проверка ключа
         Optional<UserDBEntity> creatorUserOptional = userService.findByKey(key);
         //Если вдруг пользователь с key не найден
-        if (creatorUserOptional.isEmpty()){
+        if (creatorUserOptional.isEmpty()) {
             return new ResponseEntity<>(GenResponseUtil.ResponseError("Не удалось авторизоваться по указанному ключу"), HttpStatus.FORBIDDEN);
         }
 
         //Проверка на существование пользователей
-        for (String userId: users) {
-            if (userService.find(userId).isEmpty()){
-                return new ResponseEntity<>(GenResponseUtil.ResponseError("Пользователя с id "+userId+" не существует"), HttpStatus.BAD_REQUEST);
+        for (String userId : users) {
+            if (userService.find(userId).isEmpty()) {
+                return new ResponseEntity<>(GenResponseUtil.ResponseError("Пользователя с id " + userId + " не существует"), HttpStatus.BAD_REQUEST);
             }
         }
 
@@ -70,14 +74,15 @@ public class RoomController {
 
         //Формируем сообщение, что комната создана
         String messageText = "*Комната была создана*";
-        messageService.create(creatorId,creatorUser.getName(), messageText, newRoom.getId());
+        messageService.create(creatorId, creatorUser.getName(), messageText, newRoom.getId());
 
         return new ResponseEntity<>(GenResponseUtil.ResponseOK(newRoom), HttpStatus.OK);
     }
 
     /**
      * Получение инфорации о комнате
-     * @param key - ключ пользователя
+     *
+     * @param key    - ключ пользователя
      * @param roomId - id комнаты
      * @return
      */
@@ -86,14 +91,14 @@ public class RoomController {
 
 
         //Проверка ключа
-        if (!userService.checkUserKey(key)){
+        if (!userService.checkUserKey(key)) {
             return new ResponseEntity<>(GenResponseUtil.ResponseError("Не удалось авторизоваться по указанному ключу"), HttpStatus.FORBIDDEN);
         }
 
         Optional<RoomDBEntity> roomResult = roomService.find(roomId);
         //Если комнаты с таким id не существует
-        if (roomResult.isEmpty()){
-            return new ResponseEntity<>(GenResponseUtil.ResponseError("Комнаты с id "+roomId+" не существует"), HttpStatus.NOT_FOUND);
+        if (roomResult.isEmpty()) {
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Комнаты с id " + roomId + " не существует"), HttpStatus.NOT_FOUND);
         }
 
         //Если существует
@@ -103,6 +108,7 @@ public class RoomController {
 
     /**
      * Получение всех комнат, в которых состоит пользователь
+     *
      * @param key - ключ пользователя
      * @return
      */
@@ -111,7 +117,7 @@ public class RoomController {
 
         //Проверка ключа
         Optional<UserDBEntity> currentUserOptional = userService.findByKey(key);
-        if (currentUserOptional.isEmpty()){
+        if (currentUserOptional.isEmpty()) {
             return new ResponseEntity<>(GenResponseUtil.ResponseError("Не удалось авторизоваться по указанному ключу"), HttpStatus.FORBIDDEN);
         }
 

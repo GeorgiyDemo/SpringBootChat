@@ -15,58 +15,90 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Сервис для работы с пользователями
+ */
 @Service
 public class UserService {
 
     private final UserRepository userRepo;
 
     @Autowired
-    public UserService(UserRepository userRepo){
+    public UserService(UserRepository userRepo) {
         this.userRepo = userRepo;
     }
 
+    /**
+     * Обновление пароля пользователя
+     *
+     * @param user    - объект пользователя
+     * @param newData - объект обновления пароля (да, объект)
+     */
     public void update(UserDBEntity user, UpdatePasswordEntity newData) {
         user.setPassword(newData.getNewPassword());
         userRepo.save(user);
     }
 
-    public void delete(UserDBEntity item) {
-        userRepo.delete(item);
-    }
-
-    public List<UserDBEntity> findAll(){
-        return userRepo.findAll();
-    }
-
-    public Optional<UserDBEntity> find(String id){
+    /**
+     * Поиск пользователя по его id
+     *
+     * @param id - идентификатор пользователя
+     * @return
+     */
+    public Optional<UserDBEntity> find(String id) {
         return userRepo.findById(id);
     }
 
-    public Optional<UserDBEntity> findByMasterKeyAndEmail(String masterKey, String email){
-        return userRepo.findByMasterKeyAndEmail(masterKey, email);
+    /**
+     * Поиск пользователя по мастер-ключу и e-mail
+     * Используется при восстановлении пароля
+     *
+     * @param masterKey - мастер-ключ пользователя
+     * @param login     - логин пользоваетля
+     * @return
+     */
+    public Optional<UserDBEntity> findByMasterKeyAndEmail(String masterKey, String login) {
+        return userRepo.findByMasterKeyAndEmail(masterKey, login);
     }
 
-    //Проверка на авторизацию пользователя
-    public UserDBEntity checkAuth(String login, String password){
+    /**
+     * Проверка на авторизацию пользователя по паре логин/пароль
+     *
+     * @param login    - логин пользователя
+     * @param password - пароль пользователя
+     * @return
+     */
+    public UserDBEntity checkAuth(String login, String password) {
         Optional<UserDBEntity> result = userRepo.checkUserAuth(login, password);
         return result.orElse(null);
     }
 
-    //Проверка на авторизацию пользователя
-    public UserDBEntity checkAuth(String key){
+    /**
+     * Проверка на авторизацию пользователя по ключу API
+     *
+     * @param key - ключ API пользователя
+     * @return
+     */
+    public UserDBEntity checkAuth(String key) {
         Optional<UserDBEntity> result = userRepo.checkUserKey(key);
         return result.orElse(null);
     }
 
-    //Регистрация пользователя
-    public UserDBEntity create(String login, String password, String username, String masterPassword){
+    /**
+     * Создание/регистрация пользователя в системе
+     *
+     * @param login          - логин пользователя (e-mail)
+     * @param password       - пароль пользоваетля
+     * @param username       - ник пользователя (не путать с логином)
+     * @param masterPassword - мастер-ключ пользователя. Нужен для восстановления пароля.
+     * @return
+     */
+    public UserDBEntity create(String login, String password, String username, String masterPassword) {
 
         //Проверяем на то, не зарегался ли уже пользователь с таким email или именем
-        if ((userRepo.findByLogin(login).isPresent()) || (userRepo.findByName(username).isPresent())){
+        if ((userRepo.findByLogin(login).isPresent()) || (userRepo.findByName(username).isPresent())) {
             return null;
         }
-
-        Optional<UserDBEntity> result = userRepo.checkUserAuth(login, password);
 
         UserDBEntity newUser = new UserDBEntity();
 
@@ -83,37 +115,70 @@ public class UserService {
         return newUser;
     }
 
-    //Поиск по ключу
-    public Optional<UserDBEntity> findByKey(String key){
+    /**
+     * Поиск пользователя по ключу API
+     *
+     * @param key - ключ API пользователя
+     * @return
+     */
+    public Optional<UserDBEntity> findByKey(String key) {
         return userRepo.checkUserKey(key);
     }
 
-    //Поиск пользователей
-    public List<UserDBEntity> searchUsers(String name, Integer limit, String currentUserKey){
+    /**
+     * Поиск пользователей в системе. Используется при создании комнаты и выборе её участников
+     *
+     * @param name           - паттерн имени пользователя
+     * @param limit          - лимит найденный пользователей
+     * @param currentUserKey - ключ API пользователя, осуществляющего поиск
+     * @return
+     */
+    public List<UserDBEntity> searchUsers(String name, Integer limit, String currentUserKey) {
 
         List<UserDBEntity> bufList = new ArrayList<UserDBEntity>();
         List<UserDBEntity> resultList = new ArrayList<UserDBEntity>();
         Pageable pageLimit = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "time_created"));
 
-        if (name != null){
-            bufList.addAll(userRepo.findAllByNameLimit("^"+name, pageLimit));
-        }
-        else{
+        if (name != null) {
+            bufList.addAll(userRepo.findAllByNameLimit("^" + name, pageLimit));
+        } else {
             bufList.addAll(userRepo.findAllLimit(pageLimit));
         }
 
         //Выкидываем самого пользователя, который запросил данные (чтоб не отображать ему самого себя)
-        for (UserDBEntity item: bufList) {
-            if (!item.getKey().equals(currentUserKey)){
+        for (UserDBEntity item : bufList) {
+            if (!item.getKey().equals(currentUserKey)) {
                 resultList.add(item);
             }
         }
         return resultList;
     }
 
-    //Проверка на валидный ключ пользователя
-    public boolean checkUserKey(String key){
+    /**
+     * Проверка на существование ключа API пользователя
+     *
+     * @param key - ключ API пользователя
+     * @return
+     */
+    public boolean checkUserKey(String key) {
         return userRepo.checkUserKey(key).isPresent();
     }
 
+    /**
+     * Удаление пользователя по его объекту
+     *
+     * @param item - объект пользователя
+     */
+    public void delete(UserDBEntity item) {
+        userRepo.delete(item);
+    }
+
+    /**
+     * Поиск всех пользователей в коллекции
+     *
+     * @return
+     */
+    public List<UserDBEntity> findAll() {
+        return userRepo.findAll();
+    }
 }

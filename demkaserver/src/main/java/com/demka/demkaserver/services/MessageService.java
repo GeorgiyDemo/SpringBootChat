@@ -15,29 +15,45 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
+/**
+ * Сервис для работы с сообщениями
+ */
 @Service
 public class MessageService {
 
     private final MessageRepository messageRepo;
 
     @Autowired
-    public MessageService(MessageRepository messageRepo){
+    public MessageService(MessageRepository messageRepo) {
         this.messageRepo = messageRepo;
     }
 
-    public MessageDBEntity GetLastMessageByUser(String userId){
+    /**
+     * Отдельный метод для получения последнего сообщения пользователя по времени
+     *
+     * @param userId - идентификатор пользователя
+     * @return
+     */
+    public MessageDBEntity GetLastMessageByUser(String userId) {
 
         Pageable pageLimit = PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "time_created"));
         List<MessageDBEntity> userMessageList = messageRepo.findAllByUser(userId, pageLimit);
-        if (userMessageList.size() != 1){
+        if (userMessageList.size() != 1) {
             return null;
         }
         return userMessageList.get(0);
     }
 
-    //Создание сообщения
-    public MessageDBEntity create(String userId, String userName, String text, String roomId){
+    /**
+     * Создание нового сообщения
+     *
+     * @param userId   - идентификатор пользователя, который отправил сообщение
+     * @param userName - имя пользователя, который отправляет сообщение
+     * @param text     - текст сообщения
+     * @param roomId   - идентификатор комнаты, куда отправляется сообщение
+     * @return
+     */
+    public MessageDBEntity create(String userId, String userName, String text, String roomId) {
 
         MessageDBEntity newMessage = new MessageDBEntity();
         newMessage.setUserId(userId);
@@ -52,21 +68,29 @@ public class MessageService {
         return newMessage;
     }
 
+    /**
+     * Обновление сообщения
+     *
+     * @param oldObj - старый объект сообщения
+     * @param newObj - новый оьъект сообщения
+     */
     public void update(MessageDBEntity oldObj, MessageDBEntity newObj) {
         messageRepo.delete(oldObj);
         messageRepo.save(newObj);
     }
 
+
     /**
-     * Получение новых сообщний по каждой комнате, дата которых больше, чем ts
-     * @param roomsList
-     * @param ts
+     * Получение новых сообщний по каждой комнате, время которых больше, чем указанное в ts
+     *
+     * @param roomsList - список комнат пользователя (предварительно вызывается в findUserRooms)
+     * @param ts        - UNIX-время
      * @return
      */
-    public List<MessageDBEntity> getNewMessagesByRooms(List<RoomDBEntity> roomsList, Long ts){
+    public List<MessageDBEntity> getNewMessagesByRooms(List<RoomDBEntity> roomsList, Long ts) {
         List<MessageDBEntity> messagesList = new ArrayList<MessageDBEntity>();
 
-        for (RoomDBEntity room: roomsList) {
+        for (RoomDBEntity room : roomsList) {
             messagesList.addAll(messageRepo.getNewMessagesByRoom(room.getId(), ts));
         }
         return messagesList;
@@ -75,30 +99,54 @@ public class MessageService {
 
     /**
      * Получение всех сообщний по каждой комнате
-     * @param roomsList
+     *
+     * @param roomsList - список комнат пользователя (предварительно вызывается в findUserRooms)
      * @return
      */
-    public List<MessageDBEntity> getAllMessagesByRooms(List<RoomDBEntity> roomsList){
+    public List<MessageDBEntity> getAllMessagesByRooms(List<RoomDBEntity> roomsList) {
         List<MessageDBEntity> messagesList = new ArrayList<MessageDBEntity>();
-        for (RoomDBEntity room: roomsList) {
+        for (RoomDBEntity room : roomsList) {
             messagesList.addAll(messageRepo.findAllByRoomId(room.getId()));
         }
         return messagesList;
     }
 
-
-    public void delete(MessageDBEntity item) { messageRepo.delete(item); }
-
-    public List<MessageDBEntity> findByRoom(String roomId){
+    /**
+     * Получение сообщений по конкретной комнате
+     *
+     * @param roomId - идентификатор комнаты
+     * @return
+     */
+    public List<MessageDBEntity> findByRoom(String roomId) {
         return messageRepo.findAllByRoomId(roomId);
     }
 
-    public List<MessageDBEntity> findAll(){
-        return messageRepo.findAll();
+    /**
+     * Поиск сообщения по его id
+     *
+     * @param id - идентификатор сообщения
+     * @return
+     */
+    public Optional<MessageDBEntity> find(String id) {
+        return messageRepo.findById(id);
     }
 
-    public Optional<MessageDBEntity> find(String id){
-        return messageRepo.findById(id);
+    /**
+     * Удаление сообщения по его объекту
+     *
+     * @param item - объект сообщения
+     */
+    public void delete(MessageDBEntity item) {
+        messageRepo.delete(item);
+    }
+
+    /**
+     * Поиск всех сообщений
+     *
+     * @return
+     */
+    public List<MessageDBEntity> findAll() {
+        return messageRepo.findAll();
     }
 
 }

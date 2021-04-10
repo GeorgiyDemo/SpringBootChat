@@ -8,7 +8,7 @@ import org.springframework.web.filter.CommonsRequestLoggingFilter;
 public class MyRequestLoggingConfig {
 
     /**
-     * Это нужно для того, чтоб было доп логирование всех запросов,
+     * Нужно для того, чтоб было доп логирование всех запросов,
      * которые приходят на сервер
      */
     @Bean

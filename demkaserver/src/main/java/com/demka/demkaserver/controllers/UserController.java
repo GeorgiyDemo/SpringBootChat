@@ -127,15 +127,16 @@ public class UserController {
 
     /**
      * Восстановление (обновление) пароля пользователя по мастер-ключу
+     *
      * @param updateItem
      * @return
      */
     @PutMapping("/reset")
     public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordEntity updateItem) {
 
-        Optional<UserDBEntity> searchResult = userService.findByMasterKeyAndEmail(updateItem.getMasterKey(),updateItem.getEmail());
+        Optional<UserDBEntity> searchResult = userService.findByMasterKeyAndEmail(updateItem.getMasterKey(), updateItem.getEmail());
         //Если не нашли пользователей, которые связаны с переданным e-mail и мастер-ключем
-        if (searchResult.isEmpty()){
+        if (searchResult.isEmpty()) {
             return new ResponseEntity<>(GenResponseUtil.ResponseError("Не удалось сменить пароль."), HttpStatus.OK);
         }
         UserDBEntity currentUser = searchResult.get();

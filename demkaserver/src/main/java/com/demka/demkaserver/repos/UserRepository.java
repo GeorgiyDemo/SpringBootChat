@@ -8,27 +8,30 @@ import org.springframework.data.mongodb.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Интерфейс MongoRepository для работы c коллекцией пользователей
+ */
 public interface UserRepository extends MongoRepository<UserDBEntity, String> {
 
 
     @Query("{ 'key' : ?0}")
-    public Optional<UserDBEntity> checkUserKey(String key);
+    Optional<UserDBEntity> checkUserKey(String key);
 
     @Query("{ 'login' : ?0, 'password' : ?1}")
-    public Optional<UserDBEntity> checkUserAuth(String login, String password);
+    Optional<UserDBEntity> checkUserAuth(String login, String password);
 
     @Query("{ 'login' : ?0}")
-    public Optional<UserDBEntity> findByLogin(String login);
+    Optional<UserDBEntity> findByLogin(String login);
 
     @Query("{ 'name' : ?0}")
-    public Optional<UserDBEntity> findByName(String name);
+    Optional<UserDBEntity> findByName(String name);
 
     @Query("{ 'name' : { $regex: ?0 } }")
-    public List<UserDBEntity> findAllByNameLimit(String regexp, Pageable pageable);
+    List<UserDBEntity> findAllByNameLimit(String regexp, Pageable pageable);
 
     @Query("{}")
-    public List<UserDBEntity> findAllLimit(Pageable pageable);
+    List<UserDBEntity> findAllLimit(Pageable pageable);
 
     @Query("{ 'master_key' : ?0, 'login' : ?1}")
-    public Optional<UserDBEntity> findByMasterKeyAndEmail(String masterKey, String email);
+    Optional<UserDBEntity> findByMasterKeyAndEmail(String masterKey, String email);
 }

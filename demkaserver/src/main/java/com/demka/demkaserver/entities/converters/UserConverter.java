@@ -5,7 +5,14 @@ import com.demka.demkaserver.entities.response.UserAuthResponseEntity;
 
 public class UserConverter {
 
-    public static UserAuthResponseEntity convert(UserDBEntity dbEntity){
+    /**
+     * Логика конвертации с UserDBEntity в UserAuthResponseEntity, который отдается при авторизации пользователя
+     * Это нужно для того, чтоб избавиться от полей, которые не нужны в ответе (т.е. пароль, мастер-ключ и т д)
+     *
+     * @param dbEntity - сущность UserDBEntity
+     * @return
+     */
+    public static UserAuthResponseEntity convert(UserDBEntity dbEntity) {
         UserAuthResponseEntity responseEntity = new UserAuthResponseEntity();
         responseEntity.setId(dbEntity.getId());
         responseEntity.setName(dbEntity.getName());

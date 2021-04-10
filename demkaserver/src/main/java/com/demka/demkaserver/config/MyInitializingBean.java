@@ -12,7 +12,7 @@ public class MyInitializingBean implements InitializingBean {
     private LongPollService longPollService;
 
     /**
-     * Кароч это переопределение нужно для того, чтоб удалять данные старых лонгпулов с СУБД
+     * Переопределение нужно для того, чтоб удалять данные старых лонгпулов с СУБД
      * После реинициализации спринга
      */
     @Override

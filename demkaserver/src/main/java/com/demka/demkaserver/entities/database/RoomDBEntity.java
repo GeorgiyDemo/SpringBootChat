@@ -9,10 +9,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.List;
 
-
+/**
+ * Сущность чат-комнаты в MongoDB
+ */
 @Data
 @NoArgsConstructor
-@Document(collection="Rooms")
+@Document(collection = "Rooms")
 public class RoomDBEntity {
 
     @Id

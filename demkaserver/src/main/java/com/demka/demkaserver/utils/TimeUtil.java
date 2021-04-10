@@ -4,10 +4,11 @@ import java.time.Instant;
 
 public class TimeUtil {
     /**
-     * UNIX-время системы
+     * Возвращает текущее UNIX-время системы
+     *
      * @return Текущее UNIX-время
      */
-    public static long unixTime(){
+    public static long unixTime() {
         return Instant.now().getEpochSecond();
     }
 }
