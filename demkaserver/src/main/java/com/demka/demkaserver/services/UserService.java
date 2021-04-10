@@ -135,8 +135,8 @@ public class UserService {
      */
     public List<UserDBEntity> searchUsers(String name, Integer limit, String currentUserKey) {
 
-        List<UserDBEntity> bufList = new ArrayList<UserDBEntity>();
-        List<UserDBEntity> resultList = new ArrayList<UserDBEntity>();
+        List<UserDBEntity> bufList = new ArrayList<>();
+        List<UserDBEntity> resultList = new ArrayList<>();
         Pageable pageLimit = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "time_created"));
 
         if (name != null) {

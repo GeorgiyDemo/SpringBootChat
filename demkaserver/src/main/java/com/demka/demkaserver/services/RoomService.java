@@ -56,7 +56,7 @@ public class RoomService {
 
         //Проверка, чтоб создатель также был в списке пользователей комнаты
 
-        List<String> allUsers = new ArrayList<String>(usersBuffer);
+        List<String> allUsers = new ArrayList<>(usersBuffer);
 
         if (!allUsers.contains(creatorId)) {
             allUsers.add(creatorId);

@@ -8,15 +8,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class MyInitializingBean implements InitializingBean {
 
+    private final LongPollService longPollService;
+
     @Autowired
-    private LongPollService longPollService;
+    public MyInitializingBean(LongPollService longPollService) {
+        this.longPollService = longPollService;
+    }
 
     /**
      * Переопределение нужно для того, чтоб удалять данные старых лонгпулов с СУБД
      * После реинициализации спринга
      */
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         longPollService.deleteAll();
     }
 }

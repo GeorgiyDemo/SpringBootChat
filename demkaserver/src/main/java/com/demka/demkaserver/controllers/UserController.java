@@ -128,7 +128,7 @@ public class UserController {
     /**
      * Восстановление (обновление) пароля пользователя по мастер-ключу
      *
-     * @param updateItem
+     * @param updateItem - объект UpdatePasswordEntity
      * @return
      */
     @PutMapping("/reset")

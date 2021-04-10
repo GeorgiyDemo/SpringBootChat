@@ -88,7 +88,7 @@ public class MessageService {
      * @return
      */
     public List<MessageDBEntity> getNewMessagesByRooms(List<RoomDBEntity> roomsList, Long ts) {
-        List<MessageDBEntity> messagesList = new ArrayList<MessageDBEntity>();
+        List<MessageDBEntity> messagesList = new ArrayList<>();
 
         for (RoomDBEntity room : roomsList) {
             messagesList.addAll(messageRepo.getNewMessagesByRoom(room.getId(), ts));
@@ -104,7 +104,7 @@ public class MessageService {
      * @return
      */
     public List<MessageDBEntity> getAllMessagesByRooms(List<RoomDBEntity> roomsList) {
-        List<MessageDBEntity> messagesList = new ArrayList<MessageDBEntity>();
+        List<MessageDBEntity> messagesList = new ArrayList<>();
         for (RoomDBEntity room : roomsList) {
             messagesList.addAll(messageRepo.findAllByRoomId(room.getId()));
         }
