@@ -66,7 +66,7 @@ public class LongPollRunnable implements Runnable {
 
             boolean exceptionFlag = false;
             try {
-                List<Message> newMessages = apiSession.longpollListener();
+                List<Message> newMessages = apiSession.longPollListener();
 
                 for (Message msg : newMessages) {
                     //Проверка на существование комнаты
@@ -108,7 +108,7 @@ public class LongPollRunnable implements Runnable {
             catch (LongpollListenerException e) {
                 System.out.println(e);
                 try {
-                    apiSession.getLongpollServer();
+                    apiSession.getLongPollServer();
                 } catch (EmptyAPIResponseException | FalseServerFlagException newE) {
                     exceptionFlag = true;
                     newE.printStackTrace();

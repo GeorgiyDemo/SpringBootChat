@@ -20,12 +20,18 @@ import java.util.Map;
 
 public interface SuperAPI {
 
-    //Да, логгер публичный и в интерфейсе, и что ты мне сделаешь?
     Logger logger = LoggerFactory.getLogger(MyAPI.class);
-    String ServerURL = "http://149.248.54.195:8080";
+    String serverURL = "http://149.248.54.195:8080";
 
-    static Map<String, Object> ResetPassword(String login, String newPassword, String masterKey) {
-        String URL = String.format("%s/user/reset", ServerURL);
+    /**
+     * Восстановление пароля
+     * @param login - логин пользователя
+     * @param newPassword - новый пароль пользователя
+     * @param masterKey - мастер-ключ пользователя
+     * @return
+     */
+    static Map<String, Object> resetPassword(String login, String newPassword, String masterKey) {
+        String URL = String.format("%s/user/reset", serverURL);
         Map<String, String> params = new HashMap<>();
         params.put("email", login);
         params.put("newPassword", String2Hash.convert(newPassword));
@@ -61,15 +67,15 @@ public interface SuperAPI {
     /**
      * Регистрация пользователя в системе
      *
-     * @param name      - ник
-     * @param login     - логин (e-mail) пользователя
-     * @param password  - пароль пользователя
+     * @param name - ник
+     * @param login - логин (e-mail) пользователя
+     * @param password - пароль пользователя
      * @param masterKey - мастер-пароль пользователя
      * @return
      */
-    static Map<String, Object> Registration(String name, String login, String password, String masterKey) {
+    static Map<String, Object> registration(String name, String login, String password, String masterKey) {
 
-        String URL = String.format("%s/user/register", ServerURL);
+        String URL = String.format("%s/user/register", serverURL);
         Map<String, String> params = new HashMap<>();
         params.put("login", login);
         params.put("username", name);
@@ -104,83 +110,84 @@ public interface SuperAPI {
     /**
      * Авторизация пользователя в системе
      * с помощью пары логин-пароль
-     *
-     * @param login
-     * @param password
+     * @param login - логин пользователя
+     * @param password - пароль пользоваетля
      * @return
      * @throws EmptyAPIResponseException
      */
-    boolean Auth(String login, String password) throws EmptyAPIResponseException;
+    boolean auth(String login, String password) throws EmptyAPIResponseException;
 
     /**
      * Авторизация пользователя в системе
      * с помощью ключа API
      *
-     * @param key
+     * @param key - ключ API пользователя
      * @return
      * @throws EmptyAPIResponseException
      */
-    boolean Auth(String key) throws EmptyAPIResponseException;
+    boolean auth(String key) throws EmptyAPIResponseException;
 
     /**
      * Получение всех чат-комнат пользователя
-     *
      * @return
+     * @throws FalseServerFlagException
+     * @throws EmptyAPIResponseException
      */
     List<Room> getUserRooms() throws FalseServerFlagException, EmptyAPIResponseException;
 
 
     /**
      * Получение объекта комнаты, в которой состоит пользователь, по её id
-     *
-     * @param roomId
+     * @param roomId - идентификатор комнаты
      * @return
+     * @throws RoomNotFoundException
+     * @throws EmptyAPIResponseException
      */
     Room getRoomInfo(String roomId) throws RoomNotFoundException, EmptyAPIResponseException;
 
     /**
      * Получение истории сообщений по конкретной комнате
-     *
-     * @param roomId
+     * @param roomId - идентификатор комнаты
      * @return
+     * @throws FalseServerFlagException
+     * @throws EmptyAPIResponseException
      */
     List<Message> getRoomMessagesHistory(String roomId) throws FalseServerFlagException, EmptyAPIResponseException;
 
 
     /**
      * Создание комнаты
-     *
-     * @param roomName
-     * @param usersString
+     * @param roomName - название комнаты
+     * @param usersString - строка с идентификаторами пользователей-участинков комнаты
      * @return
      * @throws FalseServerFlagException
      * @throws EmptyAPIResponseException
      */
-    public boolean createRoom(String roomName, String usersString) throws FalseServerFlagException, EmptyAPIResponseException;
+    boolean createRoom(String roomName, String usersString) throws FalseServerFlagException, EmptyAPIResponseException;
 
     /**
      * Поиск пользователей в системе по имени
      *
-     * @param userName
+     * @param searchExp - паттерн имени пользователя
      * @return
      * @throws FalseServerFlagException
      * @throws EmptyAPIResponseException
      */
-    List<User> getUsers(String userName) throws FalseServerFlagException, EmptyAPIResponseException;
+    List<User> getUsers(String searchExp) throws FalseServerFlagException, EmptyAPIResponseException;
 
 
     /**
      * Получение объектов пользователей по id комнаты, в которой они состоят
-     *
-     * @param roomId
+     * @param roomId - идентификатор комнаты
      * @return
+     * @throws FalseServerFlagException
+     * @throws EmptyAPIResponseException
      */
     List<User> getUsersByRoom(String roomId) throws FalseServerFlagException, EmptyAPIResponseException;
 
     /**
-     * Отправка сообщения
-     *
-     * @param text
+     * Отправка сообщения в текущую комнату
+     * @param text - текст сообщения
      * @return
      * @throws FalseServerFlagException
      * @throws EmptyAPIResponseException
@@ -189,18 +196,18 @@ public interface SuperAPI {
 
     /**
      * Получение сервера лонгпула
+     * Выставляет longpollTs, longpollSubUrl, longpollKey
      *
      * @throws EmptyAPIResponseException
      * @throws FalseServerFlagException
      */
-    void getLongpollServer() throws EmptyAPIResponseException, FalseServerFlagException;
+    void getLongPollServer() throws EmptyAPIResponseException, FalseServerFlagException;
 
     /**
      * Слушатель лонгпула
      *
      * @return
      * @throws LongpollListenerException
-     * @throws EmptyAPIResponseException
      */
-    List<Message> longpollListener() throws LongpollListenerException, EmptyAPIResponseException;
+    List<Message> longPollListener() throws LongpollListenerException;
 }

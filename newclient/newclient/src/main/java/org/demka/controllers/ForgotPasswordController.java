@@ -53,7 +53,7 @@ public class ForgotPasswordController extends SuperFullController {
         if (dataValidator(login, newPassword, masterKey)) {
             logger.info("Валидация данных со стороны клиента прошла успешно");
             //Получаем ответ от сервера
-            Map<String, Object> regResult = SuperAPI.ResetPassword(login, newPassword, masterKey);
+            Map<String, Object> regResult = SuperAPI.resetPassword(login, newPassword, masterKey);
             if ((boolean) regResult.get("result")) {
                 ErrorDescription.setOpacity(0.0);
                 ErrorDescription.setText("");

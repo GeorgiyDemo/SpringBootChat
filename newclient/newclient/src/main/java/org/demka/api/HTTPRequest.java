@@ -12,6 +12,11 @@ import java.util.Map;
 
 public class HTTPRequest {
 
+    /**
+     * Отправка GET-запроса
+     * @param urlString - URL, куда отправляется запрос
+     * @return
+     */
     public static String sendGET(String urlString) {
 
         try {
@@ -40,6 +45,12 @@ public class HTTPRequest {
         }
     }
 
+    /**
+     * Отправка POST-запроса
+     * @param urlString - URL, куда отправляется запрос
+     * @param paramsMap - параметры запроса
+     * @return
+     */
     public static String sendPOST(String urlString, Map<String, String> paramsMap) {
         try {
             URL obj = new URL(urlString);
@@ -82,6 +93,12 @@ public class HTTPRequest {
         }
     }
 
+    /**
+     * Отпрвка PUT-запроса
+     * @param urlString - URL, куда отправляется запрос
+     * @param jsonString - строка с JSON для обновления данных
+     * @return
+     */
     public static String sendPUT(String urlString, String jsonString) {
         try {
             URL obj = new URL(urlString);

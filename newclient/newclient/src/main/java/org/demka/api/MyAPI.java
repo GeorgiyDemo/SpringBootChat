@@ -30,9 +30,9 @@ public class MyAPI implements SuperAPI {
     private String userKey;
     private String userId;
 
-    private String longpollTs;
-    private String longpollSubUrl;
-    private String longpollKey;
+    private String longPollTs;
+    private String longPollSubUrl;
+    private String longPollKey;
     private String currentRoomId;
 
     private boolean isAuthenticated;
@@ -41,7 +41,7 @@ public class MyAPI implements SuperAPI {
     public MyAPI(String login, String password, App mainApp) {
         this.mainApp = mainApp;
         try {
-            isAuthenticated = this.Auth(login, password);
+            isAuthenticated = this.auth(login, password);
         } catch (EmptyAPIResponseException e) {
             e.printStackTrace();
         }
@@ -52,7 +52,7 @@ public class MyAPI implements SuperAPI {
     public MyAPI(String key, App mainApp) {
         this.mainApp = mainApp;
         try {
-            isAuthenticated = this.Auth(key);
+            isAuthenticated = this.auth(key);
         } catch (EmptyAPIResponseException e) {
             e.printStackTrace();
         }
@@ -62,18 +62,17 @@ public class MyAPI implements SuperAPI {
     /**
      * Авторизация пользователя в системе
      * с помощью пары логин-пароль
-     *
-     * @param login
-     * @param password
+     * @param login - логин пользователя
+     * @param password - пароль пользоваетля
      * @return
      * @throws EmptyAPIResponseException
      */
     @Override
-    public boolean Auth(String login, String password) throws EmptyAPIResponseException {
+    public boolean auth(String login, String password) throws EmptyAPIResponseException {
         login = URLEncoder.encode(login, StandardCharsets.UTF_8);
         password = String2Hash.convert(password);
 
-        String URL = String.format("%s/user/auth?login=%s&password=%s", ServerURL, login, password);
+        String URL = String.format("%s/user/auth?login=%s&password=%s", serverURL, login, password);
         String response = HTTPRequest.sendGET(URL);
         if (response != null) {
             JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
@@ -97,15 +96,15 @@ public class MyAPI implements SuperAPI {
      * Авторизация пользователя в системе
      * с помощью ключа API
      *
-     * @param key
+     * @param key - ключ API пользователя
      * @return
      * @throws EmptyAPIResponseException
      */
     @Override
-    public boolean Auth(String key) throws EmptyAPIResponseException {
+    public boolean auth(String key) throws EmptyAPIResponseException {
         key = URLEncoder.encode(key, StandardCharsets.UTF_8);
 
-        String URL = String.format("%s/user/auth?key=%s", ServerURL, key);
+        String URL = String.format("%s/user/auth?key=%s", serverURL, key);
         String response = HTTPRequest.sendGET(URL);
         if (response != null) {
             JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
@@ -126,7 +125,6 @@ public class MyAPI implements SuperAPI {
 
     /**
      * Получение всех чат-комнат пользователя
-     *
      * @return
      * @throws FalseServerFlagException
      * @throws EmptyAPIResponseException
@@ -139,7 +137,7 @@ public class MyAPI implements SuperAPI {
         List<Room> resultList = new ArrayList<Room>();
 
         //Запрашиваем данные по URL
-        String URL = String.format("%s/room/getByUser?key=%s", ServerURL, userKey);
+        String URL = String.format("%s/room/getByUser?key=%s", serverURL, userKey);
         String response = HTTPRequest.sendGET(URL);
         //Если ответ есть
         if (response != null) {
@@ -178,15 +176,16 @@ public class MyAPI implements SuperAPI {
 
     /**
      * Получение объекта комнаты, в которой состоит пользователь, по её id
-     *
-     * @param roomId
+     * @param roomId - идентификатор комнаты
      * @return
+     * @throws RoomNotFoundException
+     * @throws EmptyAPIResponseException
      */
     @Override
     public Room getRoomInfo(String roomId) throws RoomNotFoundException, EmptyAPIResponseException {
 
         //Запрашиваем данные по URL
-        String URL = String.format("%s/room/get?roomId=%s&key=%s", ServerURL, roomId, userKey);
+        String URL = String.format("%s/room/get?roomId=%s&key=%s", serverURL, roomId, userKey);
         String response = HTTPRequest.sendGET(URL);
         //Если ответ есть
         if (response != null) {
@@ -215,9 +214,10 @@ public class MyAPI implements SuperAPI {
 
     /**
      * Получение истории сообщений по конкретной комнате
-     *
-     * @param roomId
+     * @param roomId - идентификатор комнаты
      * @return
+     * @throws FalseServerFlagException
+     * @throws EmptyAPIResponseException
      */
     @Override
     public List<Message> getRoomMessagesHistory(String roomId) throws FalseServerFlagException, EmptyAPIResponseException {
@@ -225,7 +225,7 @@ public class MyAPI implements SuperAPI {
         List<Message> resultList = new ArrayList<Message>();
 
         //Запрашиваем данные по URL
-        String URL = String.format("%s/messages/get?roomId=%s&key=%s", ServerURL, roomId, userKey);
+        String URL = String.format("%s/messages/get?roomId=%s&key=%s", serverURL, roomId, userKey);
         String response = HTTPRequest.sendGET(URL);
         //Если ответ есть
         if (response != null) {
@@ -259,15 +259,16 @@ public class MyAPI implements SuperAPI {
 
     /**
      * Создание комнаты
-     *
-     * @param roomName
-     * @param usersString
+     * @param roomName - название комнаты
+     * @param usersString - строка с идентификаторами пользователей-участинков комнаты
      * @return
+     * @throws FalseServerFlagException
+     * @throws EmptyAPIResponseException
      */
     @Override
     public boolean createRoom(String roomName, String usersString) throws FalseServerFlagException, EmptyAPIResponseException {
         //Запрашиваем данные по URL
-        String URL = String.format("%s/room/create", ServerURL);
+        String URL = String.format("%s/room/create", serverURL);
 
         Map<String, String> params = new HashMap<>();
         params.put("users", usersString);
@@ -293,7 +294,7 @@ public class MyAPI implements SuperAPI {
     /**
      * Поиск пользователей в системе по имени
      *
-     * @param searchExp
+     * @param searchExp - паттерн имени пользователя
      * @return
      * @throws FalseServerFlagException
      * @throws EmptyAPIResponseException
@@ -304,9 +305,9 @@ public class MyAPI implements SuperAPI {
         List<User> resultList = new ArrayList<User>();
         String URL = "";
         if (searchExp == null) {
-            URL = String.format("%s/user/search?key=%s", ServerURL, userKey);
+            URL = String.format("%s/user/search?key=%s", serverURL, userKey);
         } else {
-            URL = String.format("%s/user/search?key=%s&searchName=%s", ServerURL, userKey, searchExp);
+            URL = String.format("%s/user/search?key=%s&searchName=%s", serverURL, userKey, searchExp);
         }
         String response = HTTPRequest.sendGET(URL);
         //Если ответ есть
@@ -337,15 +338,16 @@ public class MyAPI implements SuperAPI {
 
     /**
      * Получение объектов пользователей по id комнаты, в которой они состоят
-     *
-     * @param roomId
+     * @param roomId - идентификатор комнаты
      * @return
+     * @throws FalseServerFlagException
+     * @throws EmptyAPIResponseException
      */
     @Override
     public List<User> getUsersByRoom(String roomId) throws FalseServerFlagException, EmptyAPIResponseException {
 
         List<User> resultList = new ArrayList<>();
-        String URL = String.format("%s/room/getUsers?key=%s&roomId=%s", ServerURL, userKey, roomId);
+        String URL = String.format("%s/room/getUsers?key=%s&roomId=%s", serverURL, userKey, roomId);
         String response = HTTPRequest.sendGET(URL);
         //Если ответ есть
         if (response != null) {
@@ -371,11 +373,18 @@ public class MyAPI implements SuperAPI {
         }
     }
 
+    /**
+     * Отправка сообщения в текущую комнату
+     * @param text - текст сообщения
+     * @return
+     * @throws FalseServerFlagException
+     * @throws EmptyAPIResponseException
+     */
     @Override
     public Message writeMessage(String text) throws FalseServerFlagException, EmptyAPIResponseException {
 
         //Запрашиваем данные по URL
-        String URL = String.format("%s/messages/send", ServerURL);
+        String URL = String.format("%s/messages/send", serverURL);
 
         Map<String, String> params = new HashMap<>();
         params.put("key", userKey);
@@ -410,16 +419,16 @@ public class MyAPI implements SuperAPI {
     }
 
     /**
-     * Получение LongPoll'а
+     * Получение сервера лонгпула
      * Выставляет longpollTs, longpollSubUrl, longpollKey
      *
      * @throws EmptyAPIResponseException
      * @throws FalseServerFlagException
      */
     @Override
-    public void getLongpollServer() throws EmptyAPIResponseException, FalseServerFlagException {
+    public void getLongPollServer() throws EmptyAPIResponseException, FalseServerFlagException {
         //Запрашиваем данные по URL
-        String URL = String.format("%s/longpoll/getServer?key=%s", ServerURL, userKey);
+        String URL = String.format("%s/longpoll/getServer?key=%s", serverURL, userKey);
         String response = HTTPRequest.sendGET(URL);
         //Если ответ есть
         if (response != null) {
@@ -428,9 +437,9 @@ public class MyAPI implements SuperAPI {
 
                 JsonObject credentials = jsonResult.get("body").getAsJsonObject();
 
-                this.longpollTs = credentials.get("ts").getAsString();
-                this.longpollSubUrl = credentials.get("url").getAsString();
-                this.longpollKey = credentials.get("key").getAsString();
+                this.longPollTs = credentials.get("ts").getAsString();
+                this.longPollSubUrl = credentials.get("url").getAsString();
+                this.longPollKey = credentials.get("key").getAsString();
                 logger.info("getLongpollServer - получили конфиг, инициализировались");
             } else {
                 throw new FalseServerFlagException(URL, response, "getLongpollServer - Не удалось получить конфиг, не инициализировались");
@@ -447,10 +456,10 @@ public class MyAPI implements SuperAPI {
      * @throws LongpollListenerException
      */
     @Override
-    public List<Message> longpollListener() throws LongpollListenerException {
+    public List<Message> longPollListener() throws LongpollListenerException {
 
         //Если лонгпул не инициализирован
-        if (longpollKey == null || longpollTs == null || longpollSubUrl == null) {
+        if (longPollKey == null || longPollTs == null || longPollSubUrl == null) {
             logger.error("longpollListener - LongPool не инициалзирован");
             throw new LongpollListenerException("Лонгпул не был иницилизирован! Нужно использовать метод getLongpollServer для иницализации");
         }
@@ -462,7 +471,7 @@ public class MyAPI implements SuperAPI {
             List<Message> resultList = new ArrayList<>();
 
             //Запрашиваем данные по URL
-            String URL = String.format("%s/longpoll/updates/%s?key=%s&ts=%s", ServerURL, longpollSubUrl, longpollKey, longpollTs);
+            String URL = String.format("%s/longpoll/updates/%s?key=%s&ts=%s", serverURL, longPollSubUrl, longPollKey, longPollTs);
             logger.info("longpollListener - отправили запрос, ожидаем новые сообщения..");
             String response = HTTPRequest.sendGET(URL);
 
@@ -474,7 +483,7 @@ public class MyAPI implements SuperAPI {
                     //Данные, которые получили
                     JsonObject newData = jsonResult.get("body").getAsJsonObject();
                     //Обновляем ts
-                    this.longpollTs = newData.get("ts").getAsString();
+                    this.longPollTs = newData.get("ts").getAsString();
 
                     //Работем с сообщениями
                     JsonArray newMessages = newData.get("updates").getAsJsonArray();

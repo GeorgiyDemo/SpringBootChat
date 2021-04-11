@@ -93,7 +93,7 @@ public class RegistrationController extends SuperFullController {
         if (dataValidator(userName, userEmail, userPassword, masterKey)) {
             logger.info("Валидация данных со стороны клиента прошла успешно");
             //Получаем ответ от сервера
-            Map<String, Object> regResult = SuperAPI.Registration(userName, userEmail, userPassword, masterKey);
+            Map<String, Object> regResult = SuperAPI.registration(userName, userEmail, userPassword, masterKey);
 
             if ((boolean) regResult.get("result")) {
                 ErrorDescription.setOpacity(0.0);

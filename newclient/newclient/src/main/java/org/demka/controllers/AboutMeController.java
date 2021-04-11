@@ -12,7 +12,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-//Этот контроллер и вьюха мне максимально не нужны, но методичка требует
+/**
+ * Контроллер-обработчик окна "О программе/об авторе"
+ */
 public class AboutMeController extends SuperPartController {
 
     private static final Logger logger = LoggerFactory.getLogger(AboutMeController.class);
