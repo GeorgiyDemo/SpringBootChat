@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -32,22 +34,28 @@ public class CheckInternetRunnable implements Runnable {
      *
      * @see Thread#run()
      */
+
+    private static boolean isReachable(String addr, int openPort, int timeOutMillis) {
+
+        try {
+            try (Socket soc = new Socket()) {
+                soc.connect(new InetSocketAddress(addr, openPort), timeOutMillis);
+            }
+            return true;
+        } catch (IOException ex) {
+            return false;
+        }
+    }
+
     @Override
     public void run() {
 
 
         while (!Thread.currentThread().isInterrupted()) {
+
             //Проверяем интернет
-
-
             boolean exceptionFlag = false;
-            try {
-                URL url = new URL("https://ya.ru");
-                URLConnection connection = url.openConnection();
-                connection.setConnectTimeout(2000);
-                connection.connect();
-            } catch (IOException e) {
-                logger.info("Интернета нет, все плохо");
+            if (!isReachable("149.248.54.195", 8080,3000)){
                 try {
                     exceptionFlag = true;
                     //Вызываем страницу с ошибкой интернет-соединения, если еще не вызвали
