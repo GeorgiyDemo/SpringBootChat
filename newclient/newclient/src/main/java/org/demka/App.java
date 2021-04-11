@@ -59,10 +59,7 @@ public class App extends Application {
     }
 
     public void myStart(Stage primaryStage) {
-        //Выставляем RootLayout
 
-
-        System.out.println(String2Hash.convert("3845"));
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("DEMKAChat - Авторизация");
         this.authUtil = new AuthUtil();
