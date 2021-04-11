@@ -1,11 +1,8 @@
 package org.demka.models;
 
-import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.demka.utils.UNIXTime2String;
-
-import java.util.List;
 
 public class Message {
 
@@ -16,7 +13,7 @@ public class Message {
     private StringProperty timeCreated;
     private StringProperty id;
 
-    public Message(String userId, String userName, String text, String roomId, long timeCreated, String id){
+    public Message(String userId, String userName, String text, String roomId, long timeCreated, String id) {
         this.userId = new SimpleStringProperty(userId);
         this.userName = new SimpleStringProperty(userName);
         this.text = new SimpleStringProperty(text);
@@ -33,15 +30,15 @@ public class Message {
         return userName.get();
     }
 
-    public StringProperty getUserNameProperty(){
+    public StringProperty getUserNameProperty() {
         return userName;
     }
 
-    public StringProperty getTextProperty(){
+    public StringProperty getTextProperty() {
         return text;
     }
 
-    public StringProperty getTimeCreatedProperty(){
+    public StringProperty getTimeCreatedProperty() {
         return timeCreated;
     }
 

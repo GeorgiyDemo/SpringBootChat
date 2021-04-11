@@ -10,7 +10,7 @@ public class User {
     private final StringProperty name;
     private final IntegerProperty timeCreated;
 
-    public User(String id, String name, Integer timeCreated){
+    public User(String id, String name, Integer timeCreated) {
         this.id = new SimpleStringProperty(id);
         this.name = new SimpleStringProperty(name);
         this.timeCreated = new SimpleIntegerProperty(timeCreated);

@@ -33,12 +33,12 @@ public class App extends Application {
         launch(args);
     }
 
-    public void setAPISession(MyAPI APISession) {
-        this.APISession = APISession;
-    }
-
     public MyAPI getAPISession() {
         return APISession;
+    }
+
+    public void setAPISession(MyAPI APISession) {
+        this.APISession = APISession;
     }
 
     public Stage getPrimaryStage() {
@@ -69,18 +69,18 @@ public class App extends Application {
         initRootLayout();
         //Читаем токен из файла
         String key = authUtil.readKey();
-        if (key != null){
+        if (key != null) {
             APISession = new MyAPI(key, this);
         }
 
         //Если пользователь не авторизован
-        if  (!APISession.getIsAuthenticated()){
+        if (!APISession.getIsAuthenticated()) {
             authUtil.writeKey("");
             UserAuthorisation();
         }
         //Если уже успешно авторизовался
         else {
-            this.primaryStage.setTitle("DEMKAChat - Сообщения ["+APISession.getUserName()+"]");
+            this.primaryStage.setTitle("DEMKAChat - Сообщения [" + APISession.getUserName() + "]");
             MainChat();
         }
     }
@@ -138,10 +138,9 @@ public class App extends Application {
     }
 
 
-
     public void SuccessUserAction(String windowTitle, String mainText) {
         try {
-            this.primaryStage.setTitle("DEMKAChat - "+windowTitle);
+            this.primaryStage.setTitle("DEMKAChat - " + windowTitle);
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(App.class.getResource("views/SuccessActionView.fxml"));
             AnchorPane mainPage = loader.load();
@@ -158,7 +157,7 @@ public class App extends Application {
      * Показывает информацию о программе и авторе
      */
     public void AboutMe() {
-        try{
+        try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(App.class.getResource("views/AboutMeView.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
@@ -171,9 +170,10 @@ public class App extends Application {
             dialogStage.setScene(scene);
             AboutMeController controller = loader.getController();
             controller.initialize(this, dialogStage);
-            dialogStage.showAndWait();;
+            dialogStage.showAndWait();
+            ;
 
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -213,8 +213,8 @@ public class App extends Application {
     /**
      * Окно создания новой комнаты
      */
-    public void NewRoom(){
-        try{
+    public void NewRoom() {
+        try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(App.class.getResource("views/CreateNewRoomView.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
@@ -227,9 +227,10 @@ public class App extends Application {
             dialogStage.setScene(scene);
             CreateNewRoomController controller = loader.getController();
             controller.initialize(this, dialogStage);
-            dialogStage.showAndWait();;
+            dialogStage.showAndWait();
+            ;
 
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -237,22 +238,22 @@ public class App extends Application {
     /**
      * Показывает участников текущей комнаты
      */
-    public void showCurrentRoomUsers(){
-        try{
+    public void showCurrentRoomUsers() {
+        try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(App.class.getResource("views/ShowChatUsersView.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
             Stage dialogStage = new Stage();
-            dialogStage.setTitle("Комната N");
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(page);
             dialogStage.setScene(scene);
             ShowChatUsersController controller = loader.getController();
             controller.initialize(this, dialogStage);
-            dialogStage.showAndWait();;
+            dialogStage.showAndWait();
+            ;
 
-        }catch(IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

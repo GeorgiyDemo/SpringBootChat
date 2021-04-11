@@ -6,15 +6,14 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.demka.App;
-import org.demka.runnable.CheckInternetRunnable;
-import org.demka.runnable.RunnableManager;
+import org.demka.api.MyAPI;
 import org.demka.exceptions.EmptyAPIResponseException;
 import org.demka.exceptions.FalseServerFlagException;
 import org.demka.models.Message;
 import org.demka.models.Room;
+import org.demka.runnable.CheckInternetRunnable;
 import org.demka.runnable.LongPollRunnable;
-import org.demka.api.MyAPI;
-import org.demka.utils.AuthUtil;
+import org.demka.runnable.RunnableManager;
 import org.demka.utils.MyActionClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,10 +21,9 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 public class MainChatController extends SuperFullController {
+    private static final Logger logger = LoggerFactory.getLogger(MainChatController.class);
     private ObservableList<Room> RoomData = FXCollections.observableArrayList();
     private ObservableList<Message> MessageData = FXCollections.observableArrayList();
-    private static final Logger logger = LoggerFactory.getLogger(MainChatController.class);
-
     private MyAPI APISession;
     @FXML
     private TableView<Room> RoomTable;
@@ -55,16 +53,16 @@ public class MainChatController extends SuperFullController {
     private JFXButton sendMessageButton;
     @FXML
     private TextField newMessageText;
+
     /***
      *  Обработчик нажатия на button отпраавки сообщения
      */
     @FXML
-    private void sendMessageButtonClicked(){
+    private void sendMessageButtonClicked() {
         String messageText = newMessageText.getText();
-        if (messageText.equals("")){
+        if (messageText.equals("")) {
             logger.info("Поле отправки сообщения пустое");
-        }
-        else {
+        } else {
             //Отправляем сообщеньку
             try {
                 APISession.writeMessage(messageText);
@@ -73,18 +71,19 @@ public class MainChatController extends SuperFullController {
             }
 
             newMessageText.setText("");
-            MessageTable.scrollTo(MessageData.get(MessageData.size()-1));
+            MessageTable.scrollTo(MessageData.get(MessageData.size() - 1));
         }
     }
 
     @FXML
-    private void createRoomButtonClicked(){
-         mainApp.NewRoom();
+    private void createRoomButtonClicked() {
+        mainApp.NewRoom();
     }
 
 
     /**
      * Метод инициализации (вызывается с Main)
+     *
      * @param mainApp
      */
     @Override
@@ -154,18 +153,18 @@ public class MainChatController extends SuperFullController {
         //Запускаем отдельный поток, который будет:
         // Добавлять новую комнату в RoomData, если пришло обновление по комнате, id которой нет в RoomData
         // Добавлять в определенный элемент room.addMessage() новое сообщение, которое прилетело через лонгпул
-        LongPollRunnable runnable1 = new LongPollRunnable(RoomData, MessageData, APISession,mainApp);
+        LongPollRunnable runnable1 = new LongPollRunnable(RoomData, MessageData, APISession, mainApp);
         Thread thread1 = new Thread(runnable1, "LongPoll thread");
         RunnableManager.threadsList.add(thread1);
         thread1.start();
-        logger.info("MainChatController - стартанули LongPollRunnable с id "+thread1.getId());
+        logger.info("MainChatController - стартанули LongPollRunnable с id " + thread1.getId());
 
         //Поток, который проверяет доступонсть интернета
         CheckInternetRunnable runnable2 = new CheckInternetRunnable(mainApp);
         Thread thread2 = new Thread(runnable2, "Check internet connection thread");
         RunnableManager.threadsList.add(thread2);
         thread2.start();
-        logger.info("MainChatController - стартанули CheckInternetRunnable с id "+thread2.getId());
+        logger.info("MainChatController - стартанули CheckInternetRunnable с id " + thread2.getId());
 
         //Биндим действия к AboutMenuItem и ExitMenuItem
         MyActionClass.onAction(AboutMenuItem);
@@ -176,7 +175,7 @@ public class MainChatController extends SuperFullController {
      * Нажатие на пункт "О программе"
      */
     @FXML
-    private void AboutMenuItemClicked(){
+    private void AboutMenuItemClicked() {
         logger.info("Нажатие на button 'О программе'");
         mainApp.AboutMe();
     }
@@ -185,7 +184,7 @@ public class MainChatController extends SuperFullController {
      * Нажатие на выход из аккаунта пользователя
      */
     @FXML
-    private void ExitMenuItemClicked(){
+    private void ExitMenuItemClicked() {
         //Останавливаем все потоки (лонгпул и проверка интернета)
         RunnableManager.interruptAll();
         //Удаляем ключ авторизации
@@ -197,9 +196,10 @@ public class MainChatController extends SuperFullController {
 
     /**
      * Обработчик нажатия на комнату-чат
+     *
      * @param room
      */
-    private void showChatRoomDetails(Room room){
+    private void showChatRoomDetails(Room room) {
 
         //Отображаем отправку сообщений
         newMessageText.setDisable(false);
@@ -211,16 +211,16 @@ public class MainChatController extends SuperFullController {
 
         //Выставляем id текущей комнаты
         MessageData.clear();
-        if(room != null) {
+        if (room != null) {
             APISession.setCurrentRoomId(room.getId());
             MessageData.addAll(room.getMessages());
             MessageTable.setItems(MessageData);
         }
-        MessageTable.scrollTo(MessageData.get(MessageData.size()-1));
+        MessageTable.scrollTo(MessageData.get(MessageData.size() - 1));
     }
 
     @FXML
-    private void ChatUsersButtonClicked(){
+    private void ChatUsersButtonClicked() {
         mainApp.showCurrentRoomUsers();
         logger.info("Нажатие на button показа пользователей комнаты ");
     }

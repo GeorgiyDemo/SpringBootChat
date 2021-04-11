@@ -7,6 +7,7 @@ public class Validators {
 
     /**
      * Проверка e-mail на корректность
+     *
      * @param email - исходный e-mail
      * @return - результат валидации
      */

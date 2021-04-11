@@ -18,9 +18,9 @@ import java.util.List;
 
 public class CreateNewRoomController extends SuperPartController {
 
+    private static final Logger logger = LoggerFactory.getLogger(CreateNewRoomController.class);
     private ObservableList<User> AllUsersData = FXCollections.observableArrayList();
     private ObservableList<User> ChatUsersData = FXCollections.observableArrayList();
-
     private MyAPI APISession;
     @FXML
     private TableView<User> AllUsersTable;
@@ -35,7 +35,6 @@ public class CreateNewRoomController extends SuperPartController {
     @FXML
     private TextField ChatName;
     private boolean CustomChatName = false;
-    private static final Logger logger = LoggerFactory.getLogger(CreateNewRoomController.class);
 
     @Override
     public void initialize(App mainApp, Stage dialogStage) {
@@ -69,7 +68,7 @@ public class CreateNewRoomController extends SuperPartController {
     }
 
     @FXML
-    private void CancelButtonClicked(){
+    private void CancelButtonClicked() {
         dialogStage.close();
     }
 
@@ -78,29 +77,28 @@ public class CreateNewRoomController extends SuperPartController {
         String localeChatName;
         StringBuilder usersIds = new StringBuilder();
         //Если не было задано название конфы, то генерируем ее из имен
-        if (ChatName.getText().equals("")){
+        if (ChatName.getText().equals("")) {
 
             StringBuilder ChatNameBuilder = new StringBuilder();
             ChatNameBuilder.append("Чат с ");
-            for (User user: ChatUsersData) {
+            for (User user : ChatUsersData) {
                 ChatNameBuilder.append(user.getName()).append(", ");
             }
             //Удаляем последнюю запятую
             ChatNameBuilder.setLength(ChatNameBuilder.length() - 2);
             //Если длина слишком большая - сокращаем
-            if (ChatNameBuilder.length() > 100){
+            if (ChatNameBuilder.length() > 100) {
                 ChatNameBuilder.setLength(100);
                 ChatNameBuilder.append("..");
             }
             localeChatName = ChatNameBuilder.toString();
 
-        }
-        else{
+        } else {
             localeChatName = ChatName.getText();
         }
 
         //Добавляем id всех пользователей
-        for (User user: ChatUsersData) {
+        for (User user : ChatUsersData) {
             usersIds.append(user.getId());
             usersIds.append(",");
         }
@@ -109,7 +107,7 @@ public class CreateNewRoomController extends SuperPartController {
 
         //Создаем комнату
         try {
-            APISession.createRoom(localeChatName,usersIds.toString());
+            APISession.createRoom(localeChatName, usersIds.toString());
         } catch (FalseServerFlagException | EmptyAPIResponseException e) {
             e.printStackTrace();
         }
@@ -121,7 +119,7 @@ public class CreateNewRoomController extends SuperPartController {
      * Добавление пользователя в чат
      */
     @FXML
-    private void addUserToChat(){
+    private void addUserToChat() {
 
         ObservableList<User> selectedItems = AllUsersTable.getSelectionModel().getSelectedItems();
         //Буферный список, который не изменяется
@@ -143,7 +141,7 @@ public class CreateNewRoomController extends SuperPartController {
      * Удаление пользователя из чата
      */
     @FXML
-    private void removeUserFromChat(){
+    private void removeUserFromChat() {
 
         ObservableList<User> selectedItems = ChatUsersTable.getSelectionModel().getSelectedItems();
         //Буферный список, который не изменяется

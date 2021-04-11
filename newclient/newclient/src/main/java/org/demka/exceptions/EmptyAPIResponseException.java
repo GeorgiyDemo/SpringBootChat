@@ -13,7 +13,7 @@ public class EmptyAPIResponseException extends Exception {
 
     private static final Logger logger = LoggerFactory.getLogger(EmptyAPIResponseException.class);
 
-    public EmptyAPIResponseException(App mainApp,String errorMessage) {
+    public EmptyAPIResponseException(App mainApp, String errorMessage) {
         super(errorMessage);
         logger.error(errorMessage);
 

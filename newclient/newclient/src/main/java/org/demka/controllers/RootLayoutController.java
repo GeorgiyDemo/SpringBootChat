@@ -6,6 +6,7 @@ public class RootLayoutController extends SuperFullController {
 
     /**
      * Метод инициализации (вызывается с Main)
+     *
      * @param mainApp
      */
     @Override

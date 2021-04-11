@@ -10,20 +10,24 @@ import org.demka.App;
 import org.demka.api.MyAPI;
 import org.demka.exceptions.EmptyAPIResponseException;
 import org.demka.exceptions.FalseServerFlagException;
+import org.demka.exceptions.RoomNotFoundException;
 import org.demka.models.Room;
 import org.demka.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
+
 public class ShowChatUsersController extends SuperPartController {
 
+    private static final Logger logger = LoggerFactory.getLogger(ShowChatUsersController.class);
     @FXML
     private TableView<User> ChatUserTable;
     @FXML
     private TableColumn<User, String> ChatUserNameColumn;
     private ObservableList<User> ChatUserData = FXCollections.observableArrayList();
     private MyAPI APISession;
-    private static final Logger logger = LoggerFactory.getLogger(ShowChatUsersController.class);
+
     /**
      * Метод инициализации (вызывается с Main)
      *
@@ -38,16 +42,21 @@ public class ShowChatUsersController extends SuperPartController {
 
         ChatUserTable.setItems(ChatUserData);
         ChatUserNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+        String currentRoomId = APISession.getCurrentRoomId();
         try {
-            ChatUserData.addAll(APISession.getUsersByRoom(APISession.getCurrentRoomId()));
-        } catch (FalseServerFlagException | EmptyAPIResponseException e) {
+            Room currentRoom = APISession.getRoomInfo(currentRoomId);
+            dialogStage.setTitle("Информация о диалоге " + currentRoom.getName());
+            List<User> roomUsersList = APISession.getUsersByRoom(currentRoomId);
+            ChatUserData.addAll(roomUsersList);
+            ChatUserNameColumn.setText("Участники (" + roomUsersList.size() + " всего)");
+        } catch (FalseServerFlagException | EmptyAPIResponseException | RoomNotFoundException e) {
             e.printStackTrace();
             dialogStage.close();
         }
     }
 
     @FXML
-    private void backButtonClicked(){
+    private void backButtonClicked() {
         logger.info("Выход из из подменю информации о пользователях чата");
         dialogStage.close();
     }

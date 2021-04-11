@@ -127,6 +127,8 @@ public class RoomController {
 
     /**
      * Получение пользователей, которые состоят в комнате
+     *
+     * @param key    - ключ пользователя
      * @param roomId - идентификатор чат-комнаты
      * @return
      */
@@ -146,11 +148,11 @@ public class RoomController {
 
         RoomDBEntity currentRoom = roomResult.get();
         List<UserSearchResponseEntity> roomUsersList = new ArrayList<>();
-        for (String userId: currentRoom.getUsers()) {
+        for (String userId : currentRoom.getUsers()) {
             Optional<UserDBEntity> currentUserOptional = userService.find(userId);
 
             //Если пользователь найден - добавляем в список результатов
-            if (currentUserOptional.isPresent()){
+            if (currentUserOptional.isPresent()) {
                 UserDBEntity currentUser = currentUserOptional.get();
                 roomUsersList.add(UserSearchConverter.convert(currentUser));
             }

@@ -12,8 +12,9 @@ public abstract class SuperPartController {
 
     /**
      * Метод инициализации (вызывается с Main)
+     *
      * @param mainApp
      * @param dialogStage
      */
-    public abstract void  initialize(App mainApp, Stage dialogStage);
+    public abstract void initialize(App mainApp, Stage dialogStage);
 }

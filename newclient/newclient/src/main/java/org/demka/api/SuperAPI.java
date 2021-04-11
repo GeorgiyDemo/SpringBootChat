@@ -24,9 +24,9 @@ public interface SuperAPI {
     Logger logger = LoggerFactory.getLogger(MyAPI.class);
     String ServerURL = "http://149.248.54.195:8080";
 
-    static Map<String, Object> ResetPassword(String login, String newPassword, String masterKey){
+    static Map<String, Object> ResetPassword(String login, String newPassword, String masterKey) {
         String URL = String.format("%s/user/reset", ServerURL);
-        Map<String,String> params = new HashMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put("email", login);
         params.put("newPassword", String2Hash.convert(newPassword));
         params.put("masterKey", String2Hash.convert(masterKey));
@@ -36,10 +36,10 @@ public interface SuperAPI {
         String response = HTTPRequest.sendPUT(URL, jsonString);
         Map<String, Object> resultMap = new HashMap<>();
 
-        if (response == null){
+        if (response == null) {
             resultMap.put("result", false);
-            resultMap.put("error","Нет ответа от сервера");
-            logger.error("Не получили ответ от сервера во время смены пароля пользователя с логином "+login);
+            resultMap.put("error", "Нет ответа от сервера");
+            logger.error("Не получили ответ от сервера во время смены пароля пользователя с логином " + login);
             return resultMap;
         }
 
@@ -51,24 +51,26 @@ public interface SuperAPI {
         if (!authResult) {
             String errDescription = jsonResult.get("description").getAsString();
             resultMap.put("error", errDescription);
-            logger.info("Сервер возвратил ошибку при смене пароля: "+errDescription);
+            logger.info("Сервер возвратил ошибку при смене пароля: " + errDescription);
             return resultMap;
         }
-        logger.info("Пользователь "+login+" успешно сменил пароль");
+        logger.info("Пользователь " + login + " успешно сменил пароль");
         return resultMap;
     }
+
     /**
      * Регистрация пользователя в системе
-     * @param name - ник
-     * @param login - логин (e-mail) пользователя
-     * @param password - пароль пользователя
+     *
+     * @param name      - ник
+     * @param login     - логин (e-mail) пользователя
+     * @param password  - пароль пользователя
      * @param masterKey - мастер-пароль пользователя
      * @return
      */
     static Map<String, Object> Registration(String name, String login, String password, String masterKey) {
 
         String URL = String.format("%s/user/register", ServerURL);
-        Map<String,String> params = new HashMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put("login", login);
         params.put("username", name);
         params.put("password", String2Hash.convert(password));
@@ -76,10 +78,10 @@ public interface SuperAPI {
         String response = HTTPRequest.sendPOST(URL, params);
         Map<String, Object> resultMap = new HashMap<>();
 
-        if (response == null){
+        if (response == null) {
             resultMap.put("result", false);
-            resultMap.put("error","Нет ответа от сервера");
-            logger.error("Не получили ответ от сервера во время регистрации пользователя "+name);
+            resultMap.put("error", "Нет ответа от сервера");
+            logger.error("Не получили ответ от сервера во время регистрации пользователя " + name);
             return resultMap;
         }
 
@@ -91,17 +93,18 @@ public interface SuperAPI {
         if (!authResult) {
             String errDescription = jsonResult.get("description").getAsString();
             resultMap.put("error", errDescription);
-            logger.info("Сервер возвратил ошибку регистрации: "+errDescription);
+            logger.info("Сервер возвратил ошибку регистрации: " + errDescription);
             return resultMap;
         }
 
-        logger.info("Пользователь "+name+" успешно зарегистрировался");
+        logger.info("Пользователь " + name + " успешно зарегистрировался");
         return resultMap;
     }
 
     /**
      * Авторизация пользователя в системе
      * с помощью пары логин-пароль
+     *
      * @param login
      * @param password
      * @return
@@ -112,6 +115,7 @@ public interface SuperAPI {
     /**
      * Авторизация пользователя в системе
      * с помощью ключа API
+     *
      * @param key
      * @return
      * @throws EmptyAPIResponseException
@@ -120,6 +124,7 @@ public interface SuperAPI {
 
     /**
      * Получение всех чат-комнат пользователя
+     *
      * @return
      */
     List<Room> getUserRooms() throws FalseServerFlagException, EmptyAPIResponseException;
@@ -127,6 +132,7 @@ public interface SuperAPI {
 
     /**
      * Получение объекта комнаты, в которой состоит пользователь, по её id
+     *
      * @param roomId
      * @return
      */
@@ -134,6 +140,7 @@ public interface SuperAPI {
 
     /**
      * Получение истории сообщений по конкретной комнате
+     *
      * @param roomId
      * @return
      */
@@ -142,6 +149,7 @@ public interface SuperAPI {
 
     /**
      * Создание комнаты
+     *
      * @param roomName
      * @param usersString
      * @return
@@ -152,6 +160,7 @@ public interface SuperAPI {
 
     /**
      * Поиск пользователей в системе по имени
+     *
      * @param userName
      * @return
      * @throws FalseServerFlagException
@@ -162,6 +171,7 @@ public interface SuperAPI {
 
     /**
      * Получение объектов пользователей по id комнаты, в которой они состоят
+     *
      * @param roomId
      * @return
      */
@@ -169,6 +179,7 @@ public interface SuperAPI {
 
     /**
      * Отправка сообщения
+     *
      * @param text
      * @return
      * @throws FalseServerFlagException
@@ -178,6 +189,7 @@ public interface SuperAPI {
 
     /**
      * Получение сервера лонгпула
+     *
      * @throws EmptyAPIResponseException
      * @throws FalseServerFlagException
      */
@@ -185,6 +197,7 @@ public interface SuperAPI {
 
     /**
      * Слушатель лонгпула
+     *
      * @return
      * @throws LongpollListenerException
      * @throws EmptyAPIResponseException

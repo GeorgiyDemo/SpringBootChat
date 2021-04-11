@@ -1,11 +1,12 @@
 package org.demka.api;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
@@ -73,11 +74,10 @@ public class HTTPRequest {
                 return response.toString();
 
             } else {
-                System.out.println("POST получил код "+con.getResponseCode());
+                System.out.println("POST получил код " + con.getResponseCode());
                 return null;
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }
@@ -111,11 +111,10 @@ public class HTTPRequest {
                 return response.toString();
 
             } else {
-                System.out.println("PUT получил код "+con.getResponseCode());
+                System.out.println("PUT получил код " + con.getResponseCode());
                 return null;
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }

@@ -1,9 +1,9 @@
 package org.demka.api;
 
 
-import com.google.gson.*;
-import javafx.beans.Observable;
-import javafx.collections.ObservableList;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.demka.App;
 import org.demka.exceptions.EmptyAPIResponseException;
 import org.demka.exceptions.FalseServerFlagException;
@@ -62,6 +62,7 @@ public class MyAPI implements SuperAPI {
     /**
      * Авторизация пользователя в системе
      * с помощью пары логин-пароль
+     *
      * @param login
      * @param password
      * @return
@@ -125,6 +126,7 @@ public class MyAPI implements SuperAPI {
 
     /**
      * Получение всех чат-комнат пользователя
+     *
      * @return
      * @throws FalseServerFlagException
      * @throws EmptyAPIResponseException
@@ -154,30 +156,29 @@ public class MyAPI implements SuperAPI {
                     String roomName = currentRoom.get("name").getAsString();
 
                     List<String> usersList = new ArrayList<>();
-                    JsonArray usersArray  = currentRoom.get("users").getAsJsonArray();
+                    JsonArray usersArray = currentRoom.get("users").getAsJsonArray();
                     for (int j = 0; j < usersArray.size(); j++) {
                         usersList.add(usersArray.get(j).getAsString());
                     }
 
                     int timeCreated = currentRoom.get("timeCreated").getAsInt();
-                    Room room = new Room(creatorId,roomName,timeCreated,usersList,roomId);
+                    Room room = new Room(creatorId, roomName, timeCreated, usersList, roomId);
                     resultList.add(room);
                 }
 
-                logger.info("getUserRooms - Получили список комнат для пользователя "+userId);
+                logger.info("getUserRooms - Получили список комнат для пользователя " + userId);
                 return resultList;
+            } else {
+                throw new FalseServerFlagException(URL, response, "getUserRooms - Не удалось получить список комнат для пользователя " + userId);
             }
-            else{
-                throw new FalseServerFlagException(URL,response,"getUserRooms - Не удалось получить список комнат для пользователя "+userId);
-            }
-        }
-        else{
+        } else {
             throw new EmptyAPIResponseException(mainApp, "getUserRooms - получили пустой ответ от сервера");
         }
     }
 
     /**
      * Получение объекта комнаты, в которой состоит пользователь, по её id
+     *
      * @param roomId
      * @return
      */
@@ -196,19 +197,17 @@ public class MyAPI implements SuperAPI {
                 String creatorId = currentRoom.get("creatorId").getAsString();
                 String roomName = currentRoom.get("name").getAsString();
                 List<String> usersList = new ArrayList<>();
-                JsonArray usersArray  = currentRoom.get("users").getAsJsonArray();
+                JsonArray usersArray = currentRoom.get("users").getAsJsonArray();
                 for (int i = 0; i < usersArray.size(); i++) {
                     usersList.add(usersArray.get(i).getAsString());
                 }
                 int timeCreated = currentRoom.get("timeCreated").getAsInt();
-                logger.info("getRoomInfo - отдали данные для комнаты с id "+roomId);
-                return new Room(creatorId,roomName,timeCreated,usersList,roomId);
+                logger.info("getRoomInfo - отдали данные для комнаты с id " + roomId);
+                return new Room(creatorId, roomName, timeCreated, usersList, roomId);
+            } else {
+                throw new RoomNotFoundException("getRoomInfo - Запрашиваемой комнаты с id " + roomId + " не существует");
             }
-            else {
-                throw new RoomNotFoundException("getRoomInfo - Запрашиваемой комнаты с id "+roomId+" не существует");
-            }
-        }
-        else {
+        } else {
             throw new EmptyAPIResponseException(mainApp, "getRoomInfo - получили пустой ответ от сервера");
         }
 
@@ -216,6 +215,7 @@ public class MyAPI implements SuperAPI {
 
     /**
      * Получение истории сообщений по конкретной комнате
+     *
      * @param roomId
      * @return
      */
@@ -244,23 +244,22 @@ public class MyAPI implements SuperAPI {
                     String messageUserId = currentMessage.get("userId").getAsString();
                     String messageUserName = currentMessage.get("userName").getAsString();
 
-                    Message bufMessage = new Message(messageUserId, messageUserName, messageText, messageRoom, messageTimeCreated, messageId );
+                    Message bufMessage = new Message(messageUserId, messageUserName, messageText, messageRoom, messageTimeCreated, messageId);
                     resultList.add(bufMessage);
                 }
-                logger.info("getRoomMessagesHistory - Получили список сообщений для комнаты "+roomId);
+                logger.info("getRoomMessagesHistory - Получили список сообщений для комнаты " + roomId);
                 return resultList;
-            }
-            else {
+            } else {
                 throw new FalseServerFlagException(URL, response, "getRoomMessagesHistory - Не удалось получить список сообщений для комнаты " + roomId);
             }
-        }
-        else{
+        } else {
             throw new EmptyAPIResponseException(mainApp, "getRoomMessagesHistory - Получили пустой ответ от сервера");
         }
     }
 
     /**
      * Создание комнаты
+     *
      * @param roomName
      * @param usersString
      * @return
@@ -270,7 +269,7 @@ public class MyAPI implements SuperAPI {
         //Запрашиваем данные по URL
         String URL = String.format("%s/room/create", ServerURL);
 
-        Map<String,String> params = new HashMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put("users", usersString);
         params.put("roomName", roomName);
         params.put("key", userKey);
@@ -282,19 +281,18 @@ public class MyAPI implements SuperAPI {
             JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
             if (jsonResult.get("result").getAsBoolean()) {
                 logger.info("createRoom - Успешно создали новую комнату");
-                return  true;
-            }
-            else {
+                return true;
+            } else {
                 throw new FalseServerFlagException(URL, response, "createRoom - Не удалось создать новую комнату");
             }
-        }
-        else{
+        } else {
             throw new EmptyAPIResponseException(mainApp, "createRoom - Получили пустой ответ от сервера");
         }
     }
 
     /**
      * Поиск пользователей в системе по имени
+     *
      * @param searchExp
      * @return
      * @throws FalseServerFlagException
@@ -305,10 +303,9 @@ public class MyAPI implements SuperAPI {
 
         List<User> resultList = new ArrayList<User>();
         String URL = "";
-        if (searchExp == null){
+        if (searchExp == null) {
             URL = String.format("%s/user/search?key=%s", ServerURL, userKey);
-        }
-        else{
+        } else {
             URL = String.format("%s/user/search?key=%s&searchName=%s", ServerURL, userKey, searchExp);
         }
         String response = HTTPRequest.sendGET(URL);
@@ -328,25 +325,24 @@ public class MyAPI implements SuperAPI {
                     User bufUser = new User(userId, userName, userTimeCreated);
                     resultList.add(bufUser);
                 }
-                logger.info("getUsers - получили "+resultList.size()+" пользователей");
+                logger.info("getUsers - получили " + resultList.size() + " пользователей");
                 return resultList;
+            } else {
+                throw new FalseServerFlagException(URL, response, "getUsers - не удалось получить пользователей");
             }
-            else{
-                throw  new FalseServerFlagException(URL,response, "getUsers - не удалось получить пользователей");
-            }
-        }
-        else {
-            throw  new EmptyAPIResponseException(mainApp, "getUsers - получили пустой ответ от сервера");
+        } else {
+            throw new EmptyAPIResponseException(mainApp, "getUsers - получили пустой ответ от сервера");
         }
     }
 
     /**
      * Получение объектов пользователей по id комнаты, в которой они состоят
+     *
      * @param roomId
      * @return
      */
     @Override
-    public List<User> getUsersByRoom(String roomId) throws FalseServerFlagException, EmptyAPIResponseException{
+    public List<User> getUsersByRoom(String roomId) throws FalseServerFlagException, EmptyAPIResponseException {
 
         List<User> resultList = new ArrayList<>();
         String URL = String.format("%s/room/getUsers?key=%s&roomId=%s", ServerURL, userKey, roomId);
@@ -365,15 +361,13 @@ public class MyAPI implements SuperAPI {
                     User bufUser = new User(userId, userName, userTimeCreated);
                     resultList.add(bufUser);
                 }
-                logger.info("getUsersByRoom - получили "+resultList.size()+" пользователей");
+                logger.info("getUsersByRoom - получили " + resultList.size() + " пользователей");
                 return resultList;
+            } else {
+                throw new FalseServerFlagException(URL, response, "getUsersByRoom - Не удалось получить список пользоватлеей для комнаты");
             }
-            else{
-                throw new FalseServerFlagException(URL,response, "getUsersByRoom - Не удалось получить список пользоватлеей для комнаты");
-            }
-        }
-        else {
-            throw  new EmptyAPIResponseException(mainApp, "getUsersByRoom - получили пустой ответ от сервера");
+        } else {
+            throw new EmptyAPIResponseException(mainApp, "getUsersByRoom - получили пустой ответ от сервера");
         }
     }
 
@@ -383,7 +377,7 @@ public class MyAPI implements SuperAPI {
         //Запрашиваем данные по URL
         String URL = String.format("%s/messages/send", ServerURL);
 
-        Map<String,String> params = new HashMap<>();
+        Map<String, String> params = new HashMap<>();
         params.put("key", userKey);
         params.put("text", text);
         params.put("roomId", currentRoomId);
@@ -396,24 +390,21 @@ public class MyAPI implements SuperAPI {
 
                 JsonObject newMessageJsonObject = jsonResult.get("body").getAsJsonObject();
 
-                    String messageId = newMessageJsonObject.get("id").getAsString();
-                    String roomId = newMessageJsonObject.get("roomId").getAsString();
-                    String messageText = newMessageJsonObject.get("text").getAsString();
-                    Integer timeCreated = newMessageJsonObject.get("timeCreated").getAsInt();
-                    String messageUserId = newMessageJsonObject.get("userId").getAsString();
-                    String messageUserName = newMessageJsonObject.get("userName").getAsString();
+                String messageId = newMessageJsonObject.get("id").getAsString();
+                String roomId = newMessageJsonObject.get("roomId").getAsString();
+                String messageText = newMessageJsonObject.get("text").getAsString();
+                Integer timeCreated = newMessageJsonObject.get("timeCreated").getAsInt();
+                String messageUserId = newMessageJsonObject.get("userId").getAsString();
+                String messageUserName = newMessageJsonObject.get("userName").getAsString();
 
-                    logger.info("writeMessage - Отправили новое сообщение "+messageText +" "+messageId);
-                    return new Message(messageUserId, messageUserName, messageText,roomId,timeCreated,messageId);
+                logger.info("writeMessage - Отправили новое сообщение " + messageText + " " + messageId);
+                return new Message(messageUserId, messageUserName, messageText, roomId, timeCreated, messageId);
+            } else {
+                throw new FalseServerFlagException(URL, response, "writeMessage - Не удалось отправить новое сообщение");
             }
 
-            else{
-                throw  new FalseServerFlagException(URL,response, "writeMessage - Не удалось отправить новое сообщение");
-            }
-
-        }
-        else {
-            throw  new EmptyAPIResponseException(mainApp, "writeMessage - получили пустой ответ от сервера");
+        } else {
+            throw new EmptyAPIResponseException(mainApp, "writeMessage - получили пустой ответ от сервера");
         }
 
     }
@@ -421,6 +412,7 @@ public class MyAPI implements SuperAPI {
     /**
      * Получение LongPoll'а
      * Выставляет longpollTs, longpollSubUrl, longpollKey
+     *
      * @throws EmptyAPIResponseException
      * @throws FalseServerFlagException
      */
@@ -440,18 +432,17 @@ public class MyAPI implements SuperAPI {
                 this.longpollSubUrl = credentials.get("url").getAsString();
                 this.longpollKey = credentials.get("key").getAsString();
                 logger.info("getLongpollServer - получили конфиг, инициализировались");
+            } else {
+                throw new FalseServerFlagException(URL, response, "getLongpollServer - Не удалось получить конфиг, не инициализировались");
             }
-            else {
-                throw new FalseServerFlagException(URL,response,"getLongpollServer - Не удалось получить конфиг, не инициализировались");
-            }
-        }
-        else {
+        } else {
             throw new EmptyAPIResponseException(mainApp, "getLongpollServer - Получили пустой ответ от сервера");
         }
     }
 
     /**
      * Слушатель лонгпула
+     *
      * @return
      * @throws LongpollListenerException
      */
@@ -459,13 +450,13 @@ public class MyAPI implements SuperAPI {
     public List<Message> longpollListener() throws LongpollListenerException {
 
         //Если лонгпул не инициализирован
-        if (longpollKey == null || longpollTs == null || longpollSubUrl == null){
+        if (longpollKey == null || longpollTs == null || longpollSubUrl == null) {
             logger.error("longpollListener - LongPool не инициалзирован");
             throw new LongpollListenerException("Лонгпул не был иницилизирован! Нужно использовать метод getLongpollServer для иницализации");
         }
 
         //Если же инициализация прошла успешно
-        else{
+        else {
 
             //Список результатов сообщений
             List<Message> resultList = new ArrayList<>();
@@ -502,25 +493,27 @@ public class MyAPI implements SuperAPI {
                         resultList.add(bufMessage);
                     }
                     logger.info("longpollListener - получили новые сообщения");
-                }
-                else{
+                } else {
                     throw new LongpollListenerException("Ответ result = false. Нужна повторная авторизация (или же мы передали что-то некорректно");
                 }
-            }
-            else{
+            } else {
                 throw new LongpollListenerException("Лонгпул ничего не получил от сервера. Что-то сломалось");
             }
 
             return resultList;
         }
     }
-    
-    public boolean getIsAuthenticated(){
+
+    public boolean getIsAuthenticated() {
         return isAuthenticated;
     }
 
     public String getCurrentRoomId() {
         return currentRoomId;
+    }
+
+    public void setCurrentRoomId(String currentRoomId) {
+        this.currentRoomId = currentRoomId;
     }
 
     public String getUserName() {
@@ -529,10 +522,6 @@ public class MyAPI implements SuperAPI {
 
     public String getUserKey() {
         return userKey;
-    }
-
-    public void setCurrentRoomId(String currentRoomId) {
-        this.currentRoomId = currentRoomId;
     }
 }
 

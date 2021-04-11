@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 public class LongpollListenerException extends Exception {
 
     private static final Logger logger = LoggerFactory.getLogger(LongpollListenerException.class);
+
     public LongpollListenerException(String errorMessage) {
         super(errorMessage);
         logger.error(errorMessage);

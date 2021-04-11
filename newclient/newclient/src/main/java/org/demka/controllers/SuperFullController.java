@@ -10,6 +10,7 @@ public abstract class SuperFullController {
 
     /**
      * Метод инициализации (вызывается с Main)
+     *
      * @param mainApp
      */
     public abstract void initialize(App mainApp);

@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SuccessActionController extends SuperFullController {
+    private static final Logger logger = LoggerFactory.getLogger(RegistrationController.class);
     /**
      * Метод инициализации (вызывается с Main)
      *
@@ -16,20 +17,18 @@ public class SuccessActionController extends SuperFullController {
     @FXML
     private Label MainText;
 
-    private static final Logger logger = LoggerFactory.getLogger(RegistrationController.class);
-
     @Override
     public void initialize(App mainApp) {
         this.mainApp = mainApp;
     }
 
     @FXML
-    private void okButtonClicked(){
+    private void okButtonClicked() {
         logger.info("Нажатие на button возврата на формы авторизации");
         mainApp.UserAuthorisation();
     }
 
-    public void setMainText(String text){
+    public void setMainText(String text) {
         MainText.setText(text);
     }
 }

@@ -7,14 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RunnableManager {
-    public static List<Thread> threadsList = new ArrayList<>();
     private static final Logger logger = LoggerFactory.getLogger(RunnableManager.class);
+    public static List<Thread> threadsList = new ArrayList<>();
 
-    public static void interruptAll(){
+    public static void interruptAll() {
 
-        for (Thread t: threadsList) {
+        for (Thread t : threadsList) {
             t.interrupt();
-            logger.info("Отправили прерывание для потока с id "+t.getId()+" "+t.getName());
+            logger.info("Отправили прерывание для потока с id " + t.getId() + " " + t.getName());
         }
     }
 }

@@ -4,7 +4,6 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +17,7 @@ public class Room {
 
     private List<Message> messages;
 
-    public Room(String creator_id, String name, int time_created, List<String> users, String id){
+    public Room(String creator_id, String name, int time_created, List<String> users, String id) {
         this.creator_id = new SimpleStringProperty(creator_id);
         this.name = new SimpleStringProperty(name);
         this.time_created = new SimpleIntegerProperty(time_created);

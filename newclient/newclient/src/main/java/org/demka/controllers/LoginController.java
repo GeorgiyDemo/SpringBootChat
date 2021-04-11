@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 public class LoginController extends SuperFullController {
 
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
     @FXML
     private Label AppName;
     @FXML
@@ -23,7 +24,6 @@ public class LoginController extends SuperFullController {
     private JFXPasswordField PasswordTextField;
     @FXML
     private JFXCheckBox AutoLoginCheckBox;
-    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 
     @FXML
     public void mainButtonClick() {
@@ -32,10 +32,9 @@ public class LoginController extends SuperFullController {
         String login = LoginTextField.getText();
         String password = PasswordTextField.getText();
 
-        if ((login.equals("")) || (password.equals(""))){
+        if ((login.equals("")) || (password.equals(""))) {
             logger.info("Попытка входа без ввода данных");
-        }
-        else{
+        } else {
             //Пытаемся авторизоваться
             MyAPI bufSession = new MyAPI(login, password, this.mainApp);
             //Если удалось произвести авторизацию
@@ -47,11 +46,10 @@ public class LoginController extends SuperFullController {
                     authUtil.writeKey(bufSession.getUserKey());
                 }
 
-                mainApp.getPrimaryStage().setTitle("DEMKAChat - Сообщения ["+bufSession.getUserName()+"]");
+                mainApp.getPrimaryStage().setTitle("DEMKAChat - Сообщения [" + bufSession.getUserName() + "]");
                 mainApp.MainChat();
                 logger.info("Пользователь успешно авторизовался");
-            }
-            else{
+            } else {
                 WrongAuth.setOpacity(1);
                 logger.info("Не удалось авторизоваться");
             }
@@ -62,19 +60,20 @@ public class LoginController extends SuperFullController {
     }
 
     @FXML
-    public void regLinkClicked(){
+    public void regLinkClicked() {
         mainApp.UserRegistration();
         logger.info("Переход на форму регистрации");
     }
 
     @FXML
-    public void forgotPasswordLinkClicked(){
+    public void forgotPasswordLinkClicked() {
         mainApp.ForgotPassword();
         logger.info("Переход на форму восстановления пароля");
     }
 
     /**
      * Метод инициализации (вызывается с Main)
+     *
      * @param mainApp
      */
     @Override

@@ -14,20 +14,16 @@ import java.util.Map;
 
 public class ForgotPasswordController extends SuperFullController {
 
+    private static final Logger logger = LoggerFactory.getLogger(ForgotPasswordController.class);
     @FXML
     JFXPasswordField NewPasswordTextField;
-
     @FXML
     JFXPasswordField MasterKeyTextField;
-
     @FXML
     JFXTextField LoginTextField;
-
     @FXML
     Label ErrorDescription;
-
     private String errorString;
-    private static final Logger logger = LoggerFactory.getLogger(ForgotPasswordController.class);
 
     /**
      * Метод инициализации (вызывается с Main)
@@ -41,39 +37,37 @@ public class ForgotPasswordController extends SuperFullController {
     }
 
     @FXML
-    private void backButtonClicked(){
+    private void backButtonClicked() {
         mainApp.UserAuthorisation();
         logger.info("Выход из формы смены пароля");
     }
 
     @FXML
-    private void resetButtonClicked(){
+    private void resetButtonClicked() {
         logger.info("Нажатие на button сброса пароля");
 
         String login = LoginTextField.getText();
         String newPassword = NewPasswordTextField.getText();
         String masterKey = MasterKeyTextField.getText();
 
-        if (dataValidator(login, newPassword, masterKey)){
+        if (dataValidator(login, newPassword, masterKey)) {
             logger.info("Валидация данных со стороны клиента прошла успешно");
             //Получаем ответ от сервера
-            Map<String,Object> regResult = SuperAPI.ResetPassword(login, newPassword, masterKey);
-            if ((boolean) regResult.get("result")){
+            Map<String, Object> regResult = SuperAPI.ResetPassword(login, newPassword, masterKey);
+            if ((boolean) regResult.get("result")) {
                 ErrorDescription.setOpacity(0.0);
                 ErrorDescription.setText("");
                 logger.info("Успешно сменили пароль пользователя");
                 mainApp.SuccessUserAction("Успешная смена пароля", "Успешно сменили пароль!");
-            }
-            else{
+            } else {
                 errorString = (String) regResult.get("error");
                 ErrorDescription.setText(errorString);
-                logger.info("Валидация со стороны сервера не прошла: "+errorString);
+                logger.info("Валидация со стороны сервера не прошла: " + errorString);
                 ErrorDescription.setOpacity(1.0);
             }
 
-        }
-        else{
-            logger.info("Валидация данных со стороны клиента не прошла: "+errorString);
+        } else {
+            logger.info("Валидация данных со стороны клиента не прошла: " + errorString);
             ErrorDescription.setText(errorString);
             ErrorDescription.setOpacity(1.0);
         }
@@ -81,7 +75,7 @@ public class ForgotPasswordController extends SuperFullController {
 
     }
 
-    private Boolean dataValidator(String eMail, String password, String masterKey){
+    private Boolean dataValidator(String eMail, String password, String masterKey) {
 
 
         if ((eMail == null) || (eMail.equals(""))) {
@@ -99,17 +93,17 @@ public class ForgotPasswordController extends SuperFullController {
             return false;
         }
 
-        if (!Validators.emailValidator(eMail)){
+        if (!Validators.emailValidator(eMail)) {
             errorString = "Некорректный e-mail";
             return false;
         }
 
-        if (password.length() < 8){
+        if (password.length() < 8) {
             errorString = "Пароль должен быть не менее 8 символов";
             return false;
         }
 
-        if (masterKey.length() < 8){
+        if (masterKey.length() < 8) {
             errorString = "Мастер-пароль должен быть не менее 8 символов";
             return false;
         }
