@@ -151,11 +151,21 @@ public interface SuperAPI {
     public boolean createRoom(String roomName, String usersString) throws FalseServerFlagException, EmptyAPIResponseException;
 
     /**
-     * Поиск пользователей в системе
-     * @param searchString
+     * Поиск пользователей в системе по имени
+     * @param userName
+     * @return
+     * @throws FalseServerFlagException
+     * @throws EmptyAPIResponseException
+     */
+    List<User> getUsers(String userName) throws FalseServerFlagException, EmptyAPIResponseException;
+
+
+    /**
+     * Получение объектов пользователей по id комнаты, в которой они состоят
+     * @param roomId
      * @return
      */
-    List<User> getUsers(String searchString) throws FalseServerFlagException, EmptyAPIResponseException;
+    List<User> getUsersByRoom(String roomId) throws FalseServerFlagException, EmptyAPIResponseException;
 
     /**
      * Отправка сообщения

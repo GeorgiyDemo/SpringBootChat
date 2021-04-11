@@ -2,6 +2,8 @@ package org.demka.api;
 
 
 import com.google.gson.*;
+import javafx.beans.Observable;
+import javafx.collections.ObservableList;
 import org.demka.App;
 import org.demka.exceptions.EmptyAPIResponseException;
 import org.demka.exceptions.FalseServerFlagException;
@@ -292,22 +294,22 @@ public class MyAPI implements SuperAPI {
     }
 
     /**
-     * Поиск пользователей в системе
-     *
-     * @param searchString
+     * Поиск пользователей в системе по имени
+     * @param searchExp
      * @return
+     * @throws FalseServerFlagException
+     * @throws EmptyAPIResponseException
      */
-
     @Override
-    public List<User> getUsers(String searchString) throws FalseServerFlagException, EmptyAPIResponseException {
+    public List<User> getUsers(String searchExp) throws FalseServerFlagException, EmptyAPIResponseException {
 
         List<User> resultList = new ArrayList<User>();
         String URL = "";
-        if (searchString == null){
+        if (searchExp == null){
             URL = String.format("%s/user/search?key=%s", ServerURL, userKey);
         }
         else{
-            URL = String.format("%s/user/search?key=%s&searchName=%s", ServerURL, userKey, searchString);
+            URL = String.format("%s/user/search?key=%s&searchName=%s", ServerURL, userKey, searchExp);
         }
         String response = HTTPRequest.sendGET(URL);
         //Если ответ есть
@@ -330,11 +332,48 @@ public class MyAPI implements SuperAPI {
                 return resultList;
             }
             else{
-                throw  new FalseServerFlagException(URL,response, "getUsers - Не удалось отправить новое сообщение");
+                throw  new FalseServerFlagException(URL,response, "getUsers - не удалось получить пользователей");
             }
         }
         else {
             throw  new EmptyAPIResponseException(mainApp, "getUsers - получили пустой ответ от сервера");
+        }
+    }
+
+    /**
+     * Получение объектов пользователей по id комнаты, в которой они состоят
+     * @param roomId
+     * @return
+     */
+    @Override
+    public List<User> getUsersByRoom(String roomId) throws FalseServerFlagException, EmptyAPIResponseException{
+
+        List<User> resultList = new ArrayList<>();
+        String URL = String.format("%s/room/getUsers?key=%s&roomId=%s", ServerURL, userKey, roomId);
+        String response = HTTPRequest.sendGET(URL);
+        //Если ответ есть
+        if (response != null) {
+            JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
+            if (jsonResult.get("result").getAsBoolean()) {
+
+                JsonArray bufList = jsonResult.get("body").getAsJsonArray();
+                for (int i = 0; i < bufList.size(); i++) {
+                    JsonObject currentUser = bufList.get(i).getAsJsonObject();
+                    String userId = currentUser.get("id").getAsString();
+                    String userName = currentUser.get("name").getAsString();
+                    Integer userTimeCreated = currentUser.get("timeCreated").getAsInt();
+                    User bufUser = new User(userId, userName, userTimeCreated);
+                    resultList.add(bufUser);
+                }
+                logger.info("getUsersByRoom - получили "+resultList.size()+" пользователей");
+                return resultList;
+            }
+            else{
+                throw new FalseServerFlagException(URL,response, "getUsersByRoom - Не удалось получить список пользоватлеей для комнаты");
+            }
+        }
+        else {
+            throw  new EmptyAPIResponseException(mainApp, "getUsersByRoom - получили пустой ответ от сервера");
         }
     }
 
@@ -475,8 +514,7 @@ public class MyAPI implements SuperAPI {
             return resultList;
         }
     }
-
-
+    
     public boolean getIsAuthenticated(){
         return isAuthenticated;
     }

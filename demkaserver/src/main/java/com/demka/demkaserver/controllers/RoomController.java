@@ -1,7 +1,9 @@
 package com.demka.demkaserver.controllers;
 
+import com.demka.demkaserver.entities.converters.UserSearchConverter;
 import com.demka.demkaserver.entities.database.RoomDBEntity;
 import com.demka.demkaserver.entities.database.UserDBEntity;
+import com.demka.demkaserver.entities.response.UserSearchResponseEntity;
 import com.demka.demkaserver.services.MessageService;
 import com.demka.demkaserver.services.RoomService;
 import com.demka.demkaserver.services.UserService;
@@ -11,10 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/room")
@@ -124,5 +123,39 @@ public class RoomController {
         UserDBEntity currentUser = currentUserOptional.get();
         List<RoomDBEntity> userRooms = roomService.findUserRooms(currentUser.getId());
         return new ResponseEntity<>(GenResponseUtil.ResponseOK(userRooms), HttpStatus.OK);
+    }
+
+    /**
+     * Получение пользователей, которые состоят в комнате
+     * @param roomId - идентификатор чат-комнаты
+     * @return
+     */
+    @GetMapping(value = "/getUsers")
+    public ResponseEntity<Map<String, Object>> getRoomUsers(@RequestParam String key, @RequestParam String roomId) {
+
+        //Проверка ключа
+        if (!userService.checkUserKey(key)) {
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Не удалось авторизоваться по указанному ключу"), HttpStatus.FORBIDDEN);
+        }
+
+        Optional<RoomDBEntity> roomResult = roomService.find(roomId);
+        //Если комнаты с таким id не существует
+        if (roomResult.isEmpty()) {
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Комнаты с id " + roomId + " не существует"), HttpStatus.NOT_FOUND);
+        }
+
+        RoomDBEntity currentRoom = roomResult.get();
+        List<UserSearchResponseEntity> roomUsersList = new ArrayList<>();
+        for (String userId: currentRoom.getUsers()) {
+            Optional<UserDBEntity> currentUserOptional = userService.find(userId);
+
+            //Если пользователь найден - добавляем в список результатов
+            if (currentUserOptional.isPresent()){
+                UserDBEntity currentUser = currentUserOptional.get();
+                roomUsersList.add(UserSearchConverter.convert(currentUser));
+            }
+        }
+
+        return new ResponseEntity<>(GenResponseUtil.ResponseOK(roomUsersList), HttpStatus.OK);
     }
 }

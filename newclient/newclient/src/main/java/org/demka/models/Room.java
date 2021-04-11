@@ -48,4 +48,8 @@ public class Room {
     public List<Message> getMessages() {
         return messages;
     }
+
+    public ObservableList<String> getUsers() {
+        return users.get();
+    }
 }
