@@ -243,7 +243,7 @@ public class App extends Application {
             loader.setLocation(App.class.getResource("views/ShowChatUsersView.fxml"));
             AnchorPane page = (AnchorPane) loader.load();
             Stage dialogStage = new Stage();
-            dialogStage.setTitle("Пользователи комнаты N");
+            dialogStage.setTitle("Комната N");
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
             Scene scene = new Scene(page);

@@ -4,10 +4,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="250.0" prefWidth="400.0" styleClass="background" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.demka.controllers.ShowChatUsersController">
+<AnchorPane prefHeight="346.0" prefWidth="400.0" styleClass="background" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.demka.controllers.ShowChatUsersController">
     <children>
 
-        <TableView fx:id="ChatUsersTable" layoutY="88.0" prefHeight="117.0" prefWidth="400.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+        <TableView fx:id="ChatUsersTable" layoutY="88.0" prefHeight="117.0" prefWidth="400.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <columns>
                 <TableColumn fx:id="ChatUserColumn" editable="false" prefWidth="150.0" text="Пользователь" />
             </columns>
@@ -16,7 +16,7 @@
             </columnResizePolicy>
         </TableView>
 
-        <JFXButton fx:id="OkButton" layoutX="250.0" layoutY="380.0" prefHeight="40.0" prefWidth="158.0" ripplerFill="#2491bf" text="Ок" textFill="WHITE" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" />
+        <JFXButton fx:id="OkButton" layoutX="250.0" layoutY="380.0" prefHeight="40.0" prefWidth="158.0" ripplerFill="#2491bf" text="Ок" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" />
 
     </children>
 </AnchorPane>
