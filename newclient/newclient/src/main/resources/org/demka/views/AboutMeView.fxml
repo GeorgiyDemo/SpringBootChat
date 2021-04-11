@@ -1,32 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
-<?import javafx.scene.control.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.text.Font?>
+<AnchorPane xmlns:fx="http://javafx.com/fxml/1" prefHeight="250.0" prefWidth="400.0" styleClass="background"
+            stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1"
+            fx:controller="org.demka.controllers.AboutMeController">
+    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="60.0" layoutY="110.0"
+           text="Чат с использованием LongPoll" textFill="WHITE" AnchorPane.leftAnchor="50.0"
+           AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0">
+        <font>
+            <Font name="Helvetica" size="19.0"/>
+        </font>
+    </Label>
 
-<AnchorPane prefHeight="250.0" prefWidth="400.0" styleClass="background" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.demka.controllers.AboutMeController">
-    <children>
+    <Hyperlink fx:id="siteLink" alignment="CENTER" contentDisplay="CENTER" layoutX="145.0" layoutY="186.0"
+               onAction="#siteLinkClicked" text="https://georgiydemo.github.io/" textFill="WHITE"
+               AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="120.0">
+        <font>
+            <Font name="Helvetica" size="13.0"/>
+        </font>
+    </Hyperlink>
 
-        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="60.0" layoutY="110.0" text="Чат с использованием LongPoll" textFill="WHITE" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0">
-            <font>
-                <Font name="Helvetica" size="19.0" />
-            </font>
-        </Label>
+    <Label alignment="CENTER" contentDisplay="CENTER" layoutX="60.0" layoutY="110.0" text="Деменчук Георгий, ПИ19-4"
+           textFill="WHITE" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="90.0">
+        <font>
+            <Font name="Helvetica" size="13.0"/>
+        </font>
+    </Label>
 
-        <Hyperlink fx:id="siteLink" alignment="CENTER" contentDisplay="CENTER" layoutX="145.0" layoutY="186.0" onAction="#siteLinkClicked" text="https://georgiydemo.github.io/" textFill="WHITE" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="120.0">
-            <font>
-                <Font name="Helvetica" size="13.0" />
-            </font>
-        </Hyperlink>
+    <JFXButton layoutX="250.0" layoutY="380.0" onAction="#okButtonClicked" prefHeight="40.0" prefWidth="158.0"
+               ripplerFill="#2491bf" text="Ок" textFill="WHITE" AnchorPane.bottomAnchor="40.0"
+               AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0"/>
 
-        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="60.0" layoutY="110.0" text="Деменчук Георгий, ПИ19-4" textFill="WHITE" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="90.0">
-            <font>
-                <Font name="Helvetica" size="13.0" />
-            </font>
-        </Label>
-
-        <JFXButton layoutX="250.0" layoutY="380.0" onAction="#okButtonClicked" prefHeight="40.0" prefWidth="158.0" ripplerFill="#2491bf" text="Ок" textFill="WHITE" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" />
-
-    </children>
 </AnchorPane>
