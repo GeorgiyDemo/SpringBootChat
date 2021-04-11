@@ -21,20 +21,19 @@ public class CreateNewRoomController extends SuperPartController {
     private static final Logger logger = LoggerFactory.getLogger(CreateNewRoomController.class);
     private final ObservableList<User> allUsersData = FXCollections.observableArrayList();
     private final ObservableList<User> chatUsersData = FXCollections.observableArrayList();
-    private MyAPI APISession;
+    private MyAPI myAPI;
     @FXML
-    private TableView<User> AllUsersTable;
+    private TableView<User> allUsersTable;
     @FXML
-    private TableColumn<User, String> AllUsersColumn;
+    private TableColumn<User, String> allUsersColumn;
     @FXML
-    private TableView<User> ChatUsersTable;
+    private TableView<User> chatUsersTable;
     @FXML
-    private TableColumn<User, String> ChatUsersColumn;
+    private TableColumn<User, String> chatUsersColumn;
     @FXML
-    private Button CreateRoomButton;
+    private Button createRoomButton;
     @FXML
-    private TextField ChatName;
-    private final boolean CustomChatName = false;
+    private TextField chatName;
 
     @Override
     public void initialize(App app, Stage dialogStage) {
@@ -42,42 +41,42 @@ public class CreateNewRoomController extends SuperPartController {
         this.dialogStage = dialogStage;
 
         //Инициализация таблиц
-        AllUsersTable.setItems(allUsersData);
-        ChatUsersTable.setItems(chatUsersData);
+        allUsersTable.setItems(allUsersData);
+        chatUsersTable.setItems(chatUsersData);
 
         //API, через которое взаимодействуем с миром
-        APISession = app.getAPISession();
+        myAPI = app.getMyAPI();
 
         //Ресайз, зависящий от данных
-        AllUsersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        ChatUsersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        allUsersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        chatUsersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         //Отображение имен пользователей
-        AllUsersColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
-        ChatUsersColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+        allUsersColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+        chatUsersColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
 
-        AllUsersTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        ChatUsersTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        allUsersTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        chatUsersTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         //Добавляем пользователей системы
         try {
-            allUsersData.addAll(APISession.getUsers(null));
+            allUsersData.addAll(myAPI.getUsers(null));
         } catch (FalseServerFlagException | EmptyAPIResponseException e) {
             e.printStackTrace();
         }
     }
 
     @FXML
-    private void CancelButtonClicked() {
+    private void cancelButtonClicked() {
         dialogStage.close();
     }
 
     @FXML
-    public void CreateRoomButtonClicked() {
+    public void createRoomButtonClicked() {
         String localeChatName;
         StringBuilder usersIds = new StringBuilder();
         //Если не было задано название конфы, то генерируем ее из имен
-        if (ChatName.getText().equals("")) {
+        if (chatName.getText().equals("")) {
 
             StringBuilder ChatNameBuilder = new StringBuilder();
             ChatNameBuilder.append("Чат с ");
@@ -94,7 +93,7 @@ public class CreateNewRoomController extends SuperPartController {
             localeChatName = ChatNameBuilder.toString();
 
         } else {
-            localeChatName = ChatName.getText();
+            localeChatName = chatName.getText();
         }
 
         //Добавляем id всех пользователей
@@ -107,7 +106,7 @@ public class CreateNewRoomController extends SuperPartController {
 
         //Создаем комнату
         try {
-            APISession.createRoom(localeChatName, usersIds.toString());
+            myAPI.createRoom(localeChatName, usersIds.toString());
         } catch (FalseServerFlagException | EmptyAPIResponseException e) {
             e.printStackTrace();
         }
@@ -121,7 +120,7 @@ public class CreateNewRoomController extends SuperPartController {
     @FXML
     private void addUserToChat() {
 
-        ObservableList<User> selectedItems = AllUsersTable.getSelectionModel().getSelectedItems();
+        ObservableList<User> selectedItems = allUsersTable.getSelectionModel().getSelectedItems();
         //Буферный список, который не изменяется
         List<User> selectedUsers = new ArrayList<User>();
         selectedUsers.addAll(selectedItems);
@@ -133,7 +132,7 @@ public class CreateNewRoomController extends SuperPartController {
             chatUsersData.add(user);
         }
 
-        CreateRoomButton.setDisable(chatUsersData.size() <= 0);
+        createRoomButton.setDisable(chatUsersData.size() <= 0);
 
     }
 
@@ -143,7 +142,7 @@ public class CreateNewRoomController extends SuperPartController {
     @FXML
     private void removeUserFromChat() {
 
-        ObservableList<User> selectedItems = ChatUsersTable.getSelectionModel().getSelectedItems();
+        ObservableList<User> selectedItems = chatUsersTable.getSelectionModel().getSelectedItems();
         //Буферный список, который не изменяется
         List<User> selectedUsers = new ArrayList<User>();
         selectedUsers.addAll(selectedItems);
@@ -155,6 +154,6 @@ public class CreateNewRoomController extends SuperPartController {
             allUsersData.add(user);
         }
 
-        CreateRoomButton.setDisable(chatUsersData.size() <= 0);
+        createRoomButton.setDisable(chatUsersData.size() <= 0);
     }
 }

@@ -39,9 +39,10 @@ public class MyAPI implements SuperAPI {
 
     /**
      * Авторизация через пару логин/пароль
-     * @param login - логин пользователя
+     *
+     * @param login    - логин пользователя
      * @param password - пароль пользователя
-     * @param app - экземпляр главного приложения
+     * @param app      - экземпляр главного приложения
      */
     public MyAPI(String login, String password, App app) {
         this.app = app;
@@ -55,6 +56,7 @@ public class MyAPI implements SuperAPI {
 
     /**
      * Авторизация через ключ
+     *
      * @param key - ключ API приложения
      * @param app - экземпляр главного приложения
      */

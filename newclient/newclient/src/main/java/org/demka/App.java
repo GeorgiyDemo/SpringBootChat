@@ -20,7 +20,7 @@ public class App extends Application {
 
     private Stage primaryStage;
     private BorderPane rootLayout;
-    private MyAPI APISession;
+    private MyAPI myAPI;
     private AuthUtil authUtil;
 
     /**
@@ -32,12 +32,12 @@ public class App extends Application {
         launch(args);
     }
 
-    public MyAPI getAPISession() {
-        return APISession;
+    public MyAPI getMyAPI() {
+        return myAPI;
     }
 
-    public void setAPISession(MyAPI APISession) {
-        this.APISession = APISession;
+    public void setMyAPI(MyAPI myAPI) {
+        this.myAPI = myAPI;
     }
 
     public Stage getPrimaryStage() {
@@ -66,17 +66,17 @@ public class App extends Application {
         //Читаем токен из файла
         String key = authUtil.readKey();
         if (key != null) {
-            APISession = new MyAPI(key, this);
+            myAPI = new MyAPI(key, this);
         }
 
         //Если пользователь не авторизован
-        if (!APISession.getIsAuthenticated()) {
+        if (!myAPI.getIsAuthenticated()) {
             authUtil.writeKey("");
             UserAuthorisation();
         }
         //Если уже успешно авторизовался
         else {
-            this.primaryStage.setTitle("DEMKAChat - Сообщения [" + APISession.getUserName() + "]");
+            this.primaryStage.setTitle("DEMKAChat - Сообщения [" + myAPI.getUserName() + "]");
             MainChat();
         }
     }

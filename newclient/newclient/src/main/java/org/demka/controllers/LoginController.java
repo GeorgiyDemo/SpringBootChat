@@ -14,23 +14,22 @@ import org.slf4j.LoggerFactory;
 public class LoginController extends SuperFullController {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+
     @FXML
-    private Label AppName;
+    private Label wrongAuth;
     @FXML
-    private Label WrongAuth;
+    private JFXTextField loginTextField;
     @FXML
-    private JFXTextField LoginTextField;
+    private JFXPasswordField passwordTextField;
     @FXML
-    private JFXPasswordField PasswordTextField;
-    @FXML
-    private JFXCheckBox AutoLoginCheckBox;
+    private JFXCheckBox autoLoginCheckBox;
 
     @FXML
     public void mainButtonClick() {
 
         logger.info("Нажатие на button авторизации в программе");
-        String login = LoginTextField.getText();
-        String password = PasswordTextField.getText();
+        String login = loginTextField.getText();
+        String password = passwordTextField.getText();
 
         if ((login.equals("")) || (password.equals(""))) {
             logger.info("Попытка входа без ввода данных");
@@ -39,9 +38,9 @@ public class LoginController extends SuperFullController {
             MyAPI bufSession = new MyAPI(login, password, this.app);
             //Если удалось произвести авторизацию
             if (bufSession.getIsAuthenticated()) {
-                app.setAPISession(bufSession);
+                app.setMyAPI(bufSession);
                 //Если пользователь выбрал "Запомнить меня"
-                if (AutoLoginCheckBox.isSelected()) {
+                if (autoLoginCheckBox.isSelected()) {
                     AuthUtil authUtil = app.getAuthUtil();
                     authUtil.writeKey(bufSession.getUserKey());
                 }
@@ -50,7 +49,7 @@ public class LoginController extends SuperFullController {
                 app.MainChat();
                 logger.info("Пользователь успешно авторизовался");
             } else {
-                WrongAuth.setOpacity(1);
+                wrongAuth.setOpacity(1);
                 logger.info("Не удалось авторизоваться");
             }
 

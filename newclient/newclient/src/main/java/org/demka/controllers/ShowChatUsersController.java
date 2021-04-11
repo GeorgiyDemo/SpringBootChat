@@ -21,12 +21,12 @@ import java.util.List;
 public class ShowChatUsersController extends SuperPartController {
 
     private static final Logger logger = LoggerFactory.getLogger(ShowChatUsersController.class);
+    private final ObservableList<User> chatUserData = FXCollections.observableArrayList();
     @FXML
-    private TableView<User> ChatUserTable;
+    private TableView<User> chatUserTable;
     @FXML
-    private TableColumn<User, String> ChatUserNameColumn;
-    private final ObservableList<User> ChatUserData = FXCollections.observableArrayList();
-    private MyAPI APISession;
+    private TableColumn<User, String> chatUserNameColumn;
+    private MyAPI myAPI;
 
     /**
      * Метод инициализации (вызывается с Main)
@@ -38,17 +38,17 @@ public class ShowChatUsersController extends SuperPartController {
     public void initialize(App app, Stage dialogStage) {
         this.app = app;
         this.dialogStage = dialogStage;
-        APISession = app.getAPISession();
+        myAPI = app.getMyAPI();
 
-        ChatUserTable.setItems(ChatUserData);
-        ChatUserNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
-        String currentRoomId = APISession.getCurrentRoomId();
+        chatUserTable.setItems(chatUserData);
+        chatUserNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+        String currentRoomId = myAPI.getCurrentRoomId();
         try {
-            Room currentRoom = APISession.getRoomInfo(currentRoomId);
+            Room currentRoom = myAPI.getRoomInfo(currentRoomId);
             dialogStage.setTitle("Информация о диалоге " + currentRoom.getName());
-            List<User> roomUsersList = APISession.getUsersByRoom(currentRoomId);
-            ChatUserData.addAll(roomUsersList);
-            ChatUserNameColumn.setText("Участники (" + roomUsersList.size() + " всего)");
+            List<User> roomUsersList = myAPI.getUsersByRoom(currentRoomId);
+            chatUserData.addAll(roomUsersList);
+            chatUserNameColumn.setText("Участники (" + roomUsersList.size() + " всего)");
         } catch (FalseServerFlagException | EmptyAPIResponseException | RoomNotFoundException e) {
             e.printStackTrace();
             dialogStage.close();

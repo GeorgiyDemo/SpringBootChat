@@ -22,33 +22,33 @@ import java.util.List;
 
 public class MainChatController extends SuperFullController {
     private static final Logger logger = LoggerFactory.getLogger(MainChatController.class);
-    private final ObservableList<Room> RoomData = FXCollections.observableArrayList();
-    private final ObservableList<Message> MessageData = FXCollections.observableArrayList();
-    private MyAPI APISession;
+    private final ObservableList<Room> roomData = FXCollections.observableArrayList();
+    private final ObservableList<Message> messageData = FXCollections.observableArrayList();
+    private MyAPI myAPI;
     @FXML
-    private TableView<Room> RoomTable;
+    private TableView<Room> roomTable;
     @FXML
-    private TableColumn<Room, String> RoomColumn;
+    private TableColumn<Room, String> roomColumn;
 
     @FXML
-    private TableView<Message> MessageTable;
+    private TableView<Message> messageTable;
     @FXML
-    private TableColumn<Message, String> MessageTimeColumn;
+    private TableColumn<Message, String> messageTimeColumn;
     @FXML
-    private TableColumn<Message, String> MessageUserColumn;
+    private TableColumn<Message, String> messageUserColumn;
     @FXML
-    private TableColumn<Message, String> MessageTextColumn;
+    private TableColumn<Message, String> messageTextColumn;
 
 
     @FXML
-    private Menu AboutMenuItem;
+    private Menu aboutMenuItem;
     @FXML
-    private Menu ExitMenuItem;
+    private Menu exitMenuItem;
     @FXML
-    private MenuBar MainMenuBar;
+    private MenuBar mainMenuBar;
 
     @FXML
-    private JFXButton ChatUsersButton;
+    private JFXButton chatUsersButton;
     @FXML
     private JFXButton sendMessageButton;
     @FXML
@@ -65,13 +65,13 @@ public class MainChatController extends SuperFullController {
         } else {
             //Отправляем сообщеньку
             try {
-                APISession.writeMessage(messageText);
+                myAPI.writeMessage(messageText);
             } catch (FalseServerFlagException | EmptyAPIResponseException e) {
                 e.printStackTrace();
             }
 
             newMessageText.setText("");
-            MessageTable.scrollTo(MessageData.get(MessageData.size() - 1));
+            messageTable.scrollTo(messageData.get(messageData.size() - 1));
         }
     }
 
@@ -89,36 +89,36 @@ public class MainChatController extends SuperFullController {
     @Override
     public void initialize(App app) {
         this.app = app;
-        RoomTable.setItems(RoomData);
+        roomTable.setItems(roomData);
 
         sendMessageButton.setOpacity(0);
         newMessageText.setDisable(true);
-        ChatUsersButton.setDisable(true);
+        chatUsersButton.setDisable(true);
         newMessageText.setOpacity(0);
-        ChatUsersButton.setOpacity(0);
+        chatUsersButton.setOpacity(0);
 
         //API, через которое взаимодействуем с миром
-        APISession = app.getAPISession();
+        myAPI = app.getMyAPI();
 
         //Обработчик нажатия на комнату
-        RoomTable.getSelectionModel().selectedItemProperty().addListener(
+        roomTable.getSelectionModel().selectedItemProperty().addListener(
                 ((observableValue, oldValue, newValue) -> showChatRoomDetails(newValue))
         );
-        RoomTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        roomTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         //Отображение имени комнаты в таблице
-        RoomColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+        roomColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
         //Отображение сообщений в таблице
-        MessageTimeColumn.setCellValueFactory(cellData -> cellData.getValue().getTimeCreatedProperty());
-        MessageUserColumn.setCellValueFactory(cellData -> cellData.getValue().getUserNameProperty());
-        MessageTextColumn.setCellValueFactory(cellData -> cellData.getValue().getTextProperty());
+        messageTimeColumn.setCellValueFactory(cellData -> cellData.getValue().getTimeCreatedProperty());
+        messageUserColumn.setCellValueFactory(cellData -> cellData.getValue().getUserNameProperty());
+        messageTextColumn.setCellValueFactory(cellData -> cellData.getValue().getTextProperty());
 
         //Текст для таблицы сообщений, когда комната не выбрана
         Label placeholder = new Label();
         placeholder.setText("Выберите диалог слева или <создайте новый>");
         placeholder.setStyle("-fx-text-fill: white");
-        MessageTable.setPlaceholder(placeholder);
-        MessageTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        messageTable.setPlaceholder(placeholder);
+        messageTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         //Слушатель изменения текста
         newMessageText.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -129,7 +129,7 @@ public class MainChatController extends SuperFullController {
         //Получаем комнаты и запускаем цикл по каждой из них
         List<Room> roomList = null;
         try {
-            roomList = APISession.getUserRooms();
+            roomList = myAPI.getUserRooms();
         } catch (FalseServerFlagException | EmptyAPIResponseException e) {
             e.printStackTrace();
         }
@@ -138,7 +138,7 @@ public class MainChatController extends SuperFullController {
             String currentRoomId = currentRoom.getId();
             //Получаем сообщения для каждой из комнат
             try {
-                for (Message message : APISession.getRoomMessagesHistory(currentRoomId)) {
+                for (Message message : myAPI.getRoomMessagesHistory(currentRoomId)) {
                     //Добавляем сообщеньку для комнаты
                     currentRoom.addMessage(message);
                 }
@@ -147,13 +147,13 @@ public class MainChatController extends SuperFullController {
             }
 
         }
-        RoomData.addAll(roomList);
+        roomData.addAll(roomList);
         logger.info("MainChatController - инициализировали все комнаты");
 
         //Запускаем отдельный поток, который будет:
         // Добавлять новую комнату в RoomData, если пришло обновление по комнате, id которой нет в RoomData
         // Добавлять в определенный элемент room.addMessage() новое сообщение, которое прилетело через лонгпул
-        LongPollRunnable runnable1 = new LongPollRunnable(RoomData, MessageData, APISession, app);
+        LongPollRunnable runnable1 = new LongPollRunnable(roomData, messageData, myAPI, app);
         Thread thread1 = new Thread(runnable1, "LongPoll thread");
         RunnableManager.threadsList.add(thread1);
         thread1.start();
@@ -167,15 +167,15 @@ public class MainChatController extends SuperFullController {
         logger.info("MainChatController - стартанули CheckInternetRunnable с id " + thread2.getId());
 
         //Биндим действия к AboutMenuItem и ExitMenuItem
-        MyActionClass.onAction(AboutMenuItem);
-        MyActionClass.onAction(ExitMenuItem);
+        MyActionClass.onAction(aboutMenuItem);
+        MyActionClass.onAction(exitMenuItem);
     }
 
     /**
      * Нажатие на пункт "О программе"
      */
     @FXML
-    private void AboutMenuItemClicked() {
+    private void aboutMenuItemClicked() {
         logger.info("Нажатие на button 'О программе'");
         app.AboutMe();
     }
@@ -184,12 +184,12 @@ public class MainChatController extends SuperFullController {
      * Нажатие на выход из аккаунта пользователя
      */
     @FXML
-    private void ExitMenuItemClicked() {
+    private void exitMenuItemClicked() {
         //Останавливаем все потоки (лонгпул и проверка интернета)
         RunnableManager.interruptAll();
         //Удаляем ключ авторизации
         app.getAuthUtil().writeKey("");
-        MainMenuBar.setDisable(true);
+        mainMenuBar.setDisable(true);
         logger.info("Осуществлен выход из профиля");
         app.myStart(app.getPrimaryStage());
     }
@@ -203,24 +203,24 @@ public class MainChatController extends SuperFullController {
 
         //Отображаем отправку сообщений
         newMessageText.setDisable(false);
-        ChatUsersButton.setDisable(false);
-        ChatUsersButton.setOpacity(1);
+        chatUsersButton.setDisable(false);
+        chatUsersButton.setOpacity(1);
         sendMessageButton.setOpacity(1);
         newMessageText.setOpacity(1);
 
 
         //Выставляем id текущей комнаты
-        MessageData.clear();
+        messageData.clear();
         if (room != null) {
-            APISession.setCurrentRoomId(room.getId());
-            MessageData.addAll(room.getMessages());
-            MessageTable.setItems(MessageData);
+            myAPI.setCurrentRoomId(room.getId());
+            messageData.addAll(room.getMessages());
+            messageTable.setItems(messageData);
         }
-        MessageTable.scrollTo(MessageData.get(MessageData.size() - 1));
+        messageTable.scrollTo(messageData.get(messageData.size() - 1));
     }
 
     @FXML
-    private void ChatUsersButtonClicked() {
+    private void chatUsersButtonClicked() {
         app.showCurrentRoomUsers();
         logger.info("Нажатие на button показа пользователей комнаты ");
     }

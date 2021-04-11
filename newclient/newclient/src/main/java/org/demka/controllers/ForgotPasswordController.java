@@ -16,13 +16,13 @@ public class ForgotPasswordController extends SuperFullController {
 
     private static final Logger logger = LoggerFactory.getLogger(ForgotPasswordController.class);
     @FXML
-    JFXPasswordField NewPasswordTextField;
+    JFXPasswordField newPasswordTextField;
     @FXML
-    JFXPasswordField MasterKeyTextField;
+    JFXPasswordField masterKeyTextField;
     @FXML
-    JFXTextField LoginTextField;
+    JFXTextField loginTextField;
     @FXML
-    Label ErrorDescription;
+    Label errorDescription;
     private String errorString;
 
     /**
@@ -32,7 +32,7 @@ public class ForgotPasswordController extends SuperFullController {
      */
     @Override
     public void initialize(App app) {
-        ErrorDescription.setOpacity(0.0);
+        errorDescription.setOpacity(0.0);
         this.app = app;
     }
 
@@ -46,30 +46,30 @@ public class ForgotPasswordController extends SuperFullController {
     private void resetButtonClicked() {
         logger.info("Нажатие на button сброса пароля");
 
-        String login = LoginTextField.getText();
-        String newPassword = NewPasswordTextField.getText();
-        String masterKey = MasterKeyTextField.getText();
+        String login = loginTextField.getText();
+        String newPassword = newPasswordTextField.getText();
+        String masterKey = masterKeyTextField.getText();
 
         if (dataValidator(login, newPassword, masterKey)) {
             logger.info("Валидация данных со стороны клиента прошла успешно");
             //Получаем ответ от сервера
             Map<String, Object> regResult = SuperAPI.resetPassword(login, newPassword, masterKey);
             if ((boolean) regResult.get("result")) {
-                ErrorDescription.setOpacity(0.0);
-                ErrorDescription.setText("");
+                errorDescription.setOpacity(0.0);
+                errorDescription.setText("");
                 logger.info("Успешно сменили пароль пользователя");
                 app.SuccessUserAction("Успешная смена пароля", "Успешно сменили пароль!");
             } else {
                 errorString = (String) regResult.get("error");
-                ErrorDescription.setText(errorString);
+                errorDescription.setText(errorString);
                 logger.info("Валидация со стороны сервера не прошла: " + errorString);
-                ErrorDescription.setOpacity(1.0);
+                errorDescription.setOpacity(1.0);
             }
 
         } else {
             logger.info("Валидация данных со стороны клиента не прошла: " + errorString);
-            ErrorDescription.setText(errorString);
-            ErrorDescription.setOpacity(1.0);
+            errorDescription.setText(errorString);
+            errorDescription.setOpacity(1.0);
         }
 
 

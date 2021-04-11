@@ -10,8 +10,8 @@ public class FalseServerFlagException extends Exception {
 
     private static final Logger logger = LoggerFactory.getLogger(FalseServerFlagException.class);
 
-    public FalseServerFlagException(String URL, String serverResponse, String errorMessage) {
+    public FalseServerFlagException(String url, String serverResponse, String errorMessage) {
         super(errorMessage);
-        logger.error(errorMessage + "\n" + "URL: " + URL + "\n" + "Ответ: " + serverResponse);
+        logger.error(errorMessage + "\n" + "URL: " + url + "\n" + "Ответ: " + serverResponse);
     }
 }

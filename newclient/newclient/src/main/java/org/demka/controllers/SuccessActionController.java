@@ -15,7 +15,7 @@ public class SuccessActionController extends SuperFullController {
      */
 
     @FXML
-    private Label MainText;
+    private Label mainText;
 
     @Override
     public void initialize(App app) {
@@ -29,6 +29,6 @@ public class SuccessActionController extends SuperFullController {
     }
 
     public void setMainText(String text) {
-        MainText.setText(text);
+        mainText.setText(text);
     }
 }

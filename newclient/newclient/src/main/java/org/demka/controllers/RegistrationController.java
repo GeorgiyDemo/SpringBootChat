@@ -17,19 +17,19 @@ public class RegistrationController extends SuperFullController {
 
     private static final Logger logger = LoggerFactory.getLogger(RegistrationController.class);
     @FXML
-    private JFXButton BackButton;
+    private JFXButton backButton;
     @FXML
-    private JFXButton RegButton;
+    private JFXButton regButton;
     @FXML
-    private JFXTextField UserNameTextField;
+    private JFXTextField userNameTextField;
     @FXML
-    private JFXTextField EmailTextField;
+    private JFXTextField emailTextField;
     @FXML
-    private JFXPasswordField PasswordTextField;
+    private JFXPasswordField passwordTextField;
     @FXML
-    private JFXPasswordField MasterKey;
+    private JFXPasswordField masterKey;
     @FXML
-    private Label ErrorDescription;
+    private Label errorDescription;
     private String errorString;
 
     private Boolean dataValidator(String userName, String eMail, String password, String masterKey) {
@@ -86,31 +86,31 @@ public class RegistrationController extends SuperFullController {
     @FXML
     private void regButtonClicked() {
         logger.info("Нажатие на button регистрации");
-        String userName = UserNameTextField.getText();
-        String userEmail = EmailTextField.getText();
-        String userPassword = PasswordTextField.getText();
-        String masterKey = MasterKey.getText();
+        String userName = userNameTextField.getText();
+        String userEmail = emailTextField.getText();
+        String userPassword = passwordTextField.getText();
+        String masterKey = this.masterKey.getText();
         if (dataValidator(userName, userEmail, userPassword, masterKey)) {
             logger.info("Валидация данных со стороны клиента прошла успешно");
             //Получаем ответ от сервера
             Map<String, Object> regResult = SuperAPI.registration(userName, userEmail, userPassword, masterKey);
 
             if ((boolean) regResult.get("result")) {
-                ErrorDescription.setOpacity(0.0);
-                ErrorDescription.setText("");
+                errorDescription.setOpacity(0.0);
+                errorDescription.setText("");
                 logger.info("Успешно зарегистрировали пользователя");
                 app.SuccessUserAction("Успешная регистрация", "Регистрация прошла успешно!");
             } else {
                 errorString = (String) regResult.get("error");
-                ErrorDescription.setText(errorString);
+                errorDescription.setText(errorString);
                 logger.info("Валидация со стороны сервера не прошла: " + errorString);
-                ErrorDescription.setOpacity(1.0);
+                errorDescription.setOpacity(1.0);
             }
 
         } else {
             logger.info("Валидация данных со стороны клиента не прошла: " + errorString);
-            ErrorDescription.setText(errorString);
-            ErrorDescription.setOpacity(1.0);
+            errorDescription.setText(errorString);
+            errorDescription.setOpacity(1.0);
         }
 
 
@@ -131,6 +131,6 @@ public class RegistrationController extends SuperFullController {
     @Override
     public void initialize(App app) {
         this.app = app;
-        ErrorDescription.setOpacity(0.0);
+        errorDescription.setOpacity(0.0);
     }
 }
