@@ -14,7 +14,7 @@ services:
       - ./database/mongodbdata:/data/db
   
   spring:
-    image: georgiydemo/spring-chat-server
+    image: georgiydemo/spring-mychat-server
     restart: on-failure
     ports:
       - 8080:8080
