@@ -42,7 +42,7 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                   </TableView>
-                        <JFXButton layoutX="211.0" layoutY="264.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0" styleClass="special-button" text=" " AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
+                        <JFXButton fx:id="ChatUsersButton" layoutX="211.0" layoutY="264.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0" styleClass="chat-users-button" text="  " AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" onAction="ChatUsersButtonClicked"/>
 
                           <JFXButton fx:id="sendMessageButton" defaultButton="true" disable="true" onAction="#sendMessageButtonClicked" text="Отправить" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                           <JFXTextField fx:id="newMessageText" prefHeight="27.0" prefWidth="300.0" promptText="Введите сообщение.." unFocusColor="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="100.0" />

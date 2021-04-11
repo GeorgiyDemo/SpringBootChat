@@ -235,6 +235,29 @@ public class App extends Application {
     }
 
     /**
+     * Показывает участников текущей комнаты
+     */
+    public void showCurrentRoomUsers(){
+        try{
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(App.class.getResource("views/ShowChatUsersView.fxml"));
+            AnchorPane page = (AnchorPane) loader.load();
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("Пользователи комнаты N");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(primaryStage);
+            Scene scene = new Scene(page);
+            dialogStage.setScene(scene);
+            ShowChatUsersController controller = loader.getController();
+            controller.initialize(this, dialogStage);
+            dialogStage.showAndWait();;
+
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Базовый Layout
      */
     public void initRootLayout() {

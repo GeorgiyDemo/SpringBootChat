@@ -1,5 +1,6 @@
 package org.demka.controllers;
 
+import com.jfoenix.controls.JFXButton;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -49,7 +50,9 @@ public class MainChatController extends SuperFullController {
     private MenuBar MainMenuBar;
 
     @FXML
-    private Button sendMessageButton;
+    private JFXButton ChatUsersButton;
+    @FXML
+    private JFXButton sendMessageButton;
     @FXML
     private TextField newMessageText;
     /***
@@ -89,9 +92,11 @@ public class MainChatController extends SuperFullController {
         this.mainApp = mainApp;
         RoomTable.setItems(RoomData);
 
-        newMessageText.setDisable(true);
         sendMessageButton.setOpacity(0);
+        newMessageText.setDisable(true);
+        ChatUsersButton.setDisable(true);
         newMessageText.setOpacity(0);
+        ChatUsersButton.setOpacity(0);
 
         //API, через которое взаимодействуем с миром
         APISession = mainApp.getAPISession();
@@ -167,7 +172,8 @@ public class MainChatController extends SuperFullController {
         MyActionClass.onAction(ExitMenuItem);
     }
 
-    /** TODO: Нажатие на пункт "О программе"
+    /**
+     * Нажатие на пункт "О программе"
      */
     @FXML
     private void AboutMenuItemClicked(){
@@ -197,8 +203,11 @@ public class MainChatController extends SuperFullController {
 
         //Отображаем отправку сообщений
         newMessageText.setDisable(false);
+        ChatUsersButton.setDisable(false);
+        ChatUsersButton.setOpacity(1);
         sendMessageButton.setOpacity(1);
         newMessageText.setOpacity(1);
+
 
         //Выставляем id текущей комнаты
         MessageData.clear();
@@ -208,5 +217,11 @@ public class MainChatController extends SuperFullController {
             MessageTable.setItems(MessageData);
         }
         MessageTable.scrollTo(MessageData.get(MessageData.size()-1));
+    }
+
+    @FXML
+    private void ChatUsersButtonClicked(){
+        mainApp.showCurrentRoomUsers();
+        logger.info("Нажатие на button показа пользователей комнаты ");
     }
 }
