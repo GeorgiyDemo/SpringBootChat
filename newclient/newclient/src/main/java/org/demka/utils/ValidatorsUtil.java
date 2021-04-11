@@ -3,7 +3,7 @@ package org.demka.utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Validators {
+public class ValidatorsUtil {
 
     /**
      * Проверка e-mail на корректность

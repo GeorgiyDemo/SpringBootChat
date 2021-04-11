@@ -4,11 +4,11 @@ import java.io.*;
 import java.util.stream.Collectors;
 
 // Класс для работы с файлами
-public class FileProcessing {
+public class FileProcessingUtil {
 
     String fileName;
 
-    public FileProcessing(String fileName) {
+    public FileProcessingUtil(String fileName) {
         this.fileName = fileName;
 
 

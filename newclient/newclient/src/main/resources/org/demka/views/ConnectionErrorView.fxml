@@ -6,7 +6,7 @@
 
 <AnchorPane prefHeight="650.0" prefWidth="700.0" styleClass="background" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.demka.controllers.ConnectionErrorController">
     <children>
-        <Label fx:id="AppName" alignment="CENTER" contentDisplay="CENTER" layoutX="240.0" layoutY="180.0" text="Нет подключения к серверу.." textFill="WHITE" AnchorPane.bottomAnchor="180.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="180.0">
+        <Label alignment="CENTER" contentDisplay="CENTER" layoutX="240.0" layoutY="180.0" text="Нет подключения к серверу.." textFill="WHITE" AnchorPane.bottomAnchor="180.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="180.0">
             <font>
                 <Font name="Helvetica" size="24.0" />
             </font>

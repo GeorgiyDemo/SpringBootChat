@@ -44,10 +44,6 @@ public class App extends Application {
         return primaryStage;
     }
 
-    public BorderPane getRootLayout() {
-        return rootLayout;
-    }
-
     public AuthUtil getAuthUtil() {
         return authUtil;
     }

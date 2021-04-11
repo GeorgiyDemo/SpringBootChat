@@ -16,7 +16,7 @@
             </columnResizePolicy>
         </TableView>
 
-        <JFXButton fx:id="backButton" layoutX="250.0" layoutY="380.0" prefHeight="40.0" prefWidth="158.0" ripplerFill="#2491bf" text="Ок" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" onAction="#backButtonClicked"/>
+        <JFXButton onAction="#backButtonClicked" layoutX="250.0" layoutY="380.0" prefHeight="40.0" prefWidth="158.0" ripplerFill="#2491bf" text="Ок" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0"/>
 
     </children>
 </AnchorPane>

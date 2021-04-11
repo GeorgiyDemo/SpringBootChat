@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import org.demka.App;
 import org.demka.api.SuperAPI;
-import org.demka.utils.Validators;
+import org.demka.utils.ValidatorsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,10 +16,7 @@ import java.util.Map;
 public class RegistrationController extends SuperFullController {
 
     private static final Logger logger = LoggerFactory.getLogger(RegistrationController.class);
-    @FXML
-    private JFXButton backButton;
-    @FXML
-    private JFXButton regButton;
+
     @FXML
     private JFXTextField userNameTextField;
     @FXML
@@ -60,7 +57,7 @@ public class RegistrationController extends SuperFullController {
             return false;
         }
 
-        if (!Validators.emailValidator(eMail)) {
+        if (!ValidatorsUtil.emailValidator(eMail)) {
             errorString = "Некорректный e-mail";
             return false;
         }

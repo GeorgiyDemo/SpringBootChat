@@ -14,7 +14,7 @@ import org.demka.models.Room;
 import org.demka.runnable.CheckInternetRunnable;
 import org.demka.runnable.LongPollRunnable;
 import org.demka.runnable.RunnableManager;
-import org.demka.utils.MyActionClass;
+import org.demka.utils.MyActionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -133,6 +133,8 @@ public class MainChatController extends SuperFullController {
         } catch (FalseServerFlagException | EmptyAPIResponseException e) {
             e.printStackTrace();
         }
+        //Ну мало ли
+        assert roomList != null;
         for (Room currentRoom : roomList) {
 
             String currentRoomId = currentRoom.getId();
@@ -167,8 +169,8 @@ public class MainChatController extends SuperFullController {
         logger.info("MainChatController - стартанули CheckInternetRunnable с id " + thread2.getId());
 
         //Биндим действия к AboutMenuItem и ExitMenuItem
-        MyActionClass.onAction(aboutMenuItem);
-        MyActionClass.onAction(exitMenuItem);
+        MyActionUtil.onAction(aboutMenuItem);
+        MyActionUtil.onAction(exitMenuItem);
     }
 
     /**

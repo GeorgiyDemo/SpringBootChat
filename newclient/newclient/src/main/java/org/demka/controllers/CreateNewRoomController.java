@@ -122,11 +122,9 @@ public class CreateNewRoomController extends SuperPartController {
 
         ObservableList<User> selectedItems = allUsersTable.getSelectionModel().getSelectedItems();
         //Буферный список, который не изменяется
-        List<User> selectedUsers = new ArrayList<User>();
-        selectedUsers.addAll(selectedItems);
+        List<User> selectedUsers = new ArrayList<>(selectedItems);
 
-        for (int i = 0; i < selectedUsers.size(); i++) {
-            User user = selectedUsers.get(i);
+        for (User user : selectedUsers) {
             logger.info("addUserToChat - добавили пользователя " + user.getName());
             allUsersData.remove(user);
             chatUsersData.add(user);
@@ -144,11 +142,9 @@ public class CreateNewRoomController extends SuperPartController {
 
         ObservableList<User> selectedItems = chatUsersTable.getSelectionModel().getSelectedItems();
         //Буферный список, который не изменяется
-        List<User> selectedUsers = new ArrayList<User>();
-        selectedUsers.addAll(selectedItems);
+        List<User> selectedUsers = new ArrayList<>(selectedItems);
 
-        for (int i = 0; i < selectedUsers.size(); i++) {
-            User user = selectedUsers.get(i);
+        for (User user : selectedUsers) {
             logger.info("addUserToChat - удалили пользователя " + user.getName());
             chatUsersData.remove(user);
             allUsersData.add(user);

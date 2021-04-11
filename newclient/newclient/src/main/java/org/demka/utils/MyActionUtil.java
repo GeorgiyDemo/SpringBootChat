@@ -3,7 +3,7 @@ package org.demka.utils;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 
-public class MyActionClass {
+public class MyActionUtil {
     public static void onAction(Menu menu) {
         final MenuItem menuItem = new MenuItem();
         menu.getItems().add(menuItem);

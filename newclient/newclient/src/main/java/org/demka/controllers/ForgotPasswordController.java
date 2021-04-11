@@ -6,7 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import org.demka.App;
 import org.demka.api.SuperAPI;
-import org.demka.utils.Validators;
+import org.demka.utils.ValidatorsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -93,7 +93,7 @@ public class ForgotPasswordController extends SuperFullController {
             return false;
         }
 
-        if (!Validators.emailValidator(eMail)) {
+        if (!ValidatorsUtil.emailValidator(eMail)) {
             errorString = "Некорректный e-mail";
             return false;
         }

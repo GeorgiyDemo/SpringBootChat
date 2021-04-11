@@ -8,15 +8,16 @@ import org.slf4j.LoggerFactory;
 
 public class SuccessActionController extends SuperFullController {
     private static final Logger logger = LoggerFactory.getLogger(RegistrationController.class);
+
+
+    @FXML
+    private Label mainText;
+
     /**
      * Метод инициализации (вызывается с Main)
      *
      * @param app
      */
-
-    @FXML
-    private Label mainText;
-
     @Override
     public void initialize(App app) {
         this.app = app;

@@ -2,7 +2,7 @@ package org.demka.models;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import org.demka.utils.UNIXTime2String;
+import org.demka.utils.UNIXTimeUtil;
 
 public class Message {
 
@@ -18,7 +18,7 @@ public class Message {
         this.userName = new SimpleStringProperty(userName);
         this.text = new SimpleStringProperty(text);
         this.roomId = new SimpleStringProperty(roomId);
-        this.timeCreated = new SimpleStringProperty(UNIXTime2String.convert(timeCreated));
+        this.timeCreated = new SimpleStringProperty(UNIXTimeUtil.convert(timeCreated));
         this.id = new SimpleStringProperty(id);
     }
 

@@ -1,13 +1,12 @@
-.background{
+.background {
     -fx-background-color: #202234;
 }
 
-.titled-pane{
+.titled-pane {
     -fx-background-color: transparent;
 }
 
-.titled-pane > .title
-{
+.titled-pane > .title {
     -fx-background-color: transparent;
     -fx-border-color: rgba(255, 255, 255, 0.5);
     -fx-font-weight: bold;
@@ -15,8 +14,8 @@
     -fx-background-radius: 1em 1em 0 0;
 
 }
-.titled-pane > *.content
-{
+
+.titled-pane > *.content {
     -fx-border-color: rgba(255, 255, 255, 0.5);
     -fx-background-color: #202234;
     -fx-border-radius: 0 0 1em 1em;
@@ -24,8 +23,7 @@
 }
 
 
-.titled-pane > .title > .text
-{
+.titled-pane > .title > .text {
     -fx-fill: WHITE;
 }
 
@@ -34,8 +32,7 @@
     -fx-padding: 4 0 4 0;
 }
 
-.split-pane
-{
+.split-pane {
     -fx-background-color: -fx-control-inner-background;
     -fx-background-insets: 0;
     -fx-padding: 0;
@@ -52,7 +49,7 @@
     -fx-background-radius: 5em;
 }
 
-.chat-users-button{
+.chat-users-button {
 
     -fx-background-color: #393f51;
     -fx-background-image: url('images/group-icon.png');
@@ -61,7 +58,7 @@
     -fx-background-position: center;
 }
 
-.chat-users-button:hover{
+.chat-users-button:hover {
     -fx-background: #202234;
     -fx-opacity: 0.5;
 }
@@ -77,6 +74,7 @@
     -fx-border-width: 2.0;
 
 }
+
 .menu-bar .label {
     -fx-text-fill: white;
     -fx-font-weight: bold;
@@ -94,19 +92,15 @@
     -fx-background-radius: 3em;
 }
 
-
-
-/*
-Таблица
- */
-
 .table-view {
     -fx-background-color: transparent;
     -fx-table-cell-border-color: transparent;
 }
+
 .table-view .column-header-background .filler {
     -fx-background-color: transparent;
 }
+
 .table-view .corner {
     -fx-background-color: transparent;
 }
@@ -115,12 +109,12 @@
     -fx-background-color: transparent;
 }
 
-.table-view .cell{
+.table-view .cell {
     -fx-background-color: transparent;
 }
 
-.root .table-view{
-    -fx-control-inner-background:  #202234;
+.root .table-view {
+    -fx-control-inner-background: #202234;
 }
 
 .table-row-cell:selected .table-cell {
@@ -136,6 +130,7 @@
 .table-view .column-header-background .filler {
     -fx-background-color: #393f51;
 }
+
 .table-view .column-header .label {
     -fx-text-fill: white;
     -fx-font-weight: bold;
@@ -155,51 +150,51 @@
 Scrollbar
  */
 .scroll-bar:horizontal .track,
-.scroll-bar:vertical .track{
-    -fx-background-color :transparent;
-    -fx-border-color :transparent;
-    -fx-background-radius : 0.0em;
-    -fx-border-radius :2.0em;
+.scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0.0em;
+    -fx-border-radius: 2.0em;
 }
 
-.scroll-bar:horizontal .increment-button ,
+.scroll-bar:horizontal .increment-button,
 .scroll-bar:horizontal .decrement-button {
-    -fx-background-color :transparent;
-    -fx-background-radius : 0.0em;
-    -fx-padding :0.0 0.0 10.0 0.0;
+    -fx-background-color: transparent;
+    -fx-background-radius: 0.0em;
+    -fx-padding: 0.0 0.0 10.0 0.0;
 }
 
-.scroll-bar:vertical .increment-button ,
+.scroll-bar:vertical .increment-button,
 .scroll-bar:vertical .decrement-button {
-    -fx-background-color :transparent;
-    -fx-background-radius : 0.0em;
-    -fx-padding :0.0 10.0 0.0 0.0;
+    -fx-background-color: transparent;
+    -fx-background-radius: 0.0em;
+    -fx-padding: 0.0 10.0 0.0 0.0;
 }
 
 .scroll-bar .increment-arrow,
-.scroll-bar .decrement-arrow{
-    -fx-shape : " ";
-    -fx-padding :0.15em 0.0;
+.scroll-bar .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0.15em 0.0;
 }
 
 .scroll-bar:vertical .increment-arrow,
-.scroll-bar:vertical .decrement-arrow{
-    -fx-shape : " ";
-    -fx-padding :0.0 0.15em;
+.scroll-bar:vertical .decrement-arrow {
+    -fx-shape: " ";
+    -fx-padding: 0.0 0.15em;
 }
 
 .scroll-bar:vertical .thumb,
 .scroll-bar:vertical .thumb:hover {
-    -fx-background-color : #414352;
-    -fx-background-insets : 2.0, 0.0, 0.0;
-    -fx-background-radius : 2.0em;
+    -fx-background-color: #414352;
+    -fx-background-insets: 2.0, 0.0, 0.0;
+    -fx-background-radius: 2.0em;
 }
 
 .scroll-bar:horizontal .thumb,
-.scroll-bar:horizontal .thumb:hover{
-    -fx-background-color : transparent;
-    -fx-background-insets : 2.0, 0.0, 0.0;
-    -fx-background-radius : 2.0em;
+.scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: transparent;
+    -fx-background-insets: 2.0, 0.0, 0.0;
+    -fx-background-radius: 2.0em;
 }
 
 
@@ -214,6 +209,7 @@ Scrollbar
 .scroll-bar .decrement-button {
     visibility: hidden;
 }
+
 .scroll-bar:horizontal,
 .scroll-bar:vertical {
     -fx-background-color: transparent;
@@ -223,10 +219,12 @@ Scrollbar
 .scroll-bar:vertical .track-background {
     visibility: hidden;
 }
+
 .scroll-bar:horizontal .track,
 .scroll-bar:vertical .track {
     visibility: hidden;
 }
+
 .hide-thumb .scroll-bar:horizontal .thumb,
 .hide-thumb .scroll-bar:vertical .thumb {
     -fx-background-color: transparent;

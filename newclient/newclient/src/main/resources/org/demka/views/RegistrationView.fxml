@@ -13,7 +13,7 @@
             </font>
         </Label>
 
-        <JFXButton fx:id="backButton" layoutX="14.0" layoutY="36.0" onAction="#backButtonClicked" prefHeight="46.0" prefWidth="40.0" ripplerFill="#2491bf" text="&lt;-" textFill="WHITE" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0" />
+        <JFXButton layoutX="14.0" layoutY="36.0" onAction="#backButtonClicked" prefHeight="46.0" prefWidth="40.0" ripplerFill="#2491bf" text="&lt;-" textFill="WHITE" AnchorPane.leftAnchor="15.0" AnchorPane.topAnchor="15.0" />
 
         <Label fx:id="errorDescription" alignment="CENTER" contentDisplay="CENTER" layoutX="310.0" layoutY="103.0" text="ОПИСАНИЕ ОШИБКИ" textFill="WHITE" AnchorPane.leftAnchor="180.0" AnchorPane.rightAnchor="180.0" AnchorPane.topAnchor="115.0">
             <font>
@@ -21,7 +21,7 @@
             </font>
         </Label>
 
-        <JFXButton fx:id="regButton" layoutX="289.0" layoutY="564.0" onAction="#regButtonClicked" prefHeight="40.0" prefWidth="158.0" ripplerFill="#2491bf" text="Зарегистрироваться" textFill="WHITE" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0" />
+        <JFXButton layoutX="289.0" layoutY="564.0" onAction="#regButtonClicked" prefHeight="40.0" prefWidth="158.0" ripplerFill="#2491bf" text="Зарегистрироваться" textFill="WHITE" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0" />
 
         <TitledPane animated="false" collapsible="false" layoutX="62.0" layoutY="361.0" prefHeight="173.0" prefWidth="533.0" text="Пароли" AnchorPane.leftAnchor="65.0" AnchorPane.rightAnchor="65.0">
             <content>

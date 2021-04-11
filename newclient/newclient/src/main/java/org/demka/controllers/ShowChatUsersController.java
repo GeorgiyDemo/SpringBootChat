@@ -26,7 +26,6 @@ public class ShowChatUsersController extends SuperPartController {
     private TableView<User> chatUserTable;
     @FXML
     private TableColumn<User, String> chatUserNameColumn;
-    private MyAPI myAPI;
 
     /**
      * Метод инициализации (вызывается с Main)
@@ -38,7 +37,7 @@ public class ShowChatUsersController extends SuperPartController {
     public void initialize(App app, Stage dialogStage) {
         this.app = app;
         this.dialogStage = dialogStage;
-        myAPI = app.getMyAPI();
+        MyAPI myAPI = app.getMyAPI();
 
         chatUserTable.setItems(chatUserData);
         chatUserNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());

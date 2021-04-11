@@ -5,12 +5,12 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.demka.exceptions.EmptyAPIResponseException;
 import org.demka.exceptions.FalseServerFlagException;
-import org.demka.exceptions.LongpollListenerException;
+import org.demka.exceptions.LongPollListenerException;
 import org.demka.exceptions.RoomNotFoundException;
 import org.demka.models.Message;
 import org.demka.models.Room;
 import org.demka.models.User;
-import org.demka.utils.String2Hash;
+import org.demka.utils.String2HashUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,8 +35,8 @@ public interface SuperAPI {
         String URL = String.format("%s/user/reset", serverURL);
         Map<String, String> params = new HashMap<>();
         params.put("email", login);
-        params.put("newPassword", String2Hash.convert(newPassword));
-        params.put("masterKey", String2Hash.convert(masterKey));
+        params.put("newPassword", String2HashUtil.convert(newPassword));
+        params.put("masterKey", String2HashUtil.convert(masterKey));
 
         Gson gson = new Gson();
         String jsonString = gson.toJson(params);
@@ -80,8 +80,8 @@ public interface SuperAPI {
         Map<String, String> params = new HashMap<>();
         params.put("login", login);
         params.put("username", name);
-        params.put("password", String2Hash.convert(password));
-        params.put("masterKey", String2Hash.convert(masterKey));
+        params.put("password", String2HashUtil.convert(password));
+        params.put("masterKey", String2HashUtil.convert(masterKey));
         String response = HTTPRequest.sendPOST(URL, params);
         Map<String, Object> resultMap = new HashMap<>();
 
@@ -215,7 +215,7 @@ public interface SuperAPI {
      * Слушатель лонгпула
      *
      * @return
-     * @throws LongpollListenerException
+     * @throws LongPollListenerException
      */
-    List<Message> longPollListener() throws LongpollListenerException;
+    List<Message> longPollListener() throws LongPollListenerException;
 }

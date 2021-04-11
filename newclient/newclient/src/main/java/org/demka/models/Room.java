@@ -23,9 +23,9 @@ public class Room {
         this.time_created = new SimpleIntegerProperty(time_created);
         ObservableList<String> userData = FXCollections.observableArrayList();
         userData.addAll(users);
-        this.users = new SimpleListProperty<String>(userData);
+        this.users = new SimpleListProperty<>(userData);
         this.id = new SimpleStringProperty(id);
-        this.messages = new ArrayList<Message>();
+        this.messages = new ArrayList<>();
     }
 
     public StringProperty getNameProperty() {

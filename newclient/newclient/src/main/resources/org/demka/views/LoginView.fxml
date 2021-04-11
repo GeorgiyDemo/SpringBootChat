@@ -19,7 +19,7 @@
                       <Font size="11.0" />
                   </font>
               </Hyperlink>
-              <JFXButton fx:id="loginButton" onAction="#mainButtonClick" prefHeight="40.0" prefWidth="143.0" ripplerFill="#2491bf" text="Войти" textFill="WHITE" AnchorPane.bottomAnchor="47.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+              <JFXButton onAction="#mainButtonClick" prefHeight="40.0" prefWidth="143.0" ripplerFill="#2491bf" text="Войти" textFill="WHITE" AnchorPane.bottomAnchor="47.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
               <Label alignment="CENTER" contentDisplay="CENTER" text="DEMKA CHAT" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                   <font>
                       <Font name="Helvetica" size="24.0" />

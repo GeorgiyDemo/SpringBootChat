@@ -5,7 +5,7 @@ import java.io.IOException;
 
 public class AuthUtil {
 
-    private final FileProcessing fileProcessing;
+    private final FileProcessingUtil fileProcessingUtil;
 
     public AuthUtil() {
 
@@ -17,15 +17,15 @@ public class AuthUtil {
             e.printStackTrace();
         }
 
-        this.fileProcessing = new FileProcessing(pathStr);
+        this.fileProcessingUtil = new FileProcessingUtil(pathStr);
     }
 
     public String readKey() {
-        return fileProcessing.DataRead();
+        return fileProcessingUtil.DataRead();
     }
 
     public void writeKey(String key) {
-        fileProcessing.DataWrite(key);
+        fileProcessingUtil.DataWrite(key);
     }
 
 

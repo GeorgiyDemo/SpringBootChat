@@ -35,7 +35,7 @@
                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                             </columnResizePolicy>
                         </TableView>
-                  <JFXButton fx:id="removeUserChat" onAction="#removeUserFromChat" text="Удалить" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
+                  <JFXButton onAction="#removeUserFromChat" text="Удалить" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" />
                     </children>
                 </AnchorPane>
             </items>
@@ -43,7 +43,7 @@
             <JFXTextField fx:id="chatName" layoutX="14.0" layoutY="14.0" prefHeight="27.0" prefWidth="287.0" promptText="Введите название диалога" unFocusColor="WHITE" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="165.0" AnchorPane.topAnchor="10.0" />
       <HBox prefHeight="10.0" prefWidth="144.0" spacing="5.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
          <children>
-                  <JFXButton fx:id="cancelButton" onAction="#cancelButtonClicked" text="Отмена" />
+                  <JFXButton onAction="#cancelButtonClicked" text="Отмена" />
             <JFXButton fx:id="createRoomButton" disable="true" layoutX="10.0" layoutY="10.0" onAction="#createRoomButtonClicked" text="Создать" />
          </children>
       </HBox>

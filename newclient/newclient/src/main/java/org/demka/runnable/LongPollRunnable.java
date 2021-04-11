@@ -7,7 +7,7 @@ import org.demka.api.MyAPI;
 import org.demka.controllers.ConnectionErrorController;
 import org.demka.exceptions.EmptyAPIResponseException;
 import org.demka.exceptions.FalseServerFlagException;
-import org.demka.exceptions.LongpollListenerException;
+import org.demka.exceptions.LongPollListenerException;
 import org.demka.exceptions.RoomNotFoundException;
 import org.demka.models.Message;
 import org.demka.models.Room;
@@ -105,8 +105,8 @@ public class LongPollRunnable implements Runnable {
             }
 
             //Если необходимо заново пройти авторизацию - проходим
-            catch (LongpollListenerException e) {
-                System.out.println(e);
+            catch (LongPollListenerException e) {
+                e.printStackTrace();
                 try {
                     apiSession.getLongPollServer();
                 } catch (EmptyAPIResponseException | FalseServerFlagException newE) {
