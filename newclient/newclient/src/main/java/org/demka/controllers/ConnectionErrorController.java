@@ -9,13 +9,13 @@ public class ConnectionErrorController extends SuperFullController {
     /**
      * Метод инициализации (вызывается с Main)
      *
-     * @param mainApp
+     * @param app
      */
     public static boolean isActive = false;
 
     @Override
-    public void initialize(App mainApp) {
-        this.mainApp = mainApp;
+    public void initialize(App app) {
+        this.app = app;
         isActive = true;
     }
 }

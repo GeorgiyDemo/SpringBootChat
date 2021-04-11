@@ -36,18 +36,18 @@ public class LoginController extends SuperFullController {
             logger.info("Попытка входа без ввода данных");
         } else {
             //Пытаемся авторизоваться
-            MyAPI bufSession = new MyAPI(login, password, this.mainApp);
+            MyAPI bufSession = new MyAPI(login, password, this.app);
             //Если удалось произвести авторизацию
             if (bufSession.getIsAuthenticated()) {
-                mainApp.setAPISession(bufSession);
+                app.setAPISession(bufSession);
                 //Если пользователь выбрал "Запомнить меня"
                 if (AutoLoginCheckBox.isSelected()) {
-                    AuthUtil authUtil = mainApp.getAuthUtil();
+                    AuthUtil authUtil = app.getAuthUtil();
                     authUtil.writeKey(bufSession.getUserKey());
                 }
 
-                mainApp.getPrimaryStage().setTitle("DEMKAChat - Сообщения [" + bufSession.getUserName() + "]");
-                mainApp.MainChat();
+                app.getPrimaryStage().setTitle("DEMKAChat - Сообщения [" + bufSession.getUserName() + "]");
+                app.MainChat();
                 logger.info("Пользователь успешно авторизовался");
             } else {
                 WrongAuth.setOpacity(1);
@@ -61,23 +61,23 @@ public class LoginController extends SuperFullController {
 
     @FXML
     public void regLinkClicked() {
-        mainApp.UserRegistration();
+        app.UserRegistration();
         logger.info("Переход на форму регистрации");
     }
 
     @FXML
     public void forgotPasswordLinkClicked() {
-        mainApp.ForgotPassword();
+        app.ForgotPassword();
         logger.info("Переход на форму восстановления пароля");
     }
 
     /**
      * Метод инициализации (вызывается с Main)
      *
-     * @param mainApp
+     * @param app
      */
     @Override
-    public void initialize(App mainApp) {
-        this.mainApp = mainApp;
+    public void initialize(App app) {
+        this.app = app;
     }
 }

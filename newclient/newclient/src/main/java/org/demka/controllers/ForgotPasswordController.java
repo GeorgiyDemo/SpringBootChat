@@ -28,17 +28,17 @@ public class ForgotPasswordController extends SuperFullController {
     /**
      * Метод инициализации (вызывается с Main)
      *
-     * @param mainApp
+     * @param app
      */
     @Override
-    public void initialize(App mainApp) {
+    public void initialize(App app) {
         ErrorDescription.setOpacity(0.0);
-        this.mainApp = mainApp;
+        this.app = app;
     }
 
     @FXML
     private void backButtonClicked() {
-        mainApp.UserAuthorisation();
+        app.UserAuthorisation();
         logger.info("Выход из формы смены пароля");
     }
 
@@ -58,7 +58,7 @@ public class ForgotPasswordController extends SuperFullController {
                 ErrorDescription.setOpacity(0.0);
                 ErrorDescription.setText("");
                 logger.info("Успешно сменили пароль пользователя");
-                mainApp.SuccessUserAction("Успешная смена пароля", "Успешно сменили пароль!");
+                app.SuccessUserAction("Успешная смена пароля", "Успешно сменили пароль!");
             } else {
                 errorString = (String) regResult.get("error");
                 ErrorDescription.setText(errorString);

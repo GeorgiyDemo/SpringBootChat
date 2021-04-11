@@ -11,21 +11,21 @@ public class SuccessActionController extends SuperFullController {
     /**
      * Метод инициализации (вызывается с Main)
      *
-     * @param mainApp
+     * @param app
      */
 
     @FXML
     private Label MainText;
 
     @Override
-    public void initialize(App mainApp) {
-        this.mainApp = mainApp;
+    public void initialize(App app) {
+        this.app = app;
     }
 
     @FXML
     private void okButtonClicked() {
         logger.info("Нажатие на button возврата на формы авторизации");
-        mainApp.UserAuthorisation();
+        app.UserAuthorisation();
     }
 
     public void setMainText(String text) {

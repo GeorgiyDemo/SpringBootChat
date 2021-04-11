@@ -6,12 +6,12 @@ import org.demka.App;
  * Класс, от которого наследуются все контроллеры, layout которых открывается на всё окно
  */
 public abstract class SuperFullController {
-    protected App mainApp;
+    protected App app;
 
     /**
      * Метод инициализации (вызывается с Main)
      *
-     * @param mainApp
+     * @param app
      */
-    public abstract void initialize(App mainApp);
+    public abstract void initialize(App app);
 }

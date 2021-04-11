@@ -18,18 +18,19 @@ import java.net.URISyntaxException;
 public class AboutMeController extends SuperPartController {
 
     private static final Logger logger = LoggerFactory.getLogger(AboutMeController.class);
+
     @FXML
-    private Hyperlink SiteLink;
+    private Hyperlink siteLink;
 
     /**
      * Метод инициализации (вызывается с Main)
      *
-     * @param mainApp
+     * @param app
      * @param dialogStage
      */
     @Override
-    public void initialize(App mainApp, Stage dialogStage) {
-        this.mainApp = mainApp;
+    public void initialize(App app, Stage dialogStage) {
+        this.app = app;
         this.dialogStage = dialogStage;
     }
 
@@ -41,7 +42,7 @@ public class AboutMeController extends SuperPartController {
 
     @FXML
     private void siteLinkClicked() {
-        String linkText = SiteLink.getText();
+        String linkText = siteLink.getText();
         logger.info("Нажатие на ссылку " + linkText);
         if (Desktop.isDesktopSupported()) {
             try {

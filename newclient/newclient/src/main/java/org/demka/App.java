@@ -10,7 +10,6 @@ import javafx.stage.Stage;
 import org.demka.api.MyAPI;
 import org.demka.controllers.*;
 import org.demka.utils.AuthUtil;
-import org.demka.utils.String2Hash;
 
 import java.io.IOException;
 
@@ -157,7 +156,7 @@ public class App extends Application {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(App.class.getResource("views/AboutMeView.fxml"));
-            AnchorPane page = (AnchorPane) loader.load();
+            AnchorPane page = loader.load();
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle("О программе");
@@ -168,7 +167,6 @@ public class App extends Application {
             AboutMeController controller = loader.getController();
             controller.initialize(this, dialogStage);
             dialogStage.showAndWait();
-            ;
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -214,7 +212,7 @@ public class App extends Application {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(App.class.getResource("views/CreateNewRoomView.fxml"));
-            AnchorPane page = (AnchorPane) loader.load();
+            AnchorPane page = loader.load();
 
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Создание диалога");
@@ -225,7 +223,6 @@ public class App extends Application {
             CreateNewRoomController controller = loader.getController();
             controller.initialize(this, dialogStage);
             dialogStage.showAndWait();
-            ;
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -239,7 +236,7 @@ public class App extends Application {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(App.class.getResource("views/ShowChatUsersView.fxml"));
-            AnchorPane page = (AnchorPane) loader.load();
+            AnchorPane page = loader.load();
             Stage dialogStage = new Stage();
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initOwner(primaryStage);
@@ -248,7 +245,6 @@ public class App extends Application {
             ShowChatUsersController controller = loader.getController();
             controller.initialize(this, dialogStage);
             dialogStage.showAndWait();
-            ;
 
         } catch (IOException e) {
             e.printStackTrace();

@@ -25,20 +25,20 @@ public class ShowChatUsersController extends SuperPartController {
     private TableView<User> ChatUserTable;
     @FXML
     private TableColumn<User, String> ChatUserNameColumn;
-    private ObservableList<User> ChatUserData = FXCollections.observableArrayList();
+    private final ObservableList<User> ChatUserData = FXCollections.observableArrayList();
     private MyAPI APISession;
 
     /**
      * Метод инициализации (вызывается с Main)
      *
-     * @param mainApp
+     * @param app
      * @param dialogStage
      */
     @Override
-    public void initialize(App mainApp, Stage dialogStage) {
-        this.mainApp = mainApp;
+    public void initialize(App app, Stage dialogStage) {
+        this.app = app;
         this.dialogStage = dialogStage;
-        APISession = mainApp.getAPISession();
+        APISession = app.getAPISession();
 
         ChatUserTable.setItems(ChatUserData);
         ChatUserNameColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());

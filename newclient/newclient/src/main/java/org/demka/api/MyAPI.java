@@ -24,7 +24,7 @@ import java.util.Map;
 
 public class MyAPI implements SuperAPI {
 
-    private App mainApp;
+    private final App app;
 
     private String userName;
     private String userKey;
@@ -37,9 +37,14 @@ public class MyAPI implements SuperAPI {
 
     private boolean isAuthenticated;
 
-    //Авторизация через пару логин/пароль
-    public MyAPI(String login, String password, App mainApp) {
-        this.mainApp = mainApp;
+    /**
+     * Авторизация через пару логин/пароль
+     * @param login - логин пользователя
+     * @param password - пароль пользователя
+     * @param app - экземпляр главного приложения
+     */
+    public MyAPI(String login, String password, App app) {
+        this.app = app;
         try {
             isAuthenticated = this.auth(login, password);
         } catch (EmptyAPIResponseException e) {
@@ -48,9 +53,13 @@ public class MyAPI implements SuperAPI {
         logger.info("Инициализировали MyAPI");
     }
 
-    //Авторизация через ключ
-    public MyAPI(String key, App mainApp) {
-        this.mainApp = mainApp;
+    /**
+     * Авторизация через ключ
+     * @param key - ключ API приложения
+     * @param app - экземпляр главного приложения
+     */
+    public MyAPI(String key, App app) {
+        this.app = app;
         try {
             isAuthenticated = this.auth(key);
         } catch (EmptyAPIResponseException e) {
@@ -62,7 +71,8 @@ public class MyAPI implements SuperAPI {
     /**
      * Авторизация пользователя в системе
      * с помощью пары логин-пароль
-     * @param login - логин пользователя
+     *
+     * @param login    - логин пользователя
      * @param password - пароль пользоваетля
      * @return
      * @throws EmptyAPIResponseException
@@ -89,7 +99,7 @@ public class MyAPI implements SuperAPI {
             return false;
 
         }
-        throw new EmptyAPIResponseException(mainApp, "Auth - получили пустой ответ от сервера");
+        throw new EmptyAPIResponseException(app, "Auth - получили пустой ответ от сервера");
     }
 
     /**
@@ -120,11 +130,12 @@ public class MyAPI implements SuperAPI {
             logger.info("Auth - Авторизация с помощью ключа API не удалась");
             return false;
         }
-        throw new EmptyAPIResponseException(mainApp, "Auth - получили пустой ответ от сервера");
+        throw new EmptyAPIResponseException(app, "Auth - получили пустой ответ от сервера");
     }
 
     /**
      * Получение всех чат-комнат пользователя
+     *
      * @return
      * @throws FalseServerFlagException
      * @throws EmptyAPIResponseException
@@ -170,12 +181,13 @@ public class MyAPI implements SuperAPI {
                 throw new FalseServerFlagException(URL, response, "getUserRooms - Не удалось получить список комнат для пользователя " + userId);
             }
         } else {
-            throw new EmptyAPIResponseException(mainApp, "getUserRooms - получили пустой ответ от сервера");
+            throw new EmptyAPIResponseException(app, "getUserRooms - получили пустой ответ от сервера");
         }
     }
 
     /**
      * Получение объекта комнаты, в которой состоит пользователь, по её id
+     *
      * @param roomId - идентификатор комнаты
      * @return
      * @throws RoomNotFoundException
@@ -207,13 +219,14 @@ public class MyAPI implements SuperAPI {
                 throw new RoomNotFoundException("getRoomInfo - Запрашиваемой комнаты с id " + roomId + " не существует");
             }
         } else {
-            throw new EmptyAPIResponseException(mainApp, "getRoomInfo - получили пустой ответ от сервера");
+            throw new EmptyAPIResponseException(app, "getRoomInfo - получили пустой ответ от сервера");
         }
 
     }
 
     /**
      * Получение истории сообщений по конкретной комнате
+     *
      * @param roomId - идентификатор комнаты
      * @return
      * @throws FalseServerFlagException
@@ -253,13 +266,14 @@ public class MyAPI implements SuperAPI {
                 throw new FalseServerFlagException(URL, response, "getRoomMessagesHistory - Не удалось получить список сообщений для комнаты " + roomId);
             }
         } else {
-            throw new EmptyAPIResponseException(mainApp, "getRoomMessagesHistory - Получили пустой ответ от сервера");
+            throw new EmptyAPIResponseException(app, "getRoomMessagesHistory - Получили пустой ответ от сервера");
         }
     }
 
     /**
      * Создание комнаты
-     * @param roomName - название комнаты
+     *
+     * @param roomName    - название комнаты
      * @param usersString - строка с идентификаторами пользователей-участинков комнаты
      * @return
      * @throws FalseServerFlagException
@@ -287,7 +301,7 @@ public class MyAPI implements SuperAPI {
                 throw new FalseServerFlagException(URL, response, "createRoom - Не удалось создать новую комнату");
             }
         } else {
-            throw new EmptyAPIResponseException(mainApp, "createRoom - Получили пустой ответ от сервера");
+            throw new EmptyAPIResponseException(app, "createRoom - Получили пустой ответ от сервера");
         }
     }
 
@@ -332,12 +346,13 @@ public class MyAPI implements SuperAPI {
                 throw new FalseServerFlagException(URL, response, "getUsers - не удалось получить пользователей");
             }
         } else {
-            throw new EmptyAPIResponseException(mainApp, "getUsers - получили пустой ответ от сервера");
+            throw new EmptyAPIResponseException(app, "getUsers - получили пустой ответ от сервера");
         }
     }
 
     /**
      * Получение объектов пользователей по id комнаты, в которой они состоят
+     *
      * @param roomId - идентификатор комнаты
      * @return
      * @throws FalseServerFlagException
@@ -369,12 +384,13 @@ public class MyAPI implements SuperAPI {
                 throw new FalseServerFlagException(URL, response, "getUsersByRoom - Не удалось получить список пользоватлеей для комнаты");
             }
         } else {
-            throw new EmptyAPIResponseException(mainApp, "getUsersByRoom - получили пустой ответ от сервера");
+            throw new EmptyAPIResponseException(app, "getUsersByRoom - получили пустой ответ от сервера");
         }
     }
 
     /**
      * Отправка сообщения в текущую комнату
+     *
      * @param text - текст сообщения
      * @return
      * @throws FalseServerFlagException
@@ -413,7 +429,7 @@ public class MyAPI implements SuperAPI {
             }
 
         } else {
-            throw new EmptyAPIResponseException(mainApp, "writeMessage - получили пустой ответ от сервера");
+            throw new EmptyAPIResponseException(app, "writeMessage - получили пустой ответ от сервера");
         }
 
     }
@@ -445,7 +461,7 @@ public class MyAPI implements SuperAPI {
                 throw new FalseServerFlagException(URL, response, "getLongpollServer - Не удалось получить конфиг, не инициализировались");
             }
         } else {
-            throw new EmptyAPIResponseException(mainApp, "getLongpollServer - Получили пустой ответ от сервера");
+            throw new EmptyAPIResponseException(app, "getLongpollServer - Получили пустой ответ от сервера");
         }
     }
 

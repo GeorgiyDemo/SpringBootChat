@@ -22,8 +22,8 @@ import java.util.List;
 
 public class MainChatController extends SuperFullController {
     private static final Logger logger = LoggerFactory.getLogger(MainChatController.class);
-    private ObservableList<Room> RoomData = FXCollections.observableArrayList();
-    private ObservableList<Message> MessageData = FXCollections.observableArrayList();
+    private final ObservableList<Room> RoomData = FXCollections.observableArrayList();
+    private final ObservableList<Message> MessageData = FXCollections.observableArrayList();
     private MyAPI APISession;
     @FXML
     private TableView<Room> RoomTable;
@@ -77,18 +77,18 @@ public class MainChatController extends SuperFullController {
 
     @FXML
     private void createRoomButtonClicked() {
-        mainApp.NewRoom();
+        app.NewRoom();
     }
 
 
     /**
      * Метод инициализации (вызывается с Main)
      *
-     * @param mainApp
+     * @param app
      */
     @Override
-    public void initialize(App mainApp) {
-        this.mainApp = mainApp;
+    public void initialize(App app) {
+        this.app = app;
         RoomTable.setItems(RoomData);
 
         sendMessageButton.setOpacity(0);
@@ -98,7 +98,7 @@ public class MainChatController extends SuperFullController {
         ChatUsersButton.setOpacity(0);
 
         //API, через которое взаимодействуем с миром
-        APISession = mainApp.getAPISession();
+        APISession = app.getAPISession();
 
         //Обработчик нажатия на комнату
         RoomTable.getSelectionModel().selectedItemProperty().addListener(
@@ -153,14 +153,14 @@ public class MainChatController extends SuperFullController {
         //Запускаем отдельный поток, который будет:
         // Добавлять новую комнату в RoomData, если пришло обновление по комнате, id которой нет в RoomData
         // Добавлять в определенный элемент room.addMessage() новое сообщение, которое прилетело через лонгпул
-        LongPollRunnable runnable1 = new LongPollRunnable(RoomData, MessageData, APISession, mainApp);
+        LongPollRunnable runnable1 = new LongPollRunnable(RoomData, MessageData, APISession, app);
         Thread thread1 = new Thread(runnable1, "LongPoll thread");
         RunnableManager.threadsList.add(thread1);
         thread1.start();
         logger.info("MainChatController - стартанули LongPollRunnable с id " + thread1.getId());
 
         //Поток, который проверяет доступонсть интернета
-        CheckInternetRunnable runnable2 = new CheckInternetRunnable(mainApp);
+        CheckInternetRunnable runnable2 = new CheckInternetRunnable(app);
         Thread thread2 = new Thread(runnable2, "Check internet connection thread");
         RunnableManager.threadsList.add(thread2);
         thread2.start();
@@ -177,7 +177,7 @@ public class MainChatController extends SuperFullController {
     @FXML
     private void AboutMenuItemClicked() {
         logger.info("Нажатие на button 'О программе'");
-        mainApp.AboutMe();
+        app.AboutMe();
     }
 
     /**
@@ -188,10 +188,10 @@ public class MainChatController extends SuperFullController {
         //Останавливаем все потоки (лонгпул и проверка интернета)
         RunnableManager.interruptAll();
         //Удаляем ключ авторизации
-        mainApp.getAuthUtil().writeKey("");
+        app.getAuthUtil().writeKey("");
         MainMenuBar.setDisable(true);
         logger.info("Осуществлен выход из профиля");
-        mainApp.myStart(mainApp.getPrimaryStage());
+        app.myStart(app.getPrimaryStage());
     }
 
     /**
@@ -221,7 +221,7 @@ public class MainChatController extends SuperFullController {
 
     @FXML
     private void ChatUsersButtonClicked() {
-        mainApp.showCurrentRoomUsers();
+        app.showCurrentRoomUsers();
         logger.info("Нажатие на button показа пользователей комнаты ");
     }
 }

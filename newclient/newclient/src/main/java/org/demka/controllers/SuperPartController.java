@@ -7,14 +7,14 @@ import org.demka.App;
  * Класс, от которого наследуются все контроллеры, layout которых открывается на всё окно
  */
 public abstract class SuperPartController {
-    protected App mainApp;
+    protected App app;
     protected Stage dialogStage;
 
     /**
      * Метод инициализации (вызывается с Main)
      *
-     * @param mainApp
+     * @param app
      * @param dialogStage
      */
-    public abstract void initialize(App mainApp, Stage dialogStage);
+    public abstract void initialize(App app, Stage dialogStage);
 }

@@ -99,7 +99,7 @@ public class RegistrationController extends SuperFullController {
                 ErrorDescription.setOpacity(0.0);
                 ErrorDescription.setText("");
                 logger.info("Успешно зарегистрировали пользователя");
-                mainApp.SuccessUserAction("Успешная регистрация", "Регистрация прошла успешно!");
+                app.SuccessUserAction("Успешная регистрация", "Регистрация прошла успешно!");
             } else {
                 errorString = (String) regResult.get("error");
                 ErrorDescription.setText(errorString);
@@ -120,17 +120,17 @@ public class RegistrationController extends SuperFullController {
     @FXML
     private void backButtonClicked() {
         logger.info("Возврат в меню авторизации");
-        mainApp.UserAuthorisation();
+        app.UserAuthorisation();
     }
 
     /**
      * Метод инициализации (вызывается с Main)
      *
-     * @param mainApp
+     * @param app
      */
     @Override
-    public void initialize(App mainApp) {
-        this.mainApp = mainApp;
+    public void initialize(App app) {
+        this.app = app;
         ErrorDescription.setOpacity(0.0);
     }
 }

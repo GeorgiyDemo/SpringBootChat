@@ -10,14 +10,12 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.URL;
-import java.net.URLConnection;
 
 public class CheckInternetRunnable implements Runnable {
 
 
     private static final Logger logger = LoggerFactory.getLogger(CheckInternetRunnable.class);
-    private App app;
+    private final App app;
 
     public CheckInternetRunnable(App app) {
         this.app = app;
@@ -55,7 +53,7 @@ public class CheckInternetRunnable implements Runnable {
 
             //Проверяем интернет
             boolean exceptionFlag = false;
-            if (!isReachable("149.248.54.195", 8080,3000)){
+            if (!isReachable("149.248.54.195", 8080, 3000)) {
                 try {
                     exceptionFlag = true;
                     //Вызываем страницу с ошибкой интернет-соединения, если еще не вызвали

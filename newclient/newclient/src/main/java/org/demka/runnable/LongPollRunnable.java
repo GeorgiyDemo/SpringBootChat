@@ -19,10 +19,10 @@ import java.util.List;
 public class LongPollRunnable implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(LongPollRunnable.class);
-    private ObservableList<Room> roomData;
-    private ObservableList<Message> messageData;
-    private MyAPI apiSession;
-    private App app;
+    private final ObservableList<Room> roomData;
+    private final ObservableList<Message> messageData;
+    private final MyAPI apiSession;
+    private final App app;
 
     public LongPollRunnable(ObservableList<Room> roomData, ObservableList<Message> messageData, MyAPI apiSession, App app) {
         this.roomData = roomData;

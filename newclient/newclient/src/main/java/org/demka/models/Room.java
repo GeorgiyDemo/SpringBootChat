@@ -15,7 +15,7 @@ public class Room {
     private final ListProperty<String> users;
     private final StringProperty id;
 
-    private List<Message> messages;
+    private final List<Message> messages;
 
     public Room(String creator_id, String name, int time_created, List<String> users, String id) {
         this.creator_id = new SimpleStringProperty(creator_id);

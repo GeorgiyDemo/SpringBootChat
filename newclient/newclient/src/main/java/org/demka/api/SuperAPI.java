@@ -25,9 +25,10 @@ public interface SuperAPI {
 
     /**
      * Восстановление пароля
-     * @param login - логин пользователя
+     *
+     * @param login       - логин пользователя
      * @param newPassword - новый пароль пользователя
-     * @param masterKey - мастер-ключ пользователя
+     * @param masterKey   - мастер-ключ пользователя
      * @return
      */
     static Map<String, Object> resetPassword(String login, String newPassword, String masterKey) {
@@ -67,9 +68,9 @@ public interface SuperAPI {
     /**
      * Регистрация пользователя в системе
      *
-     * @param name - ник
-     * @param login - логин (e-mail) пользователя
-     * @param password - пароль пользователя
+     * @param name      - ник
+     * @param login     - логин (e-mail) пользователя
+     * @param password  - пароль пользователя
      * @param masterKey - мастер-пароль пользователя
      * @return
      */
@@ -110,7 +111,8 @@ public interface SuperAPI {
     /**
      * Авторизация пользователя в системе
      * с помощью пары логин-пароль
-     * @param login - логин пользователя
+     *
+     * @param login    - логин пользователя
      * @param password - пароль пользоваетля
      * @return
      * @throws EmptyAPIResponseException
@@ -129,6 +131,7 @@ public interface SuperAPI {
 
     /**
      * Получение всех чат-комнат пользователя
+     *
      * @return
      * @throws FalseServerFlagException
      * @throws EmptyAPIResponseException
@@ -138,6 +141,7 @@ public interface SuperAPI {
 
     /**
      * Получение объекта комнаты, в которой состоит пользователь, по её id
+     *
      * @param roomId - идентификатор комнаты
      * @return
      * @throws RoomNotFoundException
@@ -147,6 +151,7 @@ public interface SuperAPI {
 
     /**
      * Получение истории сообщений по конкретной комнате
+     *
      * @param roomId - идентификатор комнаты
      * @return
      * @throws FalseServerFlagException
@@ -157,7 +162,8 @@ public interface SuperAPI {
 
     /**
      * Создание комнаты
-     * @param roomName - название комнаты
+     *
+     * @param roomName    - название комнаты
      * @param usersString - строка с идентификаторами пользователей-участинков комнаты
      * @return
      * @throws FalseServerFlagException
@@ -178,6 +184,7 @@ public interface SuperAPI {
 
     /**
      * Получение объектов пользователей по id комнаты, в которой они состоят
+     *
      * @param roomId - идентификатор комнаты
      * @return
      * @throws FalseServerFlagException
@@ -187,6 +194,7 @@ public interface SuperAPI {
 
     /**
      * Отправка сообщения в текущую комнату
+     *
      * @param text - текст сообщения
      * @return
      * @throws FalseServerFlagException

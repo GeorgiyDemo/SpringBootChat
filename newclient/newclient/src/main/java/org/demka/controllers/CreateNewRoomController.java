@@ -19,8 +19,8 @@ import java.util.List;
 public class CreateNewRoomController extends SuperPartController {
 
     private static final Logger logger = LoggerFactory.getLogger(CreateNewRoomController.class);
-    private ObservableList<User> AllUsersData = FXCollections.observableArrayList();
-    private ObservableList<User> ChatUsersData = FXCollections.observableArrayList();
+    private final ObservableList<User> allUsersData = FXCollections.observableArrayList();
+    private final ObservableList<User> chatUsersData = FXCollections.observableArrayList();
     private MyAPI APISession;
     @FXML
     private TableView<User> AllUsersTable;
@@ -34,19 +34,19 @@ public class CreateNewRoomController extends SuperPartController {
     private Button CreateRoomButton;
     @FXML
     private TextField ChatName;
-    private boolean CustomChatName = false;
+    private final boolean CustomChatName = false;
 
     @Override
-    public void initialize(App mainApp, Stage dialogStage) {
-        this.mainApp = mainApp;
+    public void initialize(App app, Stage dialogStage) {
+        this.app = app;
         this.dialogStage = dialogStage;
 
         //Инициализация таблиц
-        AllUsersTable.setItems(AllUsersData);
-        ChatUsersTable.setItems(ChatUsersData);
+        AllUsersTable.setItems(allUsersData);
+        ChatUsersTable.setItems(chatUsersData);
 
         //API, через которое взаимодействуем с миром
-        APISession = mainApp.getAPISession();
+        APISession = app.getAPISession();
 
         //Ресайз, зависящий от данных
         AllUsersTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -61,7 +61,7 @@ public class CreateNewRoomController extends SuperPartController {
 
         //Добавляем пользователей системы
         try {
-            AllUsersData.addAll(APISession.getUsers(null));
+            allUsersData.addAll(APISession.getUsers(null));
         } catch (FalseServerFlagException | EmptyAPIResponseException e) {
             e.printStackTrace();
         }
@@ -81,7 +81,7 @@ public class CreateNewRoomController extends SuperPartController {
 
             StringBuilder ChatNameBuilder = new StringBuilder();
             ChatNameBuilder.append("Чат с ");
-            for (User user : ChatUsersData) {
+            for (User user : chatUsersData) {
                 ChatNameBuilder.append(user.getName()).append(", ");
             }
             //Удаляем последнюю запятую
@@ -98,7 +98,7 @@ public class CreateNewRoomController extends SuperPartController {
         }
 
         //Добавляем id всех пользователей
-        for (User user : ChatUsersData) {
+        for (User user : chatUsersData) {
             usersIds.append(user.getId());
             usersIds.append(",");
         }
@@ -129,11 +129,11 @@ public class CreateNewRoomController extends SuperPartController {
         for (int i = 0; i < selectedUsers.size(); i++) {
             User user = selectedUsers.get(i);
             logger.info("addUserToChat - добавили пользователя " + user.getName());
-            AllUsersData.remove(user);
-            ChatUsersData.add(user);
+            allUsersData.remove(user);
+            chatUsersData.add(user);
         }
 
-        CreateRoomButton.setDisable(ChatUsersData.size() <= 0);
+        CreateRoomButton.setDisable(chatUsersData.size() <= 0);
 
     }
 
@@ -151,10 +151,10 @@ public class CreateNewRoomController extends SuperPartController {
         for (int i = 0; i < selectedUsers.size(); i++) {
             User user = selectedUsers.get(i);
             logger.info("addUserToChat - удалили пользователя " + user.getName());
-            ChatUsersData.remove(user);
-            AllUsersData.add(user);
+            chatUsersData.remove(user);
+            allUsersData.add(user);
         }
 
-        CreateRoomButton.setDisable(ChatUsersData.size() <= 0);
+        CreateRoomButton.setDisable(chatUsersData.size() <= 0);
     }
 }

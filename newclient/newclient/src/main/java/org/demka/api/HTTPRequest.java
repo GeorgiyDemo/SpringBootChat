@@ -14,6 +14,7 @@ public class HTTPRequest {
 
     /**
      * Отправка GET-запроса
+     *
      * @param urlString - URL, куда отправляется запрос
      * @return
      */
@@ -47,6 +48,7 @@ public class HTTPRequest {
 
     /**
      * Отправка POST-запроса
+     *
      * @param urlString - URL, куда отправляется запрос
      * @param paramsMap - параметры запроса
      * @return
@@ -95,7 +97,8 @@ public class HTTPRequest {
 
     /**
      * Отпрвка PUT-запроса
-     * @param urlString - URL, куда отправляется запрос
+     *
+     * @param urlString  - URL, куда отправляется запрос
      * @param jsonString - строка с JSON для обновления данных
      * @return
      */

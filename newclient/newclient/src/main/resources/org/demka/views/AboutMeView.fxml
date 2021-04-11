@@ -14,7 +14,7 @@
             </font>
         </Label>
 
-        <Hyperlink fx:id="SiteLink" alignment="CENTER" contentDisplay="CENTER" layoutX="145.0" layoutY="186.0" onAction="#siteLinkClicked" text="http://georgiydemo.github.io/" textFill="WHITE" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="120.0">
+        <Hyperlink fx:id="siteLink" alignment="CENTER" contentDisplay="CENTER" layoutX="145.0" layoutY="186.0" onAction="#siteLinkClicked" text="http://georgiydemo.github.io/" textFill="WHITE" AnchorPane.leftAnchor="100.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="120.0">
             <font>
                 <Font name="Helvetica" size="13.0" />
             </font>

@@ -6,12 +6,12 @@ import org.demka.utils.UNIXTime2String;
 
 public class Message {
 
-    private StringProperty userId;
-    private StringProperty userName;
-    private StringProperty text;
-    private StringProperty roomId;
-    private StringProperty timeCreated;
-    private StringProperty id;
+    private final StringProperty userId;
+    private final StringProperty userName;
+    private final StringProperty text;
+    private final StringProperty roomId;
+    private final StringProperty timeCreated;
+    private final StringProperty id;
 
     public Message(String userId, String userName, String text, String roomId, long timeCreated, String id) {
         this.userId = new SimpleStringProperty(userId);
