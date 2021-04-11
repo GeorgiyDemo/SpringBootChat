@@ -22,7 +22,7 @@ public interface SuperAPI {
 
     //Да, логгер публичный и в интерфейсе, и что ты мне сделаешь?
     Logger logger = LoggerFactory.getLogger(MyAPI.class);
-    String ServerURL = "http://127.0.0.1:8080";
+    String ServerURL = "http://149.248.54.195:8080";
 
     static Map<String, Object> ResetPassword(String login, String newPassword, String masterKey){
         String URL = String.format("%s/user/reset", ServerURL);
