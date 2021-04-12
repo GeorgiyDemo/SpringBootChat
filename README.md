@@ -1,6 +1,5 @@
 # SpringBootChat
 Chat Long Polling Implementation with Spring Boot
-Cli on JavaFX
 
 Backend:
 - Spring Web
