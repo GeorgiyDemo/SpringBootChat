@@ -1,13 +1,17 @@
-# WebSocketsChat
-Chat with Spring Boot and STOMP protocol
+# SpringBootChat
+Chat Long Polling Implementation with Spring Boot
+Cli on JavaFX
 
-СУБД желательно SQL-подобную, но можно и Mongo 
-Сервер на JAVA – 100% Spring
-Взаимодействие с помощью ORM, там же лямбда
-Фронт под JavaFX?
+Backend:
+- Spring Web
+- Spring Data MongoDB
+- Lombok
+- Maven
+- Docker
 
-JavaDoc – автодокументация исходного кода везде
-
-
-ОПИСАТЬ Выбор между longpoolingом и Websocketами
-
+Frontend:
+- JavaFX (javafx-controls, javafx-fxml, javafx-graphics)
+- JFoenix
+- SLF4J
+- GSON
+- Maven
