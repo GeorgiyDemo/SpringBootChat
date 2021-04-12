@@ -13,6 +13,12 @@ public class EmptyAPIResponseException extends Exception {
 
     private static final Logger logger = LoggerFactory.getLogger(EmptyAPIResponseException.class);
 
+    /**
+     * Конструктор ошибки пустого ответа от сервера
+     *
+     * @param mainApp      - объект экземпляра app
+     * @param errorMessage - описание ошибки
+     */
     public EmptyAPIResponseException(App mainApp, String errorMessage) {
         super(errorMessage);
         logger.error(errorMessage);

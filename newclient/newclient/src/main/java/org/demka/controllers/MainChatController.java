@@ -14,12 +14,15 @@ import org.demka.models.Room;
 import org.demka.runnable.CheckInternetRunnable;
 import org.demka.runnable.LongPollRunnable;
 import org.demka.runnable.RunnableManager;
-import org.demka.utils.MyActionUtil;
+import org.demka.utils.MyMenuActionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+/**
+ * Контроллер-обработчик главного окна чата
+ */
 public class MainChatController extends SuperFullController {
     private static final Logger logger = LoggerFactory.getLogger(MainChatController.class);
     private final ObservableList<Room> roomData = FXCollections.observableArrayList();
@@ -55,7 +58,7 @@ public class MainChatController extends SuperFullController {
     private TextField newMessageText;
 
     /***
-     *  Обработчик нажатия на button отпраавки сообщения
+     *  Обработчик нажатия на кнопку сообщения
      */
     @FXML
     private void sendMessageButtonClicked() {
@@ -75,6 +78,9 @@ public class MainChatController extends SuperFullController {
         }
     }
 
+    /**
+     * Обработчик нажатия на кнопку создания новой комнаты
+     */
     @FXML
     private void createRoomButtonClicked() {
         app.NewRoom();
@@ -169,8 +175,8 @@ public class MainChatController extends SuperFullController {
         logger.info("MainChatController - стартанули CheckInternetRunnable с id " + thread2.getId());
 
         //Биндим действия к AboutMenuItem и ExitMenuItem
-        MyActionUtil.onAction(aboutMenuItem);
-        MyActionUtil.onAction(exitMenuItem);
+        MyMenuActionUtil.onAction(aboutMenuItem);
+        MyMenuActionUtil.onAction(exitMenuItem);
     }
 
     /**
@@ -199,7 +205,7 @@ public class MainChatController extends SuperFullController {
     /**
      * Обработчик нажатия на комнату-чат
      *
-     * @param room
+     * @param room - объект комнаты
      */
     private void showChatRoomDetails(Room room) {
 
@@ -221,9 +227,12 @@ public class MainChatController extends SuperFullController {
         messageTable.scrollTo(messageData.get(messageData.size() - 1));
     }
 
+    /**
+     * Показ пользователей комнаты
+     */
     @FXML
     private void chatUsersButtonClicked() {
         app.showCurrentRoomUsers();
-        logger.info("Нажатие на button показа пользователей комнаты ");
+        logger.info("Нажатие на button показа пользователей комнаты");
     }
 }

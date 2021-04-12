@@ -4,8 +4,17 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * Класс для хеширования данных в SHA-256
+ */
 public class String2HashUtil {
 
+    /**
+     * Преобразование байтов в HEX-строку
+     *
+     * @param hash - байтовые данные
+     * @return
+     */
     private static String bytesToHex(byte[] hash) {
         StringBuilder hexString = new StringBuilder(2 * hash.length);
         for (byte b : hash) {
@@ -18,6 +27,12 @@ public class String2HashUtil {
         return hexString.toString();
     }
 
+    /**
+     * Конвертация хеширование данных в SHA-256
+     *
+     * @param input - строка для хеширования
+     * @return
+     */
     public static String convert(String input) {
 
         try {

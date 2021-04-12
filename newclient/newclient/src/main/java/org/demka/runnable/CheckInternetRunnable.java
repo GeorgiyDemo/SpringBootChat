@@ -11,14 +11,42 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
+/**
+ * Отдельный поток для проверки интернет-соединения
+ */
 public class CheckInternetRunnable implements Runnable {
 
 
     private static final Logger logger = LoggerFactory.getLogger(CheckInternetRunnable.class);
     private final App app;
 
+    /**
+     * Конструктор для потока проверки интернет-соединения
+     *
+     * @param app - экземпляр app
+     */
     public CheckInternetRunnable(App app) {
         this.app = app;
+    }
+
+    /**
+     * Проверка интернет-соединения
+     *
+     * @param addr          - хост (ip/домен)
+     * @param openPort      - порт
+     * @param timeOutMillis - таймаут ожидания ответа
+     * @return
+     */
+    private static boolean isReachable(String addr, int openPort, int timeOutMillis) {
+
+        try {
+            try (Socket soc = new Socket()) {
+                soc.connect(new InetSocketAddress(addr, openPort), timeOutMillis);
+            }
+            return true;
+        } catch (IOException ex) {
+            return false;
+        }
     }
 
     /**
@@ -32,22 +60,8 @@ public class CheckInternetRunnable implements Runnable {
      *
      * @see Thread#run()
      */
-
-    private static boolean isReachable(String addr, int openPort, int timeOutMillis) {
-
-        try {
-            try (Socket soc = new Socket()) {
-                soc.connect(new InetSocketAddress(addr, openPort), timeOutMillis);
-            }
-            return true;
-        } catch (IOException ex) {
-            return false;
-        }
-    }
-
     @Override
     public void run() {
-
 
         while (!Thread.currentThread().isInterrupted()) {
 

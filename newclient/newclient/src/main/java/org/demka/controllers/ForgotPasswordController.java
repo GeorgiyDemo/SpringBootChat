@@ -12,6 +12,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
+/**
+ * Контроллер-обработчик формы восстановления пароля
+ */
 public class ForgotPasswordController extends SuperFullController {
 
     private static final Logger logger = LoggerFactory.getLogger(ForgotPasswordController.class);
@@ -36,12 +39,18 @@ public class ForgotPasswordController extends SuperFullController {
         this.app = app;
     }
 
+    /**
+     * Кнопка выхода из смены пароля
+     */
     @FXML
     private void backButtonClicked() {
         app.UserAuthorisation();
         logger.info("Выход из формы смены пароля");
     }
 
+    /**
+     * Кнопка сброса пароля
+     */
     @FXML
     private void resetButtonClicked() {
         logger.info("Нажатие на button сброса пароля");
@@ -75,10 +84,17 @@ public class ForgotPasswordController extends SuperFullController {
 
     }
 
-    private Boolean dataValidator(String eMail, String password, String masterKey) {
+    /**
+     * Фильтрация входных данных для смены пароля
+     *
+     * @param email     - e-mail пользвателя
+     * @param password  - новый пароль пользователя
+     * @param masterKey - мастер-ключ пользователя
+     * @return
+     */
+    private Boolean dataValidator(String email, String password, String masterKey) {
 
-
-        if ((eMail == null) || (eMail.equals(""))) {
+        if ((email == null) || (email.equals(""))) {
             errorString = "E-mail не может быть пустым";
             return false;
         }
@@ -93,7 +109,7 @@ public class ForgotPasswordController extends SuperFullController {
             return false;
         }
 
-        if (!ValidatorsUtil.emailValidator(eMail)) {
+        if (!ValidatorsUtil.emailValidator(email)) {
             errorString = "Некорректный e-mail";
             return false;
         }

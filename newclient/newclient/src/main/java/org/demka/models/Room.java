@@ -7,6 +7,9 @@ import javafx.collections.ObservableList;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Модель комнаты
+ */
 public class Room {
 
     private final StringProperty creator_id;
@@ -17,6 +20,15 @@ public class Room {
 
     private final List<Message> messages;
 
+    /**
+     * Конструктор комнаты
+     *
+     * @param creator_id   - идентификатор пользователя-создателя комнаты
+     * @param name         - имя комнаты
+     * @param time_created - UNIX-время создания комнаты
+     * @param users        - список идентификаторов создателей
+     * @param id           - идентификатор комнаты
+     */
     public Room(String creator_id, String name, int time_created, List<String> users, String id) {
         this.creator_id = new SimpleStringProperty(creator_id);
         this.name = new SimpleStringProperty(name);

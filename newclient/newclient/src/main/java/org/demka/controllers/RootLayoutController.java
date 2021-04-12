@@ -2,6 +2,9 @@ package org.demka.controllers;
 
 import org.demka.App;
 
+/**
+ * Базовый контроллер
+ */
 public class RootLayoutController extends SuperFullController {
 
     /**

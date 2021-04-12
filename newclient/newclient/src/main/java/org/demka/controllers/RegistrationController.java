@@ -1,6 +1,5 @@
 package org.demka.controllers;
 
-import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXPasswordField;
 import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
@@ -13,6 +12,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
+/**
+ * Контроллер-обработчик регистрации пользователя
+ */
 public class RegistrationController extends SuperFullController {
 
     private static final Logger logger = LoggerFactory.getLogger(RegistrationController.class);
@@ -29,7 +31,16 @@ public class RegistrationController extends SuperFullController {
     private Label errorDescription;
     private String errorString;
 
-    private Boolean dataValidator(String userName, String eMail, String password, String masterKey) {
+    /**
+     * Валидация данных регистрации пользователя
+     *
+     * @param userName  - ник пользователя
+     * @param email     - e-mail пользователя
+     * @param password  - пароль пользователя
+     * @param masterKey - мастер-ключ пользователя
+     * @return
+     */
+    private Boolean dataValidator(String userName, String email, String password, String masterKey) {
 
         //Проверка на пустоту
         if ((userName == null) || (userName.equals(""))) {
@@ -37,7 +48,7 @@ public class RegistrationController extends SuperFullController {
             return false;
         }
 
-        if ((eMail == null) || (eMail.equals(""))) {
+        if ((email == null) || (email.equals(""))) {
             errorString = "E-mail не может быть пустым";
             return false;
         }
@@ -57,7 +68,7 @@ public class RegistrationController extends SuperFullController {
             return false;
         }
 
-        if (!ValidatorsUtil.emailValidator(eMail)) {
+        if (!ValidatorsUtil.emailValidator(email)) {
             errorString = "Некорректный e-mail";
             return false;
         }
@@ -80,6 +91,9 @@ public class RegistrationController extends SuperFullController {
         return true;
     }
 
+    /**
+     * Обработчик нажатия на кнопку регистрации
+     */
     @FXML
     private void regButtonClicked() {
         logger.info("Нажатие на button регистрации");
@@ -114,6 +128,9 @@ public class RegistrationController extends SuperFullController {
     }
 
 
+    /**
+     * Обработчик нажатия на кнопку возврата на форму авторизации
+     */
     @FXML
     private void backButtonClicked() {
         logger.info("Возврат в меню авторизации");

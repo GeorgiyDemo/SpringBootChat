@@ -4,6 +4,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.demka.utils.UNIXTimeUtil;
 
+/**
+ * Модель сообщения
+ */
 public class Message {
 
     private final StringProperty userId;
@@ -13,6 +16,16 @@ public class Message {
     private final StringProperty timeCreated;
     private final StringProperty id;
 
+    /**
+     * Конструктор сообщения
+     *
+     * @param userId      - идентификатор пользователя, отправившего сообщение
+     * @param userName    - имя пользователя, отправившего сообщение
+     * @param text        - текст сообщения
+     * @param roomId      - идентификатор комнаты, куда отправляется сообщение
+     * @param timeCreated - UNIX-время создания сообщения
+     * @param id          - идентификатор сообщения
+     */
     public Message(String userId, String userName, String text, String roomId, long timeCreated, String id) {
         this.userId = new SimpleStringProperty(userId);
         this.userName = new SimpleStringProperty(userName);

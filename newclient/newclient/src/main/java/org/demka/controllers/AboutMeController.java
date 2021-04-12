@@ -25,7 +25,7 @@ public class AboutMeController extends SuperPartController {
     /**
      * Метод инициализации (вызывается с Main)
      *
-     * @param app
+     * @param
      * @param dialogStage
      */
     @Override
@@ -34,12 +34,18 @@ public class AboutMeController extends SuperPartController {
         this.dialogStage = dialogStage;
     }
 
+    /**
+     * Нажатие на button выхода из текущего окна
+     */
     @FXML
     private void okButtonClicked() {
         logger.info("Выход из подменю с информацией об авторе и программе");
         dialogStage.close();
     }
 
+    /**
+     * Нажатие на ссылку "Об авторе"
+     */
     @FXML
     private void siteLinkClicked() {
         String linkText = siteLink.getText();

@@ -3,10 +3,17 @@ package org.demka.utils;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Класс для работы с автоавторизацией
+ */
 public class AuthUtil {
 
     private final FileProcessingUtil fileProcessingUtil;
 
+    /**
+     * Констркутор класса AuthUtil.
+     * Пытается найти файл .tempdata, если не существует - создает его
+     */
     public AuthUtil() {
 
         //Получаем путь файла, где хранится авторизация
@@ -20,12 +27,22 @@ public class AuthUtil {
         this.fileProcessingUtil = new FileProcessingUtil(pathStr);
     }
 
+    /**
+     * Чтение данных из файла
+     *
+     * @return
+     */
     public String readKey() {
         return fileProcessingUtil.DataRead();
     }
 
-    public void writeKey(String key) {
-        fileProcessingUtil.DataWrite(key);
+    /**
+     * Запись данных в файл
+     *
+     * @param data - данные для записи
+     */
+    public void writeKey(String data) {
+        fileProcessingUtil.DataWrite(data);
     }
 
 

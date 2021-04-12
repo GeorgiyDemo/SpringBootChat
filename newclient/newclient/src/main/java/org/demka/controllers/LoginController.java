@@ -11,6 +11,9 @@ import org.demka.utils.AuthUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Контроллер-обработчик формы авторизации
+ */
 public class LoginController extends SuperFullController {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
@@ -24,6 +27,9 @@ public class LoginController extends SuperFullController {
     @FXML
     private JFXCheckBox autoLoginCheckBox;
 
+    /**
+     * Нажатие на кнопку авторизации в программе
+     */
     @FXML
     public void mainButtonClick() {
 
@@ -58,12 +64,18 @@ public class LoginController extends SuperFullController {
 
     }
 
+    /**
+     * Нажатие на ссылку перехода на форму регистрации
+     */
     @FXML
     public void regLinkClicked() {
         app.UserRegistration();
         logger.info("Переход на форму регистрации");
     }
 
+    /**
+     * Нажатие на ссылку восстановления пароля
+     */
     @FXML
     public void forgotPasswordLinkClicked() {
         app.ForgotPassword();

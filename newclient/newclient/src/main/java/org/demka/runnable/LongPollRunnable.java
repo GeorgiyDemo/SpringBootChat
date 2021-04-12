@@ -16,25 +16,37 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+/**
+ * Отдельный поток для получения сообщений через логику лонгпулинга
+ */
 public class LongPollRunnable implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(LongPollRunnable.class);
     private final ObservableList<Room> roomData;
     private final ObservableList<Message> messageData;
-    private final MyAPI apiSession;
+    private final MyAPI myAPI;
     private final App app;
 
-    public LongPollRunnable(ObservableList<Room> roomData, ObservableList<Message> messageData, MyAPI apiSession, App app) {
+    /**
+     * Конструктор LongPollRunnable
+     *
+     * @param roomData    - ObservableList данных комнат, который синхронизирован с таблицей roomTable в JavaFX
+     * @param messageData - ObservableList данных сообщений, который синхронизирован с таблицей messageTable в JavaFX
+     * @param myAPI       - объект текущей сессии API для сапросов с бека
+     * @param app         - объект app
+     */
+    public LongPollRunnable(ObservableList<Room> roomData, ObservableList<Message> messageData, MyAPI myAPI, App app) {
         this.roomData = roomData;
-        this.apiSession = apiSession;
+        this.myAPI = myAPI;
         this.messageData = messageData;
         this.app = app;
     }
 
 
-    /***
+    /**
      * Проверка на существование комнаты по её id
-     * @param roomId
+     *
+     * @param roomId - идентификатор комнаты
      * @return
      */
     public Integer isRoomExist(String roomId) {
@@ -66,7 +78,7 @@ public class LongPollRunnable implements Runnable {
 
             boolean exceptionFlag = false;
             try {
-                List<Message> newMessages = apiSession.longPollListener();
+                List<Message> newMessages = myAPI.longPollListener();
 
                 for (Message msg : newMessages) {
                     //Проверка на существование комнаты
@@ -79,7 +91,7 @@ public class LongPollRunnable implements Runnable {
                         roomData.get(existInt).addMessage(msg);
                         logger.info("Добавили сообщение '" + msg.getText() + "' для комнаты " + msg.getRoomId());
                         //Если открыт уже диалог с текущей конференцией
-                        if (messageRoomId.equals(apiSession.getCurrentRoomId())) {
+                        if (messageRoomId.equals(myAPI.getCurrentRoomId())) {
                             messageData.add(msg);
                         }
                     }
@@ -88,7 +100,7 @@ public class LongPollRunnable implements Runnable {
                     else {
                         try {
                             //Создаем объект комнаты
-                            Room newRoom = apiSession.getRoomInfo(messageRoomId);
+                            Room newRoom = myAPI.getRoomInfo(messageRoomId);
                             //Добавляем полученное сообщение
                             newRoom.addMessage(msg);
                             //Добавляем саму комнату
@@ -108,7 +120,7 @@ public class LongPollRunnable implements Runnable {
             catch (LongPollListenerException e) {
                 e.printStackTrace();
                 try {
-                    apiSession.getLongPollServer();
+                    myAPI.getLongPollServer();
                 } catch (EmptyAPIResponseException | FalseServerFlagException newE) {
                     exceptionFlag = true;
                     newE.printStackTrace();

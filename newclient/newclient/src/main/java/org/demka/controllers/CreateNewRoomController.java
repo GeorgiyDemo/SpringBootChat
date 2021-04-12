@@ -16,6 +16,9 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Контроллер-обработчик создания новой чат-комнаты
+ */
 public class CreateNewRoomController extends SuperPartController {
 
     private static final Logger logger = LoggerFactory.getLogger(CreateNewRoomController.class);
@@ -66,11 +69,17 @@ public class CreateNewRoomController extends SuperPartController {
         }
     }
 
+    /**
+     * Кнопка выхода из окна
+     */
     @FXML
     private void cancelButtonClicked() {
         dialogStage.close();
     }
 
+    /**
+     * Обработчик нажатия на кнопку создания комнаты
+     */
     @FXML
     public void createRoomButtonClicked() {
         String localeChatName;

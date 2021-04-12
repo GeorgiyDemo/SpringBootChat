@@ -32,27 +32,19 @@ public class App extends Application {
         launch(args);
     }
 
-    public MyAPI getMyAPI() {
-        return myAPI;
-    }
-
-    public void setMyAPI(MyAPI myAPI) {
-        this.myAPI = myAPI;
-    }
-
-    public Stage getPrimaryStage() {
-        return primaryStage;
-    }
-
-    public AuthUtil getAuthUtil() {
-        return authUtil;
-    }
 
     @Override
     public void start(Stage primaryStage) {
         myStart(primaryStage);
     }
 
+    /**
+     * Метод для отрисовки окна при инициализации/перезапуске.
+     * Нужен отдельный метод из-за того, что при отсутствии интернет-соединения
+     * и последующем его появлении, необходимо перезапустить приложение
+     *
+     * @param primaryStage
+     */
     public void myStart(Stage primaryStage) {
 
         this.primaryStage = primaryStage;
@@ -130,6 +122,12 @@ public class App extends Application {
     }
 
 
+    /**
+     * Динамическое окно успешного действия пользователя
+     *
+     * @param windowTitle - заголовок показываемого окна
+     * @param mainText    - текст, который отображается на форме
+     */
     public void SuccessUserAction(String windowTitle, String mainText) {
         try {
             this.primaryStage.setTitle("DEMKAChat - " + windowTitle);
@@ -264,4 +262,21 @@ public class App extends Application {
             e.printStackTrace();
         }
     }
+
+    public MyAPI getMyAPI() {
+        return myAPI;
+    }
+
+    public void setMyAPI(MyAPI myAPI) {
+        this.myAPI = myAPI;
+    }
+
+    public Stage getPrimaryStage() {
+        return primaryStage;
+    }
+
+    public AuthUtil getAuthUtil() {
+        return authUtil;
+    }
+
 }

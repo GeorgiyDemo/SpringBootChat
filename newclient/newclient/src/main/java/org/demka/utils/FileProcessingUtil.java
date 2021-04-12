@@ -3,14 +3,20 @@ package org.demka.utils;
 import java.io.*;
 import java.util.stream.Collectors;
 
-// Класс для работы с файлами
+/**
+ * Класс для работы с файлами
+ */
 public class FileProcessingUtil {
 
     String fileName;
 
+    /**
+     * Конструктор  FileProcessingUtil
+     *
+     * @param fileName - имя файла для работы
+     */
     public FileProcessingUtil(String fileName) {
         this.fileName = fileName;
-
 
         File tempFile = new File(fileName);
         //Если файла не существует - создаем его
@@ -24,7 +30,11 @@ public class FileProcessingUtil {
         }
     }
 
-    //Чтение данных
+    /**
+     * Чтение данных
+     *
+     * @return
+     */
     public String DataRead() {
 
         try {
@@ -38,7 +48,11 @@ public class FileProcessingUtil {
         }
     }
 
-    //Запись данных
+    /**
+     * Запись данных
+     *
+     * @param data - данные для записи
+     */
     public void DataWrite(String data) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(this.fileName));
