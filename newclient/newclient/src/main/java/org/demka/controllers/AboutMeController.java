@@ -24,8 +24,7 @@ public class AboutMeController extends SuperPartController {
 
     /**
      * Метод инициализации (вызывается с Main)
-     *
-     * @param
+     * @param app
      * @param dialogStage
      */
     @Override
