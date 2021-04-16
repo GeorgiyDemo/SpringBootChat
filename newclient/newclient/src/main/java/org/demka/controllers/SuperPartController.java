@@ -4,7 +4,7 @@ import javafx.stage.Stage;
 import org.demka.App;
 
 /**
- * Класс, от которого наследуются все контроллеры, layout которых открывается на всё окно
+ * Класс, от которого наследуются все контроллеры, layout которых открывается поверх основного окна
  */
 public abstract class SuperPartController {
     protected App app;

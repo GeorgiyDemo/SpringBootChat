@@ -5,7 +5,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Каасс для работы с UNIX-временем
+ * Класс для работы с UNIX-временем
  */
 public class UNIXTimeUtil {
 
