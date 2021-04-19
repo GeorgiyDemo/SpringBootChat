@@ -46,10 +46,14 @@ public class LongPollRunnable implements Runnable {
         this.mainChatController = mainChatController;
     }
 
-    public void updateRoomData(ObservableList<Room> roomData, int roomIndex){
-        Room buffRoom = roomData.get(roomIndex);
-        roomData.add(0, buffRoom);
-        Platform.runLater(() -> roomData.remove(roomIndex+1));
+    /**
+     * Перемещение комнаты на первую позицию списка в основном потоке JavaFX
+     * @param roomData - список ObservableList
+     * @param buffRoom - объект комнаты, которую необходимо поднять
+     */
+    public void updateRoomData(ObservableList<Room> roomData, Room buffRoom){
+        Platform.runLater(() -> roomData.remove(buffRoom));
+        Platform.runLater(() -> roomData.add(0, buffRoom));
     }
 
     /**
@@ -97,14 +101,19 @@ public class LongPollRunnable implements Runnable {
                     //Существует
                     if (existInt != -1) {
                         //Добавляем сообщение
-                        roomData.get(existInt).addMessage(msg);
+                        Room currentRoom = roomData.get(existInt);
+                        currentRoom.addMessage(msg);
                         logger.info("Добавили сообщение '" + msg.getText() + "' для комнаты " + msg.getRoomId());
-                        updateRoomData(roomData,existInt);
+                        updateRoomData(roomData, currentRoom);
 
                         //Если открыт уже диалог с текущей конференцией
                         if (messageRoomId.equals(myAPI.getCurrentRoomId())) {
                             messageData.add(msg);
                             Platform.runLater(mainChatController::selectFirstSelectionModel);
+                        }
+                        //Иначе выставляем флаг нового сообщения для комнаты
+                        else{
+                            currentRoom.setNewMessageFlag(true);
                         }
                     }
 
@@ -113,10 +122,11 @@ public class LongPollRunnable implements Runnable {
                         try {
                             //Создаем объект комнаты
                             Room newRoom = myAPI.getRoomInfo(messageRoomId);
+                            newRoom.setNewMessageFlag(true);
                             //Добавляем полученное сообщение
                             newRoom.addMessage(msg);
                             //Добавляем саму комнату
-                            roomData.add(0,newRoom);
+                            roomData.add(0, newRoom);
                             logger.info("Получили новую комнату " + newRoom.getName() + " [" + newRoom.getId() + "]");
                         } catch (RoomNotFoundException e) {
                             logger.error("Случилось странное: бек отдал сообщение с комнаты " + messageRoomId + ", но её не существует");

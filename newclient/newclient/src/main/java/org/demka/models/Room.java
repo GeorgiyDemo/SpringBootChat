@@ -17,8 +17,11 @@ public class Room {
     private final IntegerProperty time_created;
     private final ListProperty<String> users;
     private final StringProperty id;
-
+    private final StringProperty newMessagesFlag;
     private final List<Message> messages;
+
+    private final static String NO_NEW_MESSAGE_FLAG = " ";
+    private final static String NEW_MESSAGE_FLAG = "*";
 
     /**
      * Конструктор комнаты
@@ -38,6 +41,22 @@ public class Room {
         this.users = new SimpleListProperty<>(userData);
         this.id = new SimpleStringProperty(id);
         this.messages = new ArrayList<>();
+        this.newMessagesFlag = new SimpleStringProperty(NO_NEW_MESSAGE_FLAG);
+    }
+
+    /**
+     * Выставление флага прочитанных сообщений для комнаты
+     * @param flag булевое значение
+     */
+    public void setNewMessageFlag(boolean flag){
+        if (flag)
+            newMessagesFlag.setValue(NEW_MESSAGE_FLAG);
+        else
+            newMessagesFlag.setValue(NO_NEW_MESSAGE_FLAG);
+    }
+
+    public StringProperty newMessagesFlagString() {
+        return newMessagesFlag;
     }
 
     public StringProperty getNameProperty() {
@@ -63,4 +82,5 @@ public class Room {
     public ObservableList<String> getUsers() {
         return users.get();
     }
+
 }

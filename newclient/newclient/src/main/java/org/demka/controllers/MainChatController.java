@@ -33,6 +33,8 @@ public class MainChatController extends SuperFullController {
     private TableView<Room> roomTable;
     @FXML
     private TableColumn<Room, String> roomColumn;
+    @FXML
+    private TableColumn<Room, String> newMessageFlagColumn;
 
     @FXML
     private TableView<Message> messageTable;
@@ -115,6 +117,7 @@ public class MainChatController extends SuperFullController {
 
         //Отображение имени комнаты в таблице
         roomColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+        newMessageFlagColumn.setCellValueFactory(cellData -> cellData.getValue().newMessagesFlagString());
 
         //Отображение сообщений в таблице
         messageTimeColumn.setCellValueFactory(cellData -> cellData.getValue().getTimeCreatedProperty());
@@ -123,7 +126,7 @@ public class MainChatController extends SuperFullController {
 
         //Текст для таблицы сообщений, когда комната не выбрана
         Label placeholder = new Label();
-        placeholder.setText("Выберите диалог слева или <создайте новый>");
+        placeholder.setText("Выберите диалог слева или создайте новый");
         placeholder.setStyle("-fx-text-fill: white");
         messageTable.setPlaceholder(placeholder);
         messageTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -226,6 +229,7 @@ public class MainChatController extends SuperFullController {
         if (room != null) {
             myAPI.setCurrentRoomId(room.getId());
             messageData.addAll(room.getMessages());
+            room.setNewMessageFlag(false);
             messageTable.setItems(messageData);
         }
 
