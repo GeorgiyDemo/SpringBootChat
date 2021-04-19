@@ -216,7 +216,6 @@ public class MainChatController extends SuperFullController {
         sendMessageButton.setOpacity(1);
         newMessageText.setOpacity(1);
 
-
         //Выставляем id текущей комнаты
         messageData.clear();
         if (room != null) {
@@ -224,6 +223,10 @@ public class MainChatController extends SuperFullController {
             messageData.addAll(room.getMessages());
             messageTable.setItems(messageData);
         }
+
+        //Отчистка поля отправки сообщения
+        newMessageText.clear();
+        //Пролистываем до конца
         messageTable.scrollTo(messageData.get(messageData.size() - 1));
     }
 
