@@ -124,6 +124,11 @@ public class ForgotPasswordController extends SuperFullController {
             return false;
         }
 
+        if (masterKey.equals(password)) {
+            errorString = "Пароль и мастер-пароль не должны совпадать";
+            return false;
+        }
+
         return true;
     }
 }

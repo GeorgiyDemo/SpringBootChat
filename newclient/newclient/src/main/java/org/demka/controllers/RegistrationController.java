@@ -84,7 +84,7 @@ public class RegistrationController extends SuperFullController {
         }
 
         if (masterKey.equals(password)) {
-            errorString = "Пароль и мастер-пароль не болжны совпадать";
+            errorString = "Пароль и мастер-пароль не должны совпадать";
             return false;
         }
 

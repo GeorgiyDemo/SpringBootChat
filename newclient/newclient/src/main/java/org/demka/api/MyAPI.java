@@ -478,7 +478,7 @@ public class MyAPI implements SuperAPI {
 
         //Если лонгпул не инициализирован
         if (longPollKey == null || longPollTs == null || longPollSubUrl == null) {
-            logger.error("longPollListener - LongPool не инициалзирован");
+            logger.info("longPollListener - LongPool не инициалзирован");
             throw new LongPollListenerException("Лонгпул не был иницилизирован! Нужно использовать метод getLongPollServer для иницализации");
         }
 

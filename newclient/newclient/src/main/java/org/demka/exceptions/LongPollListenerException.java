@@ -17,6 +17,6 @@ public class LongPollListenerException extends Exception {
      */
     public LongPollListenerException(String errorMessage) {
         super(errorMessage);
-        logger.error(errorMessage);
+        logger.info(errorMessage);
     }
 }
