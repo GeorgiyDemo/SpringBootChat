@@ -114,6 +114,7 @@ public class MainChatController extends SuperFullController {
 
         //Отображение имени комнаты в таблице
         roomColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+
         //Отображение сообщений в таблице
         messageTimeColumn.setCellValueFactory(cellData -> cellData.getValue().getTimeCreatedProperty());
         messageUserColumn.setCellValueFactory(cellData -> cellData.getValue().getUserNameProperty());
@@ -161,7 +162,7 @@ public class MainChatController extends SuperFullController {
         //Запускаем отдельный поток, который будет:
         // Добавлять новую комнату в RoomData, если пришло обновление по комнате, id которой нет в RoomData
         // Добавлять в определенный элемент room.addMessage() новое сообщение, которое прилетело через лонгпул
-        LongPollRunnable runnable1 = new LongPollRunnable(roomData, messageData, myAPI, app);
+        LongPollRunnable runnable1 = new LongPollRunnable(roomData, messageData, myAPI, app, this);
         Thread thread1 = new Thread(runnable1, "LongPoll thread");
         RunnableManager.threadsList.add(thread1);
         thread1.start();
@@ -238,4 +239,14 @@ public class MainChatController extends SuperFullController {
         app.showCurrentRoomUsers();
         logger.info("Нажатие на button показа пользователей комнаты");
     }
+
+    /**
+     * Метод для LongPollRunnable, чтоб при получении обновления комнат и их последующем
+     * поднимании вверх SelectionModel() сохранялся;
+     * @return
+     */
+    public void selectFirstSelectionModel(){
+        roomTable.getSelectionModel().selectFirst();
+    }
+
 }
