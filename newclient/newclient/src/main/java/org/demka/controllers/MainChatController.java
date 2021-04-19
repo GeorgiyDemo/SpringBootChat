@@ -18,6 +18,7 @@ import org.demka.utils.MyMenuActionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -154,8 +155,11 @@ public class MainChatController extends SuperFullController {
             } catch (FalseServerFlagException | EmptyAPIResponseException e) {
                 e.printStackTrace();
             }
-
         }
+
+        //Не очень эффективно, но работает
+        Comparator<Room> byMessagesUpdate = Comparator.comparing((Room o) -> o.getMessages().get(o.getMessages().size()-1).getTimeCreated());
+        roomList.sort(byMessagesUpdate.reversed());
         roomData.addAll(roomList);
         logger.info("MainChatController - инициализировали все комнаты");
 
