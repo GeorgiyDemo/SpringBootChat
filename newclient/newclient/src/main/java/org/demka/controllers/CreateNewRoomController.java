@@ -37,6 +37,8 @@ public class CreateNewRoomController extends SuperPartController {
     private Button createRoomButton;
     @FXML
     private TextField chatName;
+    @FXML
+    private TextField searchUser;
 
     @Override
     public void initialize(App app, Stage dialogStage) {
@@ -67,6 +69,17 @@ public class CreateNewRoomController extends SuperPartController {
         } catch (FalseServerFlagException | EmptyAPIResponseException e) {
             e.printStackTrace();
         }
+
+        //Слушатель изменения текста
+        searchUser.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                List<User> searchResult = myAPI.getUsers(searchUser.getText());
+                allUsersData.clear();
+                allUsersData.addAll(searchResult);
+            } catch (FalseServerFlagException | EmptyAPIResponseException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     /**
@@ -100,7 +113,6 @@ public class CreateNewRoomController extends SuperPartController {
                 ChatNameBuilder.append("..");
             }
             localeChatName = ChatNameBuilder.toString();
-
         } else {
             localeChatName = chatName.getText();
         }

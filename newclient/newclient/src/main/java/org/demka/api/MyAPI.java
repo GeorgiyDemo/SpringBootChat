@@ -323,6 +323,7 @@ public class MyAPI implements SuperAPI {
         if (searchExp == null) {
             URL = String.format("%s/user/search?key=%s", serverURL, userKey);
         } else {
+            searchExp = URLEncoder.encode(searchExp, StandardCharsets.UTF_8);
             URL = String.format("%s/user/search?key=%s&searchName=%s", serverURL, userKey, searchExp);
         }
         String response = HTTPRequest.sendGET(URL);
