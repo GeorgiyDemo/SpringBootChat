@@ -140,7 +140,7 @@ public class UserService {
         Pageable pageLimit = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "time_created"));
 
         if (name != null) {
-            bufList.addAll(userRepo.findAllByNameLimit("^" + name, pageLimit));
+            bufList.addAll(userRepo.findAllByNameLimit("" + name, pageLimit));
         } else {
             bufList.addAll(userRepo.findAllLimit(pageLimit));
         }

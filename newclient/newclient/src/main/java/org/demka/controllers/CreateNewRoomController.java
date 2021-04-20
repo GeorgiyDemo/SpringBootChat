@@ -71,15 +71,37 @@ public class CreateNewRoomController extends SuperPartController {
         }
 
         //Слушатель изменения текста
-        searchUser.textProperty().addListener((observable, oldValue, newValue) -> {
-            try {
-                List<User> searchResult = myAPI.getUsers(searchUser.getText());
-                allUsersData.clear();
-                allUsersData.addAll(searchResult);
-            } catch (FalseServerFlagException | EmptyAPIResponseException e) {
-                e.printStackTrace();
+        searchUser.textProperty().addListener(
+                ((observableValue, oldValue, newValue) -> searchUserChanged(newValue))
+        );
+    }
+
+    /**
+     * Обработчик изменения текста в searchUser
+     * @param newValue - обновлённое значение поля
+     */
+    private void searchUserChanged(String newValue){
+        try {
+            List<User> searchResult = myAPI.getUsers(newValue);
+            allUsersData.clear();
+
+            //Фильтруем на то, чтоб не было пользователей, которых мы уже выбрали
+            for (User searchUser: searchResult) {
+
+                boolean contains = false;
+                for (User chatUser: chatUsersData) {
+                    if (searchUser.getId().equals(chatUser.getId())){
+                        contains = true;
+                        break;
+                    }
+                }
+                if (!contains){
+                    allUsersData.add(searchUser);
+                }
             }
-        });
+        } catch (FalseServerFlagException | EmptyAPIResponseException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
