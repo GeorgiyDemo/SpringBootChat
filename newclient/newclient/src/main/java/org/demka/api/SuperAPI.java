@@ -21,7 +21,7 @@ import java.util.Map;
 public interface SuperAPI {
 
     Logger logger = LoggerFactory.getLogger(MyAPI.class);
-    String serverURL = "http://149.248.54.195:8080";
+    String serverURL = "http://127.0.0.1:8080";
 
     /**
      * Восстановление пароля

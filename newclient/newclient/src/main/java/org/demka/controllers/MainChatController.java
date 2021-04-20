@@ -161,11 +161,11 @@ public class MainChatController extends SuperFullController {
         }
 
         //Не очень эффективно, но работает
-        Comparator<Room> byMessagesUpdate = Comparator.comparing((Room o) -> o.getMessages().get(o.getMessages().size()-1).getTimeCreated());
+        Comparator<Room> byMessagesUpdate = Comparator.comparing((Room o) -> o.getMessages().get(o.getMessages().size()-1).getTimeCreatedLong());
         roomList.sort(byMessagesUpdate.reversed());
         roomData.addAll(roomList);
         logger.info("MainChatController - инициализировали все комнаты");
-
+        
         //Запускаем отдельный поток, который будет:
         // Добавлять новую комнату в RoomData, если пришло обновление по комнате, id которой нет в RoomData
         // Добавлять в определенный элемент room.addMessage() новое сообщение, которое прилетело через лонгпул

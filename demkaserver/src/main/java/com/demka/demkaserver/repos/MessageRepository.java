@@ -13,7 +13,7 @@ import java.util.List;
 public interface MessageRepository extends MongoRepository<MessageDBEntity, String> {
 
     @Query("{ 'room_id' : ?0}")
-    List<MessageDBEntity> findAllByRoomId(String roomId);
+    List<MessageDBEntity> findAllByRoomId(String roomId, Pageable pageable);
 
     @Query("{ 'user_id' : ?0}")
     List<MessageDBEntity> findAllByUser(String userId, Pageable pageable);

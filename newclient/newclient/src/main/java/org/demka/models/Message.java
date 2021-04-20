@@ -1,7 +1,6 @@
 package org.demka.models;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import org.demka.utils.UNIXTimeUtil;
 
 /**
@@ -13,7 +12,8 @@ public class Message {
     private final StringProperty userName;
     private final StringProperty text;
     private final StringProperty roomId;
-    private final StringProperty timeCreated;
+    private final StringProperty timeCreatedString;
+    private final LongProperty timeCreatedLong;
     private final StringProperty id;
 
     /**
@@ -31,7 +31,9 @@ public class Message {
         this.userName = new SimpleStringProperty(userName);
         this.text = new SimpleStringProperty(text);
         this.roomId = new SimpleStringProperty(roomId);
-        this.timeCreated = new SimpleStringProperty(UNIXTimeUtil.convert(timeCreated));
+
+        this.timeCreatedLong = new SimpleLongProperty(timeCreated);
+        this.timeCreatedString = new SimpleStringProperty(UNIXTimeUtil.convert(timeCreated));
         this.id = new SimpleStringProperty(id);
     }
 
@@ -52,11 +54,15 @@ public class Message {
     }
 
     public StringProperty getTimeCreatedProperty() {
-        return timeCreated;
+        return timeCreatedString;
     }
 
-    public String getTimeCreated() {
-        return timeCreated.get();
+    public String getTimeCreatedString() {
+        return timeCreatedString.get();
+    }
+
+    public long getTimeCreatedLong() {
+        return timeCreatedLong.get();
     }
 
     public String getRoomId() {
@@ -66,4 +72,5 @@ public class Message {
     public String getId() {
         return id.get();
     }
+
 }

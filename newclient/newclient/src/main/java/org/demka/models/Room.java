@@ -12,9 +12,9 @@ import java.util.List;
  */
 public class Room {
 
-    private final StringProperty creator_id;
+    private final StringProperty creatorId;
     private final StringProperty name;
-    private final IntegerProperty time_created;
+    private final IntegerProperty timeCreated;
     private final ListProperty<String> users;
     private final StringProperty id;
     private final StringProperty newMessagesFlag;
@@ -26,16 +26,16 @@ public class Room {
     /**
      * Конструктор комнаты
      *
-     * @param creator_id   - идентификатор пользователя-создателя комнаты
+     * @param creatorId   - идентификатор пользователя-создателя комнаты
      * @param name         - имя комнаты
-     * @param time_created - UNIX-время создания комнаты
+     * @param timeCreated - UNIX-время создания комнаты
      * @param users        - список идентификаторов создателей
      * @param id           - идентификатор комнаты
      */
-    public Room(String creator_id, String name, int time_created, List<String> users, String id) {
-        this.creator_id = new SimpleStringProperty(creator_id);
+    public Room(String creatorId, String name, int timeCreated, List<String> users, String id) {
+        this.creatorId = new SimpleStringProperty(creatorId);
         this.name = new SimpleStringProperty(name);
-        this.time_created = new SimpleIntegerProperty(time_created);
+        this.timeCreated = new SimpleIntegerProperty(timeCreated);
         ObservableList<String> userData = FXCollections.observableArrayList();
         userData.addAll(users);
         this.users = new SimpleListProperty<>(userData);
