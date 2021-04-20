@@ -15,7 +15,7 @@
         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="174.0" styleClass="background">
             <TableView fx:id="roomTable" layoutX="-39.0" layoutY="14.0" prefHeight="298.0" prefWidth="175.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                 <columns>
-                    <TableColumn fx:id="roomColumn" editable="false" prefWidth="75.0" text="Диалоги" />
+                    <TableColumn fx:id="roomColumn" editable="false" prefWidth="75.0" sortable="false" text="Диалоги" />
                     <TableColumn fx:id="newMessageFlagColumn" editable="false" maxWidth="20.0" minWidth="20.0" prefWidth="20.0" text=" " />
                 </columns>
                 <columnResizePolicy>

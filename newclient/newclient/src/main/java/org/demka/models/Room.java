@@ -21,7 +21,7 @@ public class Room {
     private final List<Message> messages;
 
     private final static String NO_NEW_MESSAGE_FLAG = " ";
-    private final static String NEW_MESSAGE_FLAG = "*";
+    private final static String NEW_MESSAGE_FLAG = "●";
 
     /**
      * Конструктор комнаты
