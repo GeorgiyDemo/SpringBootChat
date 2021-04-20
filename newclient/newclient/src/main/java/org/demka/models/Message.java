@@ -1,6 +1,9 @@
 package org.demka.models;
 
-import javafx.beans.property.*;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import org.demka.utils.UNIXTimeUtil;
 
 /**

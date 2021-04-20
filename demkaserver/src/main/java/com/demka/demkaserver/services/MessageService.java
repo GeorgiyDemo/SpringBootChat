@@ -105,7 +105,7 @@ public class MessageService {
      */
     public List<MessageDBEntity> getAllMessagesByRooms(List<RoomDBEntity> roomsList) {
         List<MessageDBEntity> messagesList = new ArrayList<>();
-        Pageable pageLimit = PageRequest.of(0,Integer.MAX_VALUE, Sort.by(Sort.Direction.ASC, "time_created"));
+        Pageable pageLimit = PageRequest.of(0, Integer.MAX_VALUE, Sort.by(Sort.Direction.ASC, "time_created"));
         for (RoomDBEntity room : roomsList) {
             messagesList.addAll(messageRepo.findAllByRoomId(room.getId(), pageLimit));
         }
@@ -119,8 +119,8 @@ public class MessageService {
      * @return
      */
     public List<MessageDBEntity> findByRoom(String roomId) {
-        Pageable pageLimit = PageRequest.of(0,Integer.MAX_VALUE, Sort.by(Sort.Direction.ASC, "time_created"));
-        return messageRepo.findAllByRoomId(roomId,pageLimit);
+        Pageable pageLimit = PageRequest.of(0, Integer.MAX_VALUE, Sort.by(Sort.Direction.ASC, "time_created"));
+        return messageRepo.findAllByRoomId(roomId, pageLimit);
     }
 
     /**

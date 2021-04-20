@@ -12,6 +12,8 @@ import java.util.List;
  */
 public class Room {
 
+    private final static String NO_NEW_MESSAGE_FLAG = " ";
+    private final static String NEW_MESSAGE_FLAG = "●";
     private final StringProperty creatorId;
     private final StringProperty name;
     private final IntegerProperty timeCreated;
@@ -20,17 +22,14 @@ public class Room {
     private final StringProperty newMessagesFlag;
     private final List<Message> messages;
 
-    private final static String NO_NEW_MESSAGE_FLAG = " ";
-    private final static String NEW_MESSAGE_FLAG = "●";
-
     /**
      * Конструктор комнаты
      *
      * @param creatorId   - идентификатор пользователя-создателя комнаты
-     * @param name         - имя комнаты
+     * @param name        - имя комнаты
      * @param timeCreated - UNIX-время создания комнаты
-     * @param users        - список идентификаторов создателей
-     * @param id           - идентификатор комнаты
+     * @param users       - список идентификаторов создателей
+     * @param id          - идентификатор комнаты
      */
     public Room(String creatorId, String name, int timeCreated, List<String> users, String id) {
         this.creatorId = new SimpleStringProperty(creatorId);
@@ -46,9 +45,10 @@ public class Room {
 
     /**
      * Выставление флага прочитанных сообщений для комнаты
+     *
      * @param flag булевое значение
      */
-    public void setNewMessageFlag(boolean flag){
+    public void setNewMessageFlag(boolean flag) {
         if (flag)
             newMessagesFlag.setValue(NEW_MESSAGE_FLAG);
         else

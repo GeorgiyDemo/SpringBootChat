@@ -36,7 +36,6 @@ public class LongPollRunnable implements Runnable {
      * @param messageData - ObservableList данных сообщений, который синхронизирован с таблицей messageTable в JavaFX
      * @param myAPI       - объект текущей сессии API для сапросов с бека
      * @param app         - объект app
-     *
      */
     public LongPollRunnable(ObservableList<Room> roomData, ObservableList<Message> messageData, MyAPI myAPI, App app, MainChatController mainChatController) {
         this.roomData = roomData;
@@ -48,10 +47,11 @@ public class LongPollRunnable implements Runnable {
 
     /**
      * Перемещение комнаты на первую позицию списка в основном потоке JavaFX
+     *
      * @param roomData - список ObservableList
      * @param buffRoom - объект комнаты, которую необходимо поднять
      */
-    public void updateRoomData(ObservableList<Room> roomData, Room buffRoom){
+    public void updateRoomData(ObservableList<Room> roomData, Room buffRoom) {
         Platform.runLater(() -> roomData.remove(buffRoom));
         Platform.runLater(() -> roomData.add(0, buffRoom));
     }
@@ -112,7 +112,7 @@ public class LongPollRunnable implements Runnable {
                             Platform.runLater(mainChatController::selectFirstSelectionModel);
                         }
                         //Иначе выставляем флаг нового сообщения для комнаты
-                        else{
+                        else {
                             currentRoom.setNewMessageFlag(true);
                         }
                     }
