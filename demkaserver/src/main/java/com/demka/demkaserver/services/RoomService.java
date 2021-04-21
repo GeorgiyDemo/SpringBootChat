@@ -1,6 +1,7 @@
 package com.demka.demkaserver.services;
 
 import com.demka.demkaserver.entities.database.RoomDBEntity;
+import com.demka.demkaserver.entities.database.UserDBEntity;
 import com.demka.demkaserver.repos.RoomRepository;
 import com.demka.demkaserver.utils.TimeUtil;
 import com.demka.demkaserver.utils.UUIDUtil;
@@ -89,10 +90,10 @@ public class RoomService {
     /**
      * Удаление комнаты по её объекту
      *
-     * @param item - объект комнаты
+     * @param room - объект комнаты
      */
-    public void delete(RoomDBEntity item) {
-        roomRepo.delete(item);
+    public void delete(RoomDBEntity room) {
+        roomRepo.delete(room);
     }
 
     /**
@@ -102,5 +103,47 @@ public class RoomService {
      */
     public List<RoomDBEntity> findAll() {
         return roomRepo.findAll();
+    }
+
+    /**
+     * Удаление пользователя из комнаты
+     * @param room - объект комнаты
+     * @param userId - объект пользователя для удаления
+     */
+    public void removeUser(RoomDBEntity room, String userId){
+        room.getUsers().remove(userId);
+        roomRepo.save(room);
+    }
+
+    /**
+     * Удаление пользователя из комнаты
+     * @param room - объект комнаты
+     * @param user - объект пользователя для удаления
+     */
+    public void removeUser(RoomDBEntity room, UserDBEntity user){
+        String userId = user.getId();
+        room.getUsers().remove(userId);
+        roomRepo.save(room);
+    }
+
+    /**
+     * Добавление пользователя в комнату
+     * @param room - объект комнаты
+     * @param userId - идентификатор пользователя для добавления
+     */
+    public void addUser(RoomDBEntity room, String userId){
+        room.getUsers().add(userId);
+        roomRepo.save(room);
+    }
+
+    /**
+     * Добавление пользователя в комнату
+     * @param room - объект комнаты
+     * @param user - объект пользователя для добавления
+     */
+    public void addUser(RoomDBEntity room, UserDBEntity user){
+        String userId = user.getId();
+        room.getUsers().add(userId);
+        roomRepo.save(room);
     }
 }

@@ -97,13 +97,117 @@ public class RoomController {
         Optional<RoomDBEntity> roomResult = roomService.find(roomId);
         //Если комнаты с таким id не существует
         if (roomResult.isEmpty()) {
-            return new ResponseEntity<>(GenResponseUtil.ResponseError("Комнаты с id " + roomId + " не существует"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Комнаты с id " + roomId + " не существует"), HttpStatus.BAD_REQUEST);
         }
 
         //Если существует
         return new ResponseEntity<>(GenResponseUtil.ResponseOK(roomResult.get()), HttpStatus.OK);
     }
 
+    /**
+     * Удаление пользователя из комнаты
+     * @param data - данные в JSON. Поля:
+     *             roomId - идентификатор комнаты, с которой работаем
+     *             userId - идентификатор пользователя, которого удаляем
+     *             key - ключ API создателя беседы
+     * @return
+     */
+    @PostMapping(value="/removeUser")
+    public ResponseEntity<Map<String, Object>> removeUser(@RequestBody Map<String, String> data) {
+        String roomId = data.get("roomId");
+        String userIdToRemove = data.get("userId");
+        String key = data.get("key");
+
+        //Если клиент передал не все значения
+        if ((roomId == null) || (userIdToRemove == null) || (key == null)) {
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Не все значения были переданы"), HttpStatus.BAD_REQUEST);
+        }
+
+        //Проверка на авторизацию
+        Optional<UserDBEntity> creatorUserOptional = userService.findByKey(key);
+        if (creatorUserOptional.isEmpty()) {
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Не удалось авторизоваться по указанному ключу"), HttpStatus.FORBIDDEN);
+        }
+        UserDBEntity currentUser = creatorUserOptional.get();
+
+        Optional<RoomDBEntity> currentRoomOptional = roomService.find(roomId);
+        //Проверка на существование комнаты
+        if (currentRoomOptional.isEmpty()) {
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Комнаты с id " + roomId + " не существует"), HttpStatus.BAD_REQUEST);
+        }
+        RoomDBEntity currentRoom = currentRoomOptional.get();
+
+        //Проверка, что пользователь - создатель комнаты
+        if (!currentRoom.getCreatorId().equals(currentUser.getId())){
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("У вас нет права на удаление пользователей из комнаты "+roomId), HttpStatus.FORBIDDEN);
+        }
+
+        //Проверка, что удаляем не создателя
+        if (currentRoom.getCreatorId().equals(userIdToRemove)){
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Вы не можете удалить самого себя (создателя) из комнаты"), HttpStatus.FORBIDDEN);
+        }
+
+        //Проверка на сущестование этого человека в комнате для его последующего удаления
+        if (!currentRoom.getUsers().contains(userIdToRemove)){
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Пользователя "+userIdToRemove+" не существует в комнате "+roomId), HttpStatus.BAD_REQUEST);
+        }
+
+        roomService.removeUser(currentRoom, userIdToRemove);
+        return new ResponseEntity<>(GenResponseUtil.ResponseOK(currentRoom), HttpStatus.OK);
+    }
+
+    /**
+     * Добавление пользователя в комнату
+     * @param data - данные в JSON. Поля:
+     *             roomId - идентификатор комнаты, с которой работаем
+     *             userId - идентификатор пользователя, которого добавляем
+     *             key - ключ API создателя беседы
+     * @return
+     */
+    @PostMapping(value="/addUser")
+    public ResponseEntity<Map<String, Object>> addUser(@RequestBody Map<String, String> data) {
+        String roomId = data.get("roomId");
+        String userIdToAdd = data.get("userId");
+        String key = data.get("key");
+
+        //Если клиент передал не все значения
+        if ((roomId == null) || (userIdToAdd == null) || (key == null)) {
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Не все значения были переданы"), HttpStatus.BAD_REQUEST);
+        }
+
+        //Проверка на авторизацию
+        Optional<UserDBEntity> creatorUserOptional = userService.findByKey(key);
+        if (creatorUserOptional.isEmpty()) {
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Не удалось авторизоваться по указанному ключу"), HttpStatus.FORBIDDEN);
+        }
+        UserDBEntity currentUser = creatorUserOptional.get();
+
+        //Проверка на существование комнаты
+        Optional<RoomDBEntity> currentRoomOptional = roomService.find(roomId);
+        if (currentRoomOptional.isEmpty()) {
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Комнаты с id " + roomId + " не существует"), HttpStatus.BAD_REQUEST);
+        }
+        RoomDBEntity currentRoom = currentRoomOptional.get();
+
+        //Проверка, что пользователь - создатель комнаты
+        if (!currentRoom.getCreatorId().equals(currentUser.getId())){
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("У вас нет права на добавление пользователей в комнату "+roomId), HttpStatus.FORBIDDEN);
+        }
+
+        //Проверка на существование этого человека уже в комнате
+        if (currentRoom.getUsers().contains(userIdToAdd)){
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Пользователь "+userIdToAdd+" уже есть в комнате "+roomId), HttpStatus.BAD_REQUEST);
+        }
+
+        //Проверка на существование идентификатора пользователя для добавления в комнату
+        Optional<UserDBEntity> userToAddOptional = userService.find(userIdToAdd);
+        if (userToAddOptional.isEmpty()){
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Пользователя с id "+userIdToAdd+" не существует"), HttpStatus.BAD_REQUEST);
+        }
+        UserDBEntity userToAdd = userToAddOptional.get();
+        roomService.addUser(currentRoom,userToAdd);
+        return new ResponseEntity<>(GenResponseUtil.ResponseOK(currentRoom), HttpStatus.OK);
+    }
 
     /**
      * Получение всех комнат, в которых состоит пользователь
@@ -143,7 +247,7 @@ public class RoomController {
         Optional<RoomDBEntity> roomResult = roomService.find(roomId);
         //Если комнаты с таким id не существует
         if (roomResult.isEmpty()) {
-            return new ResponseEntity<>(GenResponseUtil.ResponseError("Комнаты с id " + roomId + " не существует"), HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Комнаты с id " + roomId + " не существует"), HttpStatus.BAD_REQUEST);
         }
 
         RoomDBEntity currentRoom = roomResult.get();
