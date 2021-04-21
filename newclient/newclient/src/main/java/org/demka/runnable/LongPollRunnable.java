@@ -46,14 +46,16 @@ public class LongPollRunnable implements Runnable {
     }
 
     /**
-     * Перемещение комнаты на первую позицию списка в основном потоке JavaFX
+     * TODO: ВСЕ ПРОБЛЕМЫ ОТ ЭТОГО. Перемещение комнаты на первую позицию списка в основном потоке JavaFX
      *
      * @param roomData - список ObservableList
-     * @param buffRoom - объект комнаты, которую необходимо поднять
+     * @param roomIndex - индекс комнаты, которую необходимо поднять
      */
-    public void updateRoomData(ObservableList<Room> roomData, Room buffRoom) {
-        Platform.runLater(() -> roomData.remove(buffRoom));
-        Platform.runLater(() -> roomData.add(0, buffRoom));
+    public void updateRoomData(ObservableList<Room> roomData, int roomIndex) {
+        Room buffRoom = roomData.get(roomIndex);
+        roomData.add(0, buffRoom);
+        Platform.runLater(() -> roomData.remove(roomIndex + 1));
+
     }
 
     /**
@@ -104,7 +106,7 @@ public class LongPollRunnable implements Runnable {
                         Room currentRoom = roomData.get(existInt);
                         currentRoom.addMessage(msg);
                         logger.info("Добавили сообщение '" + msg.getText() + "' для комнаты " + msg.getRoomId());
-                        updateRoomData(roomData, currentRoom);
+                        updateRoomData(roomData, existInt);
 
                         //Если открыт уже диалог с текущей конференцией
                         if (messageRoomId.equals(myAPI.getCurrentRoomId())) {
