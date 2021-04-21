@@ -236,7 +236,8 @@ public class MainChatController extends SuperFullController {
         //Отчистка поля отправки сообщения
         newMessageText.clear();
         //Пролистываем до конца
-        messageTable.scrollTo(messageData.get(messageData.size() - 1));
+        if (messageData.size() > 0)
+            messageTable.scrollTo(messageData.get(messageData.size() - 1));
     }
 
     /**
@@ -255,7 +256,7 @@ public class MainChatController extends SuperFullController {
      * @return
      */
     public void selectFirstSelectionModel() {
-        roomTable.getSelectionModel().selectFirst();
+        roomTable.getSelectionModel().select(0);
     }
 
 }

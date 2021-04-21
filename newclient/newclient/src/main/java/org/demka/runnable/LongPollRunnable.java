@@ -15,6 +15,7 @@ import org.demka.models.Room;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -46,16 +47,20 @@ public class LongPollRunnable implements Runnable {
     }
 
     /**
-     * TODO: ВСЕ ПРОБЛЕМЫ ОТ ЭТОГО. Перемещение комнаты на первую позицию списка в основном потоке JavaFX
+     * Перемещение комнаты на первую позицию списка
      *
-     * @param roomData - список ObservableList
+     * @param roomData  - список ObservableList
      * @param roomIndex - индекс комнаты, которую необходимо поднять
      */
     public void updateRoomData(ObservableList<Room> roomData, int roomIndex) {
-        Room buffRoom = roomData.get(roomIndex);
-        roomData.add(0, buffRoom);
-        Platform.runLater(() -> roomData.remove(roomIndex + 1));
-
+        if (roomIndex > 0) {
+            Room buffRoom = roomData.get(roomIndex);
+            ArrayList<Room> buffer = new ArrayList<>(roomData);
+            buffer.remove(buffRoom);
+            buffer.add(0, buffRoom);
+            roomData.clear();
+            roomData.addAll(buffer);
+        }
     }
 
     /**
