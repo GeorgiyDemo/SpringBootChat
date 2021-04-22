@@ -252,8 +252,6 @@ public class MainChatController extends SuperFullController {
     /**
      * Метод для LongPollRunnable, чтоб при получении обновления комнат и их последующем
      * поднимании вверх SelectionModel() сохранялся;
-     *
-     * @return
      */
     public void selectFirstSelectionModel() {
         roomTable.getSelectionModel().select(0);
