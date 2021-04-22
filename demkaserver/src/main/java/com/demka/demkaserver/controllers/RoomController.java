@@ -106,13 +106,14 @@ public class RoomController {
 
     /**
      * Удаление пользователя из комнаты
+     *
      * @param data - данные в JSON. Поля:
      *             roomId - идентификатор комнаты, с которой работаем
      *             userId - идентификатор пользователя, которого удаляем
      *             key - ключ API создателя беседы
      * @return
      */
-    @PostMapping(value="/removeUser")
+    @PostMapping(value = "/removeUser")
     public ResponseEntity<Map<String, Object>> removeUser(@RequestBody Map<String, String> data) {
         String roomId = data.get("roomId");
         String userIdToRemove = data.get("userId");
@@ -138,18 +139,18 @@ public class RoomController {
         RoomDBEntity currentRoom = currentRoomOptional.get();
 
         //Проверка, что пользователь - создатель комнаты
-        if (!currentRoom.getCreatorId().equals(currentUser.getId())){
-            return new ResponseEntity<>(GenResponseUtil.ResponseError("У вас нет права на удаление пользователей из комнаты "+roomId), HttpStatus.FORBIDDEN);
+        if (!currentRoom.getCreatorId().equals(currentUser.getId())) {
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("У вас нет права на удаление пользователей из комнаты " + roomId), HttpStatus.FORBIDDEN);
         }
 
         //Проверка, что удаляем не создателя
-        if (currentRoom.getCreatorId().equals(userIdToRemove)){
+        if (currentRoom.getCreatorId().equals(userIdToRemove)) {
             return new ResponseEntity<>(GenResponseUtil.ResponseError("Вы не можете удалить самого себя (создателя) из комнаты"), HttpStatus.FORBIDDEN);
         }
 
         //Проверка на сущестование этого человека в комнате для его последующего удаления
-        if (!currentRoom.getUsers().contains(userIdToRemove)){
-            return new ResponseEntity<>(GenResponseUtil.ResponseError("Пользователя "+userIdToRemove+" не существует в комнате "+roomId), HttpStatus.BAD_REQUEST);
+        if (!currentRoom.getUsers().contains(userIdToRemove)) {
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Пользователя " + userIdToRemove + " не существует в комнате " + roomId), HttpStatus.BAD_REQUEST);
         }
 
         roomService.removeUser(currentRoom, userIdToRemove);
@@ -158,13 +159,14 @@ public class RoomController {
 
     /**
      * Добавление пользователя в комнату
+     *
      * @param data - данные в JSON. Поля:
      *             roomId - идентификатор комнаты, с которой работаем
      *             userId - идентификатор пользователя, которого добавляем
      *             key - ключ API создателя беседы
      * @return
      */
-    @PostMapping(value="/addUser")
+    @PostMapping(value = "/addUser")
     public ResponseEntity<Map<String, Object>> addUser(@RequestBody Map<String, String> data) {
         String roomId = data.get("roomId");
         String userIdToAdd = data.get("userId");
@@ -190,22 +192,22 @@ public class RoomController {
         RoomDBEntity currentRoom = currentRoomOptional.get();
 
         //Проверка, что пользователь - создатель комнаты
-        if (!currentRoom.getCreatorId().equals(currentUser.getId())){
-            return new ResponseEntity<>(GenResponseUtil.ResponseError("У вас нет права на добавление пользователей в комнату "+roomId), HttpStatus.FORBIDDEN);
+        if (!currentRoom.getCreatorId().equals(currentUser.getId())) {
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("У вас нет права на добавление пользователей в комнату " + roomId), HttpStatus.FORBIDDEN);
         }
 
         //Проверка на существование этого человека уже в комнате
-        if (currentRoom.getUsers().contains(userIdToAdd)){
-            return new ResponseEntity<>(GenResponseUtil.ResponseError("Пользователь "+userIdToAdd+" уже есть в комнате "+roomId), HttpStatus.BAD_REQUEST);
+        if (currentRoom.getUsers().contains(userIdToAdd)) {
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Пользователь " + userIdToAdd + " уже есть в комнате " + roomId), HttpStatus.BAD_REQUEST);
         }
 
         //Проверка на существование идентификатора пользователя для добавления в комнату
         Optional<UserDBEntity> userToAddOptional = userService.find(userIdToAdd);
-        if (userToAddOptional.isEmpty()){
-            return new ResponseEntity<>(GenResponseUtil.ResponseError("Пользователя с id "+userIdToAdd+" не существует"), HttpStatus.BAD_REQUEST);
+        if (userToAddOptional.isEmpty()) {
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Пользователя с id " + userIdToAdd + " не существует"), HttpStatus.BAD_REQUEST);
         }
         UserDBEntity userToAdd = userToAddOptional.get();
-        roomService.addUser(currentRoom,userToAdd);
+        roomService.addUser(currentRoom, userToAdd);
         return new ResponseEntity<>(GenResponseUtil.ResponseOK(currentRoom), HttpStatus.OK);
     }
 
@@ -267,15 +269,20 @@ public class RoomController {
 
     /**
      * Удаление комнаты
+     *
      * @param data - данные в JSON. Поля:
-     *             roomId - идентификатор комнаты, с которой работаем
+     *             roomId - идентификатор комнаты для удаления
      *             key - ключ API создателя беседы
      * @return
      */
-    @DeleteMapping(value="/remove")
+    @DeleteMapping(value = "/remove")
     public ResponseEntity<Map<String, Object>> removeRoom(@RequestBody Map<String, String> data) {
         String roomId = data.get("roomId");
         String key = data.get("key");
+
+        if ((roomId == null) || (key == null)) {
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Не все значения были переданы"), HttpStatus.BAD_REQUEST);
+        }
 
         //Проверка на авторизацию
         Optional<UserDBEntity> currentUserOptional = userService.findByKey(key);
@@ -291,10 +298,10 @@ public class RoomController {
         RoomDBEntity currentRoom = currentRoomOptional.get();
         UserDBEntity currentUser = currentUserOptional.get();
         if (!currentUser.getId().equals(currentRoom.getCreatorId()))
-            return new ResponseEntity<>(GenResponseUtil.ResponseError("У вас нет права на удаление комнаты "+roomId), HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("У вас нет права на удаление комнаты " + roomId), HttpStatus.FORBIDDEN);
 
         //Если все ок
         roomService.delete(currentRoom);
-        return new ResponseEntity<>(GenResponseUtil.ResponseOK("Успешное удаление комнаты "+roomId), HttpStatus.OK);
+        return new ResponseEntity<>(GenResponseUtil.ResponseOK("Успешное удаление комнаты " + roomId), HttpStatus.OK);
     }
 }

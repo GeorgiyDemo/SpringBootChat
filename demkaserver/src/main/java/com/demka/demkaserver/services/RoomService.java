@@ -107,20 +107,22 @@ public class RoomService {
 
     /**
      * Удаление пользователя из комнаты
-     * @param room - объект комнаты
+     *
+     * @param room   - объект комнаты
      * @param userId - объект пользователя для удаления
      */
-    public void removeUser(RoomDBEntity room, String userId){
+    public void removeUser(RoomDBEntity room, String userId) {
         room.getUsers().remove(userId);
         roomRepo.save(room);
     }
 
     /**
      * Удаление пользователя из комнаты
+     *
      * @param room - объект комнаты
      * @param user - объект пользователя для удаления
      */
-    public void removeUser(RoomDBEntity room, UserDBEntity user){
+    public void removeUser(RoomDBEntity room, UserDBEntity user) {
         String userId = user.getId();
         room.getUsers().remove(userId);
         roomRepo.save(room);
@@ -128,20 +130,22 @@ public class RoomService {
 
     /**
      * Добавление пользователя в комнату
-     * @param room - объект комнаты
+     *
+     * @param room   - объект комнаты
      * @param userId - идентификатор пользователя для добавления
      */
-    public void addUser(RoomDBEntity room, String userId){
+    public void addUser(RoomDBEntity room, String userId) {
         room.getUsers().add(userId);
         roomRepo.save(room);
     }
 
     /**
      * Добавление пользователя в комнату
+     *
      * @param room - объект комнаты
      * @param user - объект пользователя для добавления
      */
-    public void addUser(RoomDBEntity room, UserDBEntity user){
+    public void addUser(RoomDBEntity room, UserDBEntity user) {
         String userId = user.getId();
         room.getUsers().add(userId);
         roomRepo.save(room);
