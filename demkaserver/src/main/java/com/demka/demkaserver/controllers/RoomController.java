@@ -264,4 +264,37 @@ public class RoomController {
 
         return new ResponseEntity<>(GenResponseUtil.ResponseOK(roomUsersList), HttpStatus.OK);
     }
+
+    /**
+     * Удаление комнаты
+     * @param data - данные в JSON. Поля:
+     *             roomId - идентификатор комнаты, с которой работаем
+     *             key - ключ API создателя беседы
+     * @return
+     */
+    @DeleteMapping(value="/remove")
+    public ResponseEntity<Map<String, Object>> removeRoom(@RequestBody Map<String, String> data) {
+        String roomId = data.get("roomId");
+        String key = data.get("key");
+
+        //Проверка на авторизацию
+        Optional<UserDBEntity> currentUserOptional = userService.findByKey(key);
+        if (currentUserOptional.isEmpty())
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Не удалось авторизоваться по указанному ключу"), HttpStatus.FORBIDDEN);
+
+        //Проврека на существование комнаты
+        Optional<RoomDBEntity> currentRoomOptional = roomService.find(roomId);
+        if (currentRoomOptional.isEmpty())
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Комнаты с id " + roomId + " не существует"), HttpStatus.BAD_REQUEST);
+
+        //Проверка на возможность удаления комнаты
+        RoomDBEntity currentRoom = currentRoomOptional.get();
+        UserDBEntity currentUser = currentUserOptional.get();
+        if (!currentUser.getId().equals(currentRoom.getCreatorId()))
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("У вас нет права на удаление комнаты "+roomId), HttpStatus.FORBIDDEN);
+
+        //Если все ок
+        roomService.delete(currentRoom);
+        return new ResponseEntity<>(GenResponseUtil.ResponseOK("Успешное удаление комнаты "+roomId), HttpStatus.OK);
+    }
 }
