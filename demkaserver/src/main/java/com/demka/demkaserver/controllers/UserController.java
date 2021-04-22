@@ -16,12 +16,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 
+/**
+ * The type User controller.
+ */
 @RestController
 @RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
 
+    /**
+     * Instantiates a new User controller.
+     *
+     * @param userService the user service
+     */
     @Autowired
     public UserController(UserService userService) {
         this.userService = userService;
@@ -32,7 +40,7 @@ public class UserController {
      *
      * @param login    - логин пользователя
      * @param password - пароль пользователя
-     * @return
+     * @return response entity
      */
     @GetMapping(value = "/auth", params = {"login", "password"})
     public ResponseEntity<Map<String, Object>> auth(@RequestParam String login, @RequestParam String password) {
@@ -50,7 +58,7 @@ public class UserController {
      * Авторизация пользователя через ключ API
      *
      * @param key - ключ API
-     * @return
+     * @return response entity
      */
     @GetMapping(value = "/auth", params = {"key"})
     public ResponseEntity<Map<String, Object>> auth(@RequestParam String key) {
@@ -66,11 +74,8 @@ public class UserController {
     /**
      * Регистрация пользователя
      *
-     * @param data - данные в JSON. Поля:
-     *             login - логин пользователя
-     *             password - пароль пользователя
-     *             username - ник пользователя
-     * @return
+     * @param data - данные в JSON. Поля:             login - логин пользователя             password - пароль пользователя             username - ник пользователя
+     * @return response entity
      */
     @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> regUser(@RequestBody Map<String, String> data) {
@@ -102,7 +107,7 @@ public class UserController {
      * @param key        - ключ пользователя, выполняющего поиск
      * @param searchName - паттерн имени ника пользователя, которого ищем (необязательно)
      * @param limit      - кол-во пользователей, которое надо вернуть, макс 200 (необязательно)
-     * @return
+     * @return response entity
      */
     @GetMapping(value = "/search")
     public ResponseEntity<Map<String, Object>> searchUser(@RequestParam String key, @RequestParam(required = false) String searchName, @RequestParam(required = false) Integer limit) {
@@ -129,7 +134,7 @@ public class UserController {
      * Восстановление (обновление) пароля пользователя по мастер-ключу
      *
      * @param updateItem - объект UpdatePasswordEntity
-     * @return
+     * @return response entity
      */
     @PutMapping("/reset")
     public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordEntity updateItem) {

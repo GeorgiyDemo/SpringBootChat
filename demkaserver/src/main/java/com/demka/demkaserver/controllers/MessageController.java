@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * The type Message controller.
+ */
 @RestController
 @RequestMapping("/messages")
 public class MessageController {
@@ -24,6 +27,13 @@ public class MessageController {
     private final UserService userService;
     private final MessageService messageService;
 
+    /**
+     * Instantiates a new Message controller.
+     *
+     * @param roomService    the room service
+     * @param userService    the user service
+     * @param messageService the message service
+     */
     @Autowired
     public MessageController(RoomService roomService, UserService userService, MessageService messageService) {
         this.roomService = roomService;
@@ -34,11 +44,8 @@ public class MessageController {
     /**
      * Отправка сообщения в опеределенную комнату roomId
      *
-     * @param data - данные в JSON. Поля:
-     *             key - ключ пользователя
-     *             text - текст сообщения
-     *             roomId - id комнаты, куда отправляется сообщение
-     * @return
+     * @param data - данные в JSON. Поля:             key - ключ пользователя             text - текст сообщения             roomId - id комнаты, куда отправляется сообщение
+     * @return response entity
      */
     @PostMapping(value = "/send")
     public ResponseEntity<Map<String, Object>> sendMessage(@RequestBody Map<String, String> data) {
@@ -81,7 +88,7 @@ public class MessageController {
      *
      * @param key    - ключ пользователя
      * @param roomId - id комнаты
-     * @return
+     * @return messages by room
      */
     @GetMapping(value = "/get")
     public ResponseEntity<Map<String, Object>> getMessagesByRoom(@RequestParam String key, @RequestParam String roomId) {
@@ -114,10 +121,8 @@ public class MessageController {
      * Удаление сообщения.
      * Сообщение может удалять либо сам пользователь, либо создатель комнаты
      *
-     * @param data - данные в JSON. Поля:
-     *             messageId - идентификатор сообщения для удаления
-     *             key - ключ API
-     * @return
+     * @param data - данные в JSON. Поля:             messageId - идентификатор сообщения для удаления             key - ключ API
+     * @return response entity
      */
     @DeleteMapping(value = "/remove")
     public ResponseEntity<Map<String, Object>> removeMessage(@RequestBody Map<String, String> data) {

@@ -55,30 +55,65 @@ public class Room {
             newMessagesFlag.setValue(NO_NEW_MESSAGE_FLAG);
     }
 
+    /**
+     * New messages flag string string property.
+     *
+     * @return the string property
+     */
     public StringProperty newMessagesFlagString() {
         return newMessagesFlag;
     }
 
+    /**
+     * Gets name property.
+     *
+     * @return the name property
+     */
     public StringProperty getNameProperty() {
         return name;
     }
 
+    /**
+     * Gets name.
+     *
+     * @return the name
+     */
     public String getName() {
         return name.get();
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public String getId() {
         return id.get();
     }
 
+    /**
+     * Add message.
+     *
+     * @param message the message
+     */
     public void addMessage(Message message) {
         this.messages.add(message);
     }
 
+    /**
+     * Gets messages.
+     *
+     * @return the messages
+     */
     public List<Message> getMessages() {
         return messages;
     }
 
+    /**
+     * Gets users.
+     *
+     * @return the users
+     */
     public ObservableList<String> getUsers() {
         return users.get();
     }

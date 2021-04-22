@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
+/**
+ * The type Room controller.
+ */
 @RestController
 @RequestMapping("/room")
 public class RoomController {
@@ -23,6 +26,13 @@ public class RoomController {
     private final UserService userService;
     private final MessageService messageService;
 
+    /**
+     * Instantiates a new Room controller.
+     *
+     * @param roomService    the room service
+     * @param userService    the user service
+     * @param messageService the message service
+     */
     @Autowired
     public RoomController(RoomService roomService, UserService userService, MessageService messageService) {
         this.roomService = roomService;
@@ -33,11 +43,8 @@ public class RoomController {
     /**
      * Создание комнаты для общения пользователей
      *
-     * @param data - данные в JSON. Поля:
-     *             key - ключ пользователя
-     *             roomName - название комнаты
-     *             users - строка с id пользователей, состоящих в беседе
-     * @return
+     * @param data - данные в JSON. Поля:             key - ключ пользователя             roomName - название комнаты             users - строка с id пользователей, состоящих в беседе
+     * @return response entity
      */
     @PostMapping("/create")
     public ResponseEntity<Map<String, Object>> createRoom(@RequestBody Map<String, String> data) {
@@ -83,7 +90,7 @@ public class RoomController {
      *
      * @param key    - ключ пользователя
      * @param roomId - id комнаты
-     * @return
+     * @return room info
      */
     @GetMapping(value = "/get")
     public ResponseEntity<Map<String, Object>> getRoomInfo(@RequestParam String key, @RequestParam String roomId) {
@@ -107,11 +114,8 @@ public class RoomController {
     /**
      * Удаление пользователя из комнаты
      *
-     * @param data - данные в JSON. Поля:
-     *             roomId - идентификатор комнаты, с которой работаем
-     *             userId - идентификатор пользователя, которого удаляем
-     *             key - ключ API создателя беседы
-     * @return
+     * @param data - данные в JSON. Поля:             roomId - идентификатор комнаты, с которой работаем             userId - идентификатор пользователя, которого удаляем             key - ключ API создателя беседы
+     * @return response entity
      */
     @PostMapping(value = "/removeUser")
     public ResponseEntity<Map<String, Object>> removeUser(@RequestBody Map<String, String> data) {
@@ -160,11 +164,8 @@ public class RoomController {
     /**
      * Добавление пользователя в комнату
      *
-     * @param data - данные в JSON. Поля:
-     *             roomId - идентификатор комнаты, с которой работаем
-     *             userId - идентификатор пользователя, которого добавляем
-     *             key - ключ API создателя беседы
-     * @return
+     * @param data - данные в JSON. Поля:             roomId - идентификатор комнаты, с которой работаем             userId - идентификатор пользователя, которого добавляем             key - ключ API создателя беседы
+     * @return response entity
      */
     @PostMapping(value = "/addUser")
     public ResponseEntity<Map<String, Object>> addUser(@RequestBody Map<String, String> data) {
@@ -215,7 +216,7 @@ public class RoomController {
      * Получение всех комнат, в которых состоит пользователь
      *
      * @param key - ключ пользователя
-     * @return
+     * @return by user
      */
     @GetMapping(value = "/getByUser")
     public ResponseEntity<Map<String, Object>> getByUser(@RequestParam String key) {
@@ -236,7 +237,7 @@ public class RoomController {
      *
      * @param key    - ключ пользователя
      * @param roomId - идентификатор чат-комнаты
-     * @return
+     * @return room users
      */
     @GetMapping(value = "/getUsers")
     public ResponseEntity<Map<String, Object>> getRoomUsers(@RequestParam String key, @RequestParam String roomId) {
@@ -270,10 +271,8 @@ public class RoomController {
     /**
      * Удаление комнаты
      *
-     * @param data - данные в JSON. Поля:
-     *             roomId - идентификатор комнаты для удаления
-     *             key - ключ API создателя беседы
-     * @return
+     * @param data - данные в JSON. Поля:             roomId - идентификатор комнаты для удаления             key - ключ API создателя беседы
+     * @return response entity
      */
     @DeleteMapping(value = "/remove")
     public ResponseEntity<Map<String, Object>> removeRoom(@RequestBody Map<String, String> data) {

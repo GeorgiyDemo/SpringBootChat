@@ -26,18 +26,38 @@ public class User {
         this.timeCreated = new SimpleIntegerProperty(timeCreated);
     }
 
+    /**
+     * Gets name property.
+     *
+     * @return the name property
+     */
     public StringProperty getNameProperty() {
         return name;
     }
 
+    /**
+     * Gets id property.
+     *
+     * @return the id property
+     */
     public StringProperty getIdProperty() {
         return id;
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public String getId() {
         return id.get();
     }
 
+    /**
+     * Gets name.
+     *
+     * @return the name
+     */
     public String getName() {
         return name.get();
     }

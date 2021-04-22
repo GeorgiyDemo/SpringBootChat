@@ -33,10 +33,11 @@ public class LongPollRunnable implements Runnable {
     /**
      * Конструктор LongPollRunnable
      *
-     * @param roomData    - ObservableList данных комнат, который синхронизирован с таблицей roomTable в JavaFX
-     * @param messageData - ObservableList данных сообщений, который синхронизирован с таблицей messageTable в JavaFX
-     * @param myAPI       - объект текущей сессии API для сапросов с бека
-     * @param app         - объект app
+     * @param roomData           - ObservableList данных комнат, который синхронизирован с таблицей roomTable в JavaFX
+     * @param messageData        - ObservableList данных сообщений, который синхронизирован с таблицей messageTable в JavaFX
+     * @param myAPI              - объект текущей сессии API для сапросов с бека
+     * @param app                - объект app
+     * @param mainChatController the main chat controller
      */
     public LongPollRunnable(ObservableList<Room> roomData, ObservableList<Message> messageData, MyAPI myAPI, App app, MainChatController mainChatController) {
         this.roomData = roomData;
@@ -67,7 +68,7 @@ public class LongPollRunnable implements Runnable {
      * Проверка на существование комнаты по её id
      *
      * @param roomId - идентификатор комнаты
-     * @return
+     * @return integer
      */
     public Integer isRoomExist(String roomId) {
         for (int i = 0; i < roomData.size(); i++) {

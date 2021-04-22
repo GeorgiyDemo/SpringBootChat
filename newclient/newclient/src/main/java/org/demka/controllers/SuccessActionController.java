@@ -35,6 +35,11 @@ public class SuccessActionController extends SuperFullController {
         app.UserAuthorisation();
     }
 
+    /**
+     * Sets main text.
+     *
+     * @param text the text
+     */
     public void setMainText(String text) {
         mainText.setText(text);
     }

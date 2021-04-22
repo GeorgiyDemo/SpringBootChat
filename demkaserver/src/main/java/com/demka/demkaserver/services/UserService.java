@@ -23,6 +23,11 @@ public class UserService {
 
     private final UserRepository userRepo;
 
+    /**
+     * Instantiates a new User service.
+     *
+     * @param userRepo the user repo
+     */
     @Autowired
     public UserService(UserRepository userRepo) {
         this.userRepo = userRepo;
@@ -43,7 +48,7 @@ public class UserService {
      * Поиск пользователя по его id
      *
      * @param id - идентификатор пользователя
-     * @return
+     * @return optional
      */
     public Optional<UserDBEntity> find(String id) {
         return userRepo.findById(id);
@@ -55,7 +60,7 @@ public class UserService {
      *
      * @param masterKey - мастер-ключ пользователя
      * @param login     - логин пользоваетля
-     * @return
+     * @return optional
      */
     public Optional<UserDBEntity> findByMasterKeyAndEmail(String masterKey, String login) {
         return userRepo.findByMasterKeyAndEmail(masterKey, login);
@@ -66,7 +71,7 @@ public class UserService {
      *
      * @param login    - логин пользователя
      * @param password - пароль пользователя
-     * @return
+     * @return user db entity
      */
     public UserDBEntity checkAuth(String login, String password) {
         Optional<UserDBEntity> result = userRepo.checkUserAuth(login, password);
@@ -77,7 +82,7 @@ public class UserService {
      * Проверка на авторизацию пользователя по ключу API
      *
      * @param key - ключ API пользователя
-     * @return
+     * @return user db entity
      */
     public UserDBEntity checkAuth(String key) {
         Optional<UserDBEntity> result = userRepo.checkUserKey(key);
@@ -91,7 +96,7 @@ public class UserService {
      * @param password       - пароль пользоваетля
      * @param username       - ник пользователя (не путать с логином)
      * @param masterPassword - мастер-ключ пользователя. Нужен для восстановления пароля.
-     * @return
+     * @return user db entity
      */
     public UserDBEntity create(String login, String password, String username, String masterPassword) {
 
@@ -119,7 +124,7 @@ public class UserService {
      * Поиск пользователя по ключу API
      *
      * @param key - ключ API пользователя
-     * @return
+     * @return optional
      */
     public Optional<UserDBEntity> findByKey(String key) {
         return userRepo.checkUserKey(key);
@@ -131,7 +136,7 @@ public class UserService {
      * @param name           - паттерн имени пользователя
      * @param limit          - лимит найденный пользователей
      * @param currentUserKey - ключ API пользователя, осуществляющего поиск
-     * @return
+     * @return list
      */
     public List<UserDBEntity> searchUsers(String name, Integer limit, String currentUserKey) {
 
@@ -158,7 +163,7 @@ public class UserService {
      * Проверка на существование ключа API пользователя
      *
      * @param key - ключ API пользователя
-     * @return
+     * @return boolean
      */
     public boolean checkUserKey(String key) {
         return userRepo.checkUserKey(key).isPresent();
@@ -176,7 +181,7 @@ public class UserService {
     /**
      * Поиск всех пользователей в коллекции
      *
-     * @return
+     * @return list
      */
     public List<UserDBEntity> findAll() {
         return userRepo.findAll();

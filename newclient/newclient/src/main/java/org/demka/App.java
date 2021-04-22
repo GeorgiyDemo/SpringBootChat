@@ -26,7 +26,7 @@ public class App extends Application {
     /**
      * Точка входа в программу
      *
-     * @param args
+     * @param args the input arguments
      */
     public static void main(String[] args) {
         launch(args);
@@ -43,7 +43,7 @@ public class App extends Application {
      * Нужен отдельный метод из-за того, что при отсутствии интернет-соединения
      * и последующем его появлении, необходимо перезапустить приложение
      *
-     * @param primaryStage
+     * @param primaryStage the primary stage
      */
     public void myStart(Stage primaryStage) {
 
@@ -263,18 +263,38 @@ public class App extends Application {
         }
     }
 
+    /**
+     * Gets my api.
+     *
+     * @return the my api
+     */
     public MyAPI getMyAPI() {
         return myAPI;
     }
 
+    /**
+     * Sets my api.
+     *
+     * @param myAPI the my api
+     */
     public void setMyAPI(MyAPI myAPI) {
         this.myAPI = myAPI;
     }
 
+    /**
+     * Gets primary stage.
+     *
+     * @return the primary stage
+     */
     public Stage getPrimaryStage() {
         return primaryStage;
     }
 
+    /**
+     * Gets auth util.
+     *
+     * @return the auth util
+     */
     public AuthUtil getAuthUtil() {
         return authUtil;
     }

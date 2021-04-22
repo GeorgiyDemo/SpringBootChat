@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.Map;
 
 
+/**
+ * The type My api.
+ */
 public class MyAPI implements SuperAPI {
 
     private final App app;
@@ -532,22 +535,47 @@ public class MyAPI implements SuperAPI {
         }
     }
 
+    /**
+     * Gets is authenticated.
+     *
+     * @return the is authenticated
+     */
     public boolean getIsAuthenticated() {
         return isAuthenticated;
     }
 
+    /**
+     * Gets current room id.
+     *
+     * @return the current room id
+     */
     public String getCurrentRoomId() {
         return currentRoomId;
     }
 
+    /**
+     * Sets current room id.
+     *
+     * @param currentRoomId the current room id
+     */
     public void setCurrentRoomId(String currentRoomId) {
         this.currentRoomId = currentRoomId;
     }
 
+    /**
+     * Gets user name.
+     *
+     * @return the user name
+     */
     public String getUserName() {
         return userName;
     }
 
+    /**
+     * Gets user key.
+     *
+     * @return the user key
+     */
     public String getUserKey() {
         return userKey;
     }

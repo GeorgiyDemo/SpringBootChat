@@ -11,6 +11,12 @@ import java.util.List;
  */
 public interface RoomRepository extends MongoRepository<RoomDBEntity, String> {
 
+    /**
+     * Find all by user list.
+     *
+     * @param userId the user id
+     * @return the list
+     */
     @Query("{ 'users' : ?0}")
     List<RoomDBEntity> findAllByUser(String userId);
 }

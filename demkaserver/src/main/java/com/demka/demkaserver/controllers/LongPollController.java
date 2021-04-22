@@ -19,6 +19,9 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 
+/**
+ * The type Long poll controller.
+ */
 @RestController
 @RequestMapping("/longpoll")
 public class LongPollController {
@@ -29,6 +32,14 @@ public class LongPollController {
     private final RoomService roomService;
 
 
+    /**
+     * Instantiates a new Long poll controller.
+     *
+     * @param messageService  the message service
+     * @param userService     the user service
+     * @param longPollService the long poll service
+     * @param roomService     the room service
+     */
     @Autowired
     public LongPollController(MessageService messageService, UserService userService, LongPollService longPollService, RoomService roomService) {
         this.messageService = messageService;
@@ -41,7 +52,7 @@ public class LongPollController {
      * Получение данных лонгпула для указанного ключа
      *
      * @param key - ключ пользователя
-     * @return
+     * @return long poll server
      */
     @GetMapping(value = "/getServer")
     public ResponseEntity<Map<String, Object>> getLongPollServer(@RequestParam String key) {
@@ -82,8 +93,8 @@ public class LongPollController {
      * @param url - URL лонгпула
      * @param key - ключ ЛОНГПУЛА (не пользователя)
      * @param ts  - значение ts, пполученное через /getServer
-     * @return
-     * @throws InterruptedException
+     * @return response entity
+     * @throws InterruptedException the interrupted exception
      */
     @GetMapping(value = "/updates/{url}")
     public ResponseEntity<Map<String, Object>> longPoll(@PathVariable String url, @RequestParam String key, @RequestParam Long ts) throws InterruptedException {

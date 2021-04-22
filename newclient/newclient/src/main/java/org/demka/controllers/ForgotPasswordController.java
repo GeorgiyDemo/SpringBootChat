@@ -18,12 +18,24 @@ import java.util.Map;
 public class ForgotPasswordController extends SuperFullController {
 
     private static final Logger logger = LoggerFactory.getLogger(ForgotPasswordController.class);
+    /**
+     * The New password text field.
+     */
     @FXML
     JFXPasswordField newPasswordTextField;
+    /**
+     * The Master key text field.
+     */
     @FXML
     JFXPasswordField masterKeyTextField;
+    /**
+     * The Login text field.
+     */
     @FXML
     JFXTextField loginTextField;
+    /**
+     * The Error description.
+     */
     @FXML
     Label errorDescription;
     private String errorString;

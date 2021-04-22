@@ -8,6 +8,9 @@ import java.util.stream.Collectors;
  */
 public class FileProcessingUtil {
 
+    /**
+     * The File name.
+     */
     String fileName;
 
     /**
@@ -33,7 +36,7 @@ public class FileProcessingUtil {
     /**
      * Чтение данных
      *
-     * @return
+     * @return string
      */
     public String DataRead() {
 

@@ -40,38 +40,83 @@ public class Message {
         this.id = new SimpleStringProperty(id);
     }
 
+    /**
+     * Gets text.
+     *
+     * @return the text
+     */
     public String getText() {
         return text.get();
     }
 
+    /**
+     * Gets user name.
+     *
+     * @return the user name
+     */
     public String getUserName() {
         return userName.get();
     }
 
+    /**
+     * Gets user name property.
+     *
+     * @return the user name property
+     */
     public StringProperty getUserNameProperty() {
         return userName;
     }
 
+    /**
+     * Gets text property.
+     *
+     * @return the text property
+     */
     public StringProperty getTextProperty() {
         return text;
     }
 
+    /**
+     * Gets time created property.
+     *
+     * @return the time created property
+     */
     public StringProperty getTimeCreatedProperty() {
         return timeCreatedString;
     }
 
+    /**
+     * Gets time created string.
+     *
+     * @return the time created string
+     */
     public String getTimeCreatedString() {
         return timeCreatedString.get();
     }
 
+    /**
+     * Gets time created long.
+     *
+     * @return the time created long
+     */
     public long getTimeCreatedLong() {
         return timeCreatedLong.get();
     }
 
+    /**
+     * Gets room id.
+     *
+     * @return the room id
+     */
     public String getRoomId() {
         return roomId.get();
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public String getId() {
         return id.get();
     }

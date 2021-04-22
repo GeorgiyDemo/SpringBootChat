@@ -3,6 +3,9 @@ package org.demka.utils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * The type Validators util.
+ */
 public class ValidatorsUtil {
 
     /**

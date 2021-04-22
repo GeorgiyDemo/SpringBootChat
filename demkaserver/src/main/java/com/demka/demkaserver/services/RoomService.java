@@ -20,6 +20,11 @@ public class RoomService {
 
     private final RoomRepository roomRepo;
 
+    /**
+     * Instantiates a new Room service.
+     *
+     * @param roomRepo the room repo
+     */
     @Autowired
     public RoomService(RoomRepository roomRepo) {
         this.roomRepo = roomRepo;
@@ -29,7 +34,7 @@ public class RoomService {
      * Отдаёт список комнат, в которых состоит пользователь
      *
      * @param userId - идентификатор пользователя
-     * @return
+     * @return list
      */
     public List<RoomDBEntity> findUserRooms(String userId) {
         return roomRepo.findAllByUser(userId);
@@ -39,7 +44,7 @@ public class RoomService {
      * Поиск комнаты по её id
      *
      * @param id - идентификатор комнаты
-     * @return
+     * @return optional
      */
     public Optional<RoomDBEntity> find(String id) {
         return roomRepo.findById(id);
@@ -51,7 +56,7 @@ public class RoomService {
      * @param creatorId   - идентификатор пользователя-создателя комнаты
      * @param roomName    - имя комнаты
      * @param usersBuffer - спосок идентификаторов пользователей-участников комнаты
-     * @return
+     * @return room db entity
      */
     public RoomDBEntity create(String creatorId, String roomName, List<String> usersBuffer) {
 
@@ -99,7 +104,7 @@ public class RoomService {
     /**
      * Поиск всех комнат
      *
-     * @return
+     * @return list
      */
     public List<RoomDBEntity> findAll() {
         return roomRepo.findAll();

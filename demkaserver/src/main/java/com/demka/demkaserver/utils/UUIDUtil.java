@@ -2,6 +2,9 @@ package com.demka.demkaserver.utils;
 
 import java.util.UUID;
 
+/**
+ * The type Uuid util.
+ */
 public class UUIDUtil {
 
     /**
