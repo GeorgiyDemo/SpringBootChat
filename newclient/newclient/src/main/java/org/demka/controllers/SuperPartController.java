@@ -4,17 +4,23 @@ import javafx.stage.Stage;
 import org.demka.App;
 
 /**
- * Класс, от которого наследуются все контроллеры, layout которых открывается на всё окно
+ * Класс, от которого наследуются все контроллеры, layout которых открывается поверх основного окна
  */
 public abstract class SuperPartController {
+    /**
+     * The App.
+     */
     protected App app;
+    /**
+     * The Dialog stage.
+     */
     protected Stage dialogStage;
 
     /**
      * Метод инициализации (вызывается с Main)
      *
-     * @param app
-     * @param dialogStage
+     * @param app         the app
+     * @param dialogStage the dialog stage
      */
     public abstract void initialize(App app, Stage dialogStage);
 }

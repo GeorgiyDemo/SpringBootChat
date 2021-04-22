@@ -3,6 +3,9 @@ package com.demka.demkaserver.entities.converters;
 import com.demka.demkaserver.entities.database.UserDBEntity;
 import com.demka.demkaserver.entities.response.UserAuthResponseEntity;
 
+/**
+ * The type User converter.
+ */
 public class UserConverter {
 
     /**
@@ -10,7 +13,7 @@ public class UserConverter {
      * Это нужно для того, чтоб избавиться от полей, которые не нужны в ответе (т.е. пароль, мастер-ключ и т д)
      *
      * @param dbEntity - сущность UserDBEntity
-     * @return
+     * @return user auth response entity
      */
     public static UserAuthResponseEntity convert(UserDBEntity dbEntity) {
         UserAuthResponseEntity responseEntity = new UserAuthResponseEntity();

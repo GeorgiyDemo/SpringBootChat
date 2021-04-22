@@ -17,6 +17,11 @@ public class LongPollService {
 
     private final LongPollRepository longPollRepo;
 
+    /**
+     * Instantiates a new Long poll service.
+     *
+     * @param longPollRepo the long poll repo
+     */
     @Autowired
     public LongPollService(LongPollRepository longPollRepo) {
         this.longPollRepo = longPollRepo;
@@ -27,7 +32,7 @@ public class LongPollService {
      *
      * @param userId - иднетификатор пользователя
      * @param ts     - UNIX-время последнего принятого сообщения
-     * @return
+     * @return long poll db entity
      */
     public LongPollDBEntity create(String userId, Long ts) {
 
@@ -46,7 +51,7 @@ public class LongPollService {
      * Поиск лонгпула по URL
      *
      * @param url - URL лонгпула
-     * @return
+     * @return optional
      */
     public Optional<LongPollDBEntity> findByUrl(String url) {
         return longPollRepo.findByUrl(url);
@@ -57,7 +62,7 @@ public class LongPollService {
      *
      * @param key - ключ лонгпула
      * @param url - URL лонгпула
-     * @return
+     * @return optional
      */
     public Optional<LongPollDBEntity> findByKeyAndUrl(String key, String url) {
         return longPollRepo.findByKeyAndUrl(key, url);
@@ -95,7 +100,7 @@ public class LongPollService {
     /**
      * Поиск всех лонгпулов
      *
-     * @return
+     * @return list
      */
     public List<LongPollDBEntity> findAll() {
         return longPollRepo.findAll();
@@ -105,7 +110,7 @@ public class LongPollService {
      * Поиск лонгпула по его id
      *
      * @param id - идентификатор лонгпула
-     * @return
+     * @return optional
      */
     public Optional<LongPollDBEntity> find(String id) {
         return longPollRepo.findById(id);

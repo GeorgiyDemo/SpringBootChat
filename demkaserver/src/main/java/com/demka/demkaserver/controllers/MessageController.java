@@ -16,6 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * The type Message controller.
+ */
 @RestController
 @RequestMapping("/messages")
 public class MessageController {
@@ -24,6 +27,13 @@ public class MessageController {
     private final UserService userService;
     private final MessageService messageService;
 
+    /**
+     * Instantiates a new Message controller.
+     *
+     * @param roomService    the room service
+     * @param userService    the user service
+     * @param messageService the message service
+     */
     @Autowired
     public MessageController(RoomService roomService, UserService userService, MessageService messageService) {
         this.roomService = roomService;
@@ -34,11 +44,8 @@ public class MessageController {
     /**
      * Отправка сообщения в опеределенную комнату roomId
      *
-     * @param data - данные в JSON. Поля:
-     *             key - ключ пользователя
-     *             text - текст сообщения
-     *             roomId - id комнаты, куда отправляется сообщение
-     * @return
+     * @param data - данные в JSON. Поля:             key - ключ пользователя             text - текст сообщения             roomId - id комнаты, куда отправляется сообщение
+     * @return response entity
      */
     @PostMapping(value = "/send")
     public ResponseEntity<Map<String, Object>> sendMessage(@RequestBody Map<String, String> data) {
@@ -81,7 +88,7 @@ public class MessageController {
      *
      * @param key    - ключ пользователя
      * @param roomId - id комнаты
-     * @return
+     * @return messages by room
      */
     @GetMapping(value = "/get")
     public ResponseEntity<Map<String, Object>> getMessagesByRoom(@RequestParam String key, @RequestParam String roomId) {
@@ -108,5 +115,54 @@ public class MessageController {
         //Если комната существует и все фильтрации пройдены
         List<MessageDBEntity> messagesList = messageService.findByRoom(roomId);
         return new ResponseEntity<>(GenResponseUtil.ResponseOK(messagesList), HttpStatus.OK);
+    }
+
+    /**
+     * Удаление сообщения.
+     * Сообщение может удалять либо сам пользователь, либо создатель комнаты
+     *
+     * @param data - данные в JSON. Поля:             messageId - идентификатор сообщения для удаления             key - ключ API
+     * @return response entity
+     */
+    @DeleteMapping(value = "/remove")
+    public ResponseEntity<Map<String, Object>> removeMessage(@RequestBody Map<String, String> data) {
+
+        String key = data.get("key");
+        String messageId = data.get("messageId");
+
+        if ((key == null) || (messageId == null)) {
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Не все значения были переданы"), HttpStatus.BAD_REQUEST);
+        }
+
+        //Проверка на авторизацию API
+        Optional<UserDBEntity> currentUserOptional = userService.findByKey(key);
+        if (currentUserOptional.isEmpty())
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Не удалось авторизоваться по указанному ключу"), HttpStatus.FORBIDDEN);
+        UserDBEntity currentUser = currentUserOptional.get();
+
+        //Проверка на существование сообщения
+        Optional<MessageDBEntity> currentMessageOptional = messageService.find(messageId);
+        if (currentMessageOptional.isEmpty())
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("Сообщения с id " + messageId + " не существует"), HttpStatus.BAD_REQUEST);
+
+        MessageDBEntity currentMessage = currentMessageOptional.get();
+        //Проверка на возможность удаления сообщения
+        Optional<RoomDBEntity> currentMessageRoomOptional = roomService.find(currentMessage.getRoomId());
+
+        //Удаление от имени создателя беседы
+        if (currentMessageRoomOptional.isPresent() && (currentUser.getId().equals(currentMessageRoomOptional.get().getCreatorId()))) {
+            messageService.delete(currentMessage);
+            System.out.println("Произошло удаление от имени создателя беседы");
+            return new ResponseEntity<>(GenResponseUtil.ResponseOK("Успешное удаление сообщения " + messageId), HttpStatus.OK);
+            //Удаление от имени владельца сообщения
+        } else if (currentMessage.getUserId().equals(currentUser.getId())) {
+            messageService.delete(currentMessage);
+            System.out.println("Произошло удаление от имени владельца сообщения");
+            return new ResponseEntity<>(GenResponseUtil.ResponseOK("Успешное удаление сообщения " + messageId), HttpStatus.OK);
+            //Нет прав на удаление
+        } else {
+            System.out.println("Нет прав на удаление сообщения");
+            return new ResponseEntity<>(GenResponseUtil.ResponseError("У вас нет права на удаление сообщения " + messageId), HttpStatus.FORBIDDEN);
+        }
     }
 }

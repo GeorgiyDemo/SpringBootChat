@@ -31,7 +31,7 @@ public class String2HashUtil {
      * Конвертация хеширование данных в SHA-256
      *
      * @param input - строка для хеширования
-     * @return
+     * @return string
      */
     public static String convert(String input) {
 

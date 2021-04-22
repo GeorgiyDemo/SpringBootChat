@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.Map;
 
 
+/**
+ * The type My api.
+ */
 public class MyAPI implements SuperAPI {
 
     private final App app;
@@ -323,6 +326,7 @@ public class MyAPI implements SuperAPI {
         if (searchExp == null) {
             URL = String.format("%s/user/search?key=%s", serverURL, userKey);
         } else {
+            searchExp = URLEncoder.encode(searchExp, StandardCharsets.UTF_8);
             URL = String.format("%s/user/search?key=%s&searchName=%s", serverURL, userKey, searchExp);
         }
         String response = HTTPRequest.sendGET(URL);
@@ -478,8 +482,8 @@ public class MyAPI implements SuperAPI {
 
         //Если лонгпул не инициализирован
         if (longPollKey == null || longPollTs == null || longPollSubUrl == null) {
-            logger.error("longPollListener - LongPool не инициалзирован");
-            throw new LongPollListenerException("Лонгпул не был иницилизирован! Нужно использовать метод getLongPollServer для иницализации");
+            logger.info("longPollListener - LongPool не инициалзирован");
+            throw new LongPollListenerException("[Не пугаться] Лонгпул не был иницилизирован. Использую getLongPollServer для иницализации..");
         }
 
         //Если же инициализация прошла успешно
@@ -531,22 +535,47 @@ public class MyAPI implements SuperAPI {
         }
     }
 
+    /**
+     * Gets is authenticated.
+     *
+     * @return the is authenticated
+     */
     public boolean getIsAuthenticated() {
         return isAuthenticated;
     }
 
+    /**
+     * Gets current room id.
+     *
+     * @return the current room id
+     */
     public String getCurrentRoomId() {
         return currentRoomId;
     }
 
+    /**
+     * Sets current room id.
+     *
+     * @param currentRoomId the current room id
+     */
     public void setCurrentRoomId(String currentRoomId) {
         this.currentRoomId = currentRoomId;
     }
 
+    /**
+     * Gets user name.
+     *
+     * @return the user name
+     */
     public String getUserName() {
         return userName;
     }
 
+    /**
+     * Gets user key.
+     *
+     * @return the user key
+     */
     public String getUserKey() {
         return userKey;
     }

@@ -67,7 +67,7 @@ public class CheckInternetRunnable implements Runnable {
 
             //Проверяем интернет
             boolean exceptionFlag = false;
-            if (!isReachable("149.248.54.195", 8080, 3000)) {
+            if (!isReachable("149.248.54.195", 8080, 10000)) {
                 try {
                     exceptionFlag = true;
                     //Вызываем страницу с ошибкой интернет-соединения, если еще не вызвали
@@ -81,7 +81,7 @@ public class CheckInternetRunnable implements Runnable {
 
             //Спим
             try {
-                Thread.sleep(1000);
+                Thread.sleep(4000);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 logger.error("Поток '" + Thread.currentThread().getName() + "' с id " + Thread.currentThread().getId() + " убит");

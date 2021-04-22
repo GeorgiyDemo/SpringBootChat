@@ -10,13 +10,16 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
+/**
+ * The type Http request.
+ */
 public class HTTPRequest {
 
     /**
      * Отправка GET-запроса
      *
      * @param urlString - URL, куда отправляется запрос
-     * @return
+     * @return string
      */
     public static String sendGET(String urlString) {
 
@@ -51,7 +54,7 @@ public class HTTPRequest {
      *
      * @param urlString - URL, куда отправляется запрос
      * @param paramsMap - параметры запроса
-     * @return
+     * @return string
      */
     public static String sendPOST(String urlString, Map<String, String> paramsMap) {
         try {
@@ -100,7 +103,7 @@ public class HTTPRequest {
      *
      * @param urlString  - URL, куда отправляется запрос
      * @param jsonString - строка с JSON для обновления данных
-     * @return
+     * @return string
      */
     public static String sendPUT(String urlString, String jsonString) {
         try {

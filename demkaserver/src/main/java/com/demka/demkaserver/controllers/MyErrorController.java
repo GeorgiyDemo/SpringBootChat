@@ -10,8 +10,18 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The type My error controller.
+ */
 public class MyErrorController extends BasicErrorController {
 
+    /**
+     * Instantiates a new My error controller.
+     *
+     * @param errorAttributes    the error attributes
+     * @param errorProperties    the error properties
+     * @param errorViewResolvers the error view resolvers
+     */
     public MyErrorController(ErrorAttributes errorAttributes, ErrorProperties errorProperties, List<ErrorViewResolver> errorViewResolvers) {
         super(errorAttributes, errorProperties, errorViewResolvers);
     }

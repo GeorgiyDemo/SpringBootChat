@@ -18,12 +18,24 @@ import java.util.Map;
 public class ForgotPasswordController extends SuperFullController {
 
     private static final Logger logger = LoggerFactory.getLogger(ForgotPasswordController.class);
+    /**
+     * The New password text field.
+     */
     @FXML
     JFXPasswordField newPasswordTextField;
+    /**
+     * The Master key text field.
+     */
     @FXML
     JFXPasswordField masterKeyTextField;
+    /**
+     * The Login text field.
+     */
     @FXML
     JFXTextField loginTextField;
+    /**
+     * The Error description.
+     */
     @FXML
     Label errorDescription;
     private String errorString;
@@ -121,6 +133,11 @@ public class ForgotPasswordController extends SuperFullController {
 
         if (masterKey.length() < 8) {
             errorString = "Мастер-пароль должен быть не менее 8 символов";
+            return false;
+        }
+
+        if (masterKey.equals(password)) {
+            errorString = "Пароль и мастер-пароль не должны совпадать";
             return false;
         }
 

@@ -18,10 +18,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * The interface Super api.
+ */
 public interface SuperAPI {
 
+    /**
+     * The constant logger.
+     */
     Logger logger = LoggerFactory.getLogger(MyAPI.class);
-    String serverURL = "http://149.248.54.195:8080";
+    /**
+     * The constant serverURL.
+     */
+    String serverURL = "http://127.0.0.1:8080";
 
     /**
      * Восстановление пароля
@@ -29,7 +38,7 @@ public interface SuperAPI {
      * @param login       - логин пользователя
      * @param newPassword - новый пароль пользователя
      * @param masterKey   - мастер-ключ пользователя
-     * @return
+     * @return map
      */
     static Map<String, Object> resetPassword(String login, String newPassword, String masterKey) {
         String URL = String.format("%s/user/reset", serverURL);
@@ -72,7 +81,7 @@ public interface SuperAPI {
      * @param login     - логин (e-mail) пользователя
      * @param password  - пароль пользователя
      * @param masterKey - мастер-пароль пользователя
-     * @return
+     * @return map
      */
     static Map<String, Object> registration(String name, String login, String password, String masterKey) {
 
@@ -114,8 +123,8 @@ public interface SuperAPI {
      *
      * @param login    - логин пользователя
      * @param password - пароль пользоваетля
-     * @return
-     * @throws EmptyAPIResponseException
+     * @return boolean
+     * @throws EmptyAPIResponseException the empty api response exception
      */
     boolean auth(String login, String password) throws EmptyAPIResponseException;
 
@@ -124,17 +133,17 @@ public interface SuperAPI {
      * с помощью ключа API
      *
      * @param key - ключ API пользователя
-     * @return
-     * @throws EmptyAPIResponseException
+     * @return boolean
+     * @throws EmptyAPIResponseException the empty api response exception
      */
     boolean auth(String key) throws EmptyAPIResponseException;
 
     /**
      * Получение всех чат-комнат пользователя
      *
-     * @return
-     * @throws FalseServerFlagException
-     * @throws EmptyAPIResponseException
+     * @return user rooms
+     * @throws FalseServerFlagException  the false server flag exception
+     * @throws EmptyAPIResponseException the empty api response exception
      */
     List<Room> getUserRooms() throws FalseServerFlagException, EmptyAPIResponseException;
 
@@ -143,9 +152,9 @@ public interface SuperAPI {
      * Получение объекта комнаты, в которой состоит пользователь, по её id
      *
      * @param roomId - идентификатор комнаты
-     * @return
-     * @throws RoomNotFoundException
-     * @throws EmptyAPIResponseException
+     * @return room info
+     * @throws RoomNotFoundException     the room not found exception
+     * @throws EmptyAPIResponseException the empty api response exception
      */
     Room getRoomInfo(String roomId) throws RoomNotFoundException, EmptyAPIResponseException;
 
@@ -153,9 +162,9 @@ public interface SuperAPI {
      * Получение истории сообщений по конкретной комнате
      *
      * @param roomId - идентификатор комнаты
-     * @return
-     * @throws FalseServerFlagException
-     * @throws EmptyAPIResponseException
+     * @return room messages history
+     * @throws FalseServerFlagException  the false server flag exception
+     * @throws EmptyAPIResponseException the empty api response exception
      */
     List<Message> getRoomMessagesHistory(String roomId) throws FalseServerFlagException, EmptyAPIResponseException;
 
@@ -165,9 +174,9 @@ public interface SuperAPI {
      *
      * @param roomName    - название комнаты
      * @param usersString - строка с идентификаторами пользователей-участинков комнаты
-     * @return
-     * @throws FalseServerFlagException
-     * @throws EmptyAPIResponseException
+     * @return boolean
+     * @throws FalseServerFlagException  the false server flag exception
+     * @throws EmptyAPIResponseException the empty api response exception
      */
     boolean createRoom(String roomName, String usersString) throws FalseServerFlagException, EmptyAPIResponseException;
 
@@ -175,9 +184,9 @@ public interface SuperAPI {
      * Поиск пользователей в системе по имени
      *
      * @param searchExp - паттерн имени пользователя
-     * @return
-     * @throws FalseServerFlagException
-     * @throws EmptyAPIResponseException
+     * @return users
+     * @throws FalseServerFlagException  the false server flag exception
+     * @throws EmptyAPIResponseException the empty api response exception
      */
     List<User> getUsers(String searchExp) throws FalseServerFlagException, EmptyAPIResponseException;
 
@@ -186,9 +195,9 @@ public interface SuperAPI {
      * Получение объектов пользователей по id комнаты, в которой они состоят
      *
      * @param roomId - идентификатор комнаты
-     * @return
-     * @throws FalseServerFlagException
-     * @throws EmptyAPIResponseException
+     * @return users by room
+     * @throws FalseServerFlagException  the false server flag exception
+     * @throws EmptyAPIResponseException the empty api response exception
      */
     List<User> getUsersByRoom(String roomId) throws FalseServerFlagException, EmptyAPIResponseException;
 
@@ -196,9 +205,9 @@ public interface SuperAPI {
      * Отправка сообщения в текущую комнату
      *
      * @param text - текст сообщения
-     * @return
-     * @throws FalseServerFlagException
-     * @throws EmptyAPIResponseException
+     * @return message
+     * @throws FalseServerFlagException  the false server flag exception
+     * @throws EmptyAPIResponseException the empty api response exception
      */
     Message writeMessage(String text) throws FalseServerFlagException, EmptyAPIResponseException;
 
@@ -206,16 +215,16 @@ public interface SuperAPI {
      * Получение сервера лонгпула
      * Выставляет longpollTs, longpollSubUrl, longpollKey
      *
-     * @throws EmptyAPIResponseException
-     * @throws FalseServerFlagException
+     * @throws EmptyAPIResponseException the empty api response exception
+     * @throws FalseServerFlagException  the false server flag exception
      */
     void getLongPollServer() throws EmptyAPIResponseException, FalseServerFlagException;
 
     /**
      * Слушатель лонгпула
      *
-     * @return
-     * @throws LongPollListenerException
+     * @return list
+     * @throws LongPollListenerException the long poll listener exception
      */
     List<Message> longPollListener() throws LongPollListenerException;
 }

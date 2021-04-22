@@ -2,6 +2,9 @@ package com.demka.demkaserver.utils;
 
 import java.time.Instant;
 
+/**
+ * The type Time util.
+ */
 public class TimeUtil {
     /**
      * Возвращает текущее UNIX-время системы

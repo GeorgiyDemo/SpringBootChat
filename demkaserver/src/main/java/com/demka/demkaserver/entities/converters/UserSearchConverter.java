@@ -3,6 +3,9 @@ package com.demka.demkaserver.entities.converters;
 import com.demka.demkaserver.entities.database.UserDBEntity;
 import com.demka.demkaserver.entities.response.UserSearchResponseEntity;
 
+/**
+ * The type User search converter.
+ */
 public class UserSearchConverter {
 
     /**
@@ -10,7 +13,7 @@ public class UserSearchConverter {
      * Это нужно для того, чтоб избавиться от всех полей, которые не нужны в ответе (т.е. пароль, мастер-ключ и т д)
      *
      * @param dbEntity - сущность UserDBEntity
-     * @return
+     * @return user search response entity
      */
     public static UserSearchResponseEntity convert(UserDBEntity dbEntity) {
         UserSearchResponseEntity responseEntity = new UserSearchResponseEntity();

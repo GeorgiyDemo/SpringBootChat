@@ -4,7 +4,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 
 /**
- * Класс для обработки начатия на Menu без Menuitem'ов
+ * Класс для обработки нажатия на Menu без Menuitem'ов
  */
 public class MyMenuActionUtil {
     /**

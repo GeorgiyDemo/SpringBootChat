@@ -10,12 +10,20 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
+/**
+ * The type My error configuration.
+ */
 @Configuration
 public class MyErrorConfiguration {
 
     /**
      * Нужен, чтоб кастомный ErrorController использовать
      * А он в свою очередь нужен, чтоб доп атрибут result при ошибке выводить
+     *
+     * @param errorAttributes            the error attributes
+     * @param serverProperties           the server properties
+     * @param errorViewResolversProvider the error view resolvers provider
+     * @return the my error controller
      */
     @Bean
     public MyErrorController ErrorController(ErrorAttributes errorAttributes, ServerProperties serverProperties, ObjectProvider<List<ErrorViewResolver>> errorViewResolversProvider) {

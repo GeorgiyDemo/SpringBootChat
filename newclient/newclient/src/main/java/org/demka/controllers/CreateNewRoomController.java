@@ -37,6 +37,8 @@ public class CreateNewRoomController extends SuperPartController {
     private Button createRoomButton;
     @FXML
     private TextField chatName;
+    @FXML
+    private TextField searchUser;
 
     @Override
     public void initialize(App app, Stage dialogStage) {
@@ -64,6 +66,40 @@ public class CreateNewRoomController extends SuperPartController {
         //Добавляем пользователей системы
         try {
             allUsersData.addAll(myAPI.getUsers(null));
+        } catch (FalseServerFlagException | EmptyAPIResponseException e) {
+            e.printStackTrace();
+        }
+
+        //Слушатель изменения текста
+        searchUser.textProperty().addListener(
+                ((observableValue, oldValue, newValue) -> searchUserChanged(newValue))
+        );
+    }
+
+    /**
+     * Обработчик изменения текста в searchUser
+     *
+     * @param newValue - обновлённое значение поля
+     */
+    private void searchUserChanged(String newValue) {
+        try {
+            List<User> searchResult = myAPI.getUsers(newValue);
+            allUsersData.clear();
+
+            //Фильтруем на то, чтоб не было пользователей, которых мы уже выбрали
+            for (User searchUser : searchResult) {
+
+                boolean contains = false;
+                for (User chatUser : chatUsersData) {
+                    if (searchUser.getId().equals(chatUser.getId())) {
+                        contains = true;
+                        break;
+                    }
+                }
+                if (!contains) {
+                    allUsersData.add(searchUser);
+                }
+            }
         } catch (FalseServerFlagException | EmptyAPIResponseException e) {
             e.printStackTrace();
         }
@@ -100,7 +136,6 @@ public class CreateNewRoomController extends SuperPartController {
                 ChatNameBuilder.append("..");
             }
             localeChatName = ChatNameBuilder.toString();
-
         } else {
             localeChatName = chatName.getText();
         }

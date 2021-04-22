@@ -30,7 +30,7 @@ public class AuthUtil {
     /**
      * Чтение данных из файла
      *
-     * @return
+     * @return string
      */
     public String readKey() {
         return fileProcessingUtil.DataRead();

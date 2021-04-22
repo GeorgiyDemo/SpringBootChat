@@ -5,7 +5,7 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Каасс для работы с UNIX-временем
+ * Класс для работы с UNIX-временем
  */
 public class UNIXTimeUtil {
 
@@ -15,7 +15,7 @@ public class UNIXTimeUtil {
      * Конвертирует UNIX-время в обычное время
      *
      * @param time - UNIX-время
-     * @return
+     * @return string
      */
     public static String convert(long time) {
         return formatter.format(Instant.ofEpochSecond(time));

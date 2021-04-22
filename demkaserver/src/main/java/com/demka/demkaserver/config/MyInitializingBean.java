@@ -5,11 +5,19 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * The type My initializing bean.
+ */
 @Component
 public class MyInitializingBean implements InitializingBean {
 
     private final LongPollService longPollService;
 
+    /**
+     * Instantiates a new My initializing bean.
+     *
+     * @param longPollService the long poll service
+     */
     @Autowired
     public MyInitializingBean(LongPollService longPollService) {
         this.longPollService = longPollService;

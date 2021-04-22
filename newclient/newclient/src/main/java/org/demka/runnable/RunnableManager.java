@@ -11,6 +11,9 @@ import java.util.List;
  */
 public class RunnableManager {
     private static final Logger logger = LoggerFactory.getLogger(RunnableManager.class);
+    /**
+     * The constant threadsList.
+     */
     public static List<Thread> threadsList = new ArrayList<>();
 
     /**

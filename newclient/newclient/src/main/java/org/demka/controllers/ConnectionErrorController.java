@@ -7,6 +7,9 @@ import org.demka.App;
  */
 public class ConnectionErrorController extends SuperFullController {
 
+    /**
+     * The constant isActive.
+     */
     public static boolean isActive = false;
 
     /**

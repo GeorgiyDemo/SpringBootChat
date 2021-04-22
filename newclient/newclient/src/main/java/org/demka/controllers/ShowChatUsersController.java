@@ -18,6 +18,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+/**
+ * Контроллер-обработчик окна с информацией о выбранном диалоге;
+ */
 public class ShowChatUsersController extends SuperPartController {
 
     private static final Logger logger = LoggerFactory.getLogger(ShowChatUsersController.class);

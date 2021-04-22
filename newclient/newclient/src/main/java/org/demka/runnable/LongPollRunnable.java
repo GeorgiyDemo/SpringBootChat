@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import org.demka.App;
 import org.demka.api.MyAPI;
 import org.demka.controllers.ConnectionErrorController;
+import org.demka.controllers.MainChatController;
 import org.demka.exceptions.EmptyAPIResponseException;
 import org.demka.exceptions.FalseServerFlagException;
 import org.demka.exceptions.LongPollListenerException;
@@ -14,6 +15,7 @@ import org.demka.models.Room;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,28 +28,47 @@ public class LongPollRunnable implements Runnable {
     private final ObservableList<Message> messageData;
     private final MyAPI myAPI;
     private final App app;
+    private final MainChatController mainChatController;
 
     /**
      * Конструктор LongPollRunnable
      *
-     * @param roomData    - ObservableList данных комнат, который синхронизирован с таблицей roomTable в JavaFX
-     * @param messageData - ObservableList данных сообщений, который синхронизирован с таблицей messageTable в JavaFX
-     * @param myAPI       - объект текущей сессии API для сапросов с бека
-     * @param app         - объект app
+     * @param roomData           - ObservableList данных комнат, который синхронизирован с таблицей roomTable в JavaFX
+     * @param messageData        - ObservableList данных сообщений, который синхронизирован с таблицей messageTable в JavaFX
+     * @param myAPI              - объект текущей сессии API для сапросов с бека
+     * @param app                - объект app
+     * @param mainChatController the main chat controller
      */
-    public LongPollRunnable(ObservableList<Room> roomData, ObservableList<Message> messageData, MyAPI myAPI, App app) {
+    public LongPollRunnable(ObservableList<Room> roomData, ObservableList<Message> messageData, MyAPI myAPI, App app, MainChatController mainChatController) {
         this.roomData = roomData;
         this.myAPI = myAPI;
         this.messageData = messageData;
         this.app = app;
+        this.mainChatController = mainChatController;
     }
 
+    /**
+     * Перемещение комнаты на первую позицию списка
+     *
+     * @param roomData  - список ObservableList
+     * @param roomIndex - индекс комнаты, которую необходимо поднять
+     */
+    public void updateRoomData(ObservableList<Room> roomData, int roomIndex) {
+        if (roomIndex > 0) {
+            Room buffRoom = roomData.get(roomIndex);
+            ArrayList<Room> buffer = new ArrayList<>(roomData);
+            buffer.remove(buffRoom);
+            buffer.add(0, buffRoom);
+            roomData.clear();
+            roomData.addAll(buffer);
+        }
+    }
 
     /**
      * Проверка на существование комнаты по её id
      *
      * @param roomId - идентификатор комнаты
-     * @return
+     * @return integer
      */
     public Integer isRoomExist(String roomId) {
         for (int i = 0; i < roomData.size(); i++) {
@@ -88,11 +109,19 @@ public class LongPollRunnable implements Runnable {
                     //Существует
                     if (existInt != -1) {
                         //Добавляем сообщение
-                        roomData.get(existInt).addMessage(msg);
+                        Room currentRoom = roomData.get(existInt);
+                        currentRoom.addMessage(msg);
                         logger.info("Добавили сообщение '" + msg.getText() + "' для комнаты " + msg.getRoomId());
+                        updateRoomData(roomData, existInt);
+
                         //Если открыт уже диалог с текущей конференцией
                         if (messageRoomId.equals(myAPI.getCurrentRoomId())) {
                             messageData.add(msg);
+                            Platform.runLater(mainChatController::selectFirstSelectionModel);
+                        }
+                        //Иначе выставляем флаг нового сообщения для комнаты
+                        else {
+                            currentRoom.setNewMessageFlag(true);
                         }
                     }
 
@@ -101,10 +130,11 @@ public class LongPollRunnable implements Runnable {
                         try {
                             //Создаем объект комнаты
                             Room newRoom = myAPI.getRoomInfo(messageRoomId);
+                            newRoom.setNewMessageFlag(true);
                             //Добавляем полученное сообщение
                             newRoom.addMessage(msg);
                             //Добавляем саму комнату
-                            roomData.add(newRoom);
+                            roomData.add(0, newRoom);
                             logger.info("Получили новую комнату " + newRoom.getName() + " [" + newRoom.getId() + "]");
                         } catch (RoomNotFoundException e) {
                             logger.error("Случилось странное: бек отдал сообщение с комнаты " + messageRoomId + ", но её не существует");

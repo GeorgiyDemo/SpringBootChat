@@ -18,6 +18,7 @@ import org.demka.utils.MyMenuActionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -32,6 +33,8 @@ public class MainChatController extends SuperFullController {
     private TableView<Room> roomTable;
     @FXML
     private TableColumn<Room, String> roomColumn;
+    @FXML
+    private TableColumn<Room, String> newMessageFlagColumn;
 
     @FXML
     private TableView<Message> messageTable;
@@ -114,6 +117,8 @@ public class MainChatController extends SuperFullController {
 
         //Отображение имени комнаты в таблице
         roomColumn.setCellValueFactory(cellData -> cellData.getValue().getNameProperty());
+        newMessageFlagColumn.setCellValueFactory(cellData -> cellData.getValue().newMessagesFlagString());
+
         //Отображение сообщений в таблице
         messageTimeColumn.setCellValueFactory(cellData -> cellData.getValue().getTimeCreatedProperty());
         messageUserColumn.setCellValueFactory(cellData -> cellData.getValue().getUserNameProperty());
@@ -121,7 +126,7 @@ public class MainChatController extends SuperFullController {
 
         //Текст для таблицы сообщений, когда комната не выбрана
         Label placeholder = new Label();
-        placeholder.setText("Выберите диалог слева или <создайте новый>");
+        placeholder.setText("Выберите диалог слева или создайте новый");
         placeholder.setStyle("-fx-text-fill: white");
         messageTable.setPlaceholder(placeholder);
         messageTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -153,15 +158,18 @@ public class MainChatController extends SuperFullController {
             } catch (FalseServerFlagException | EmptyAPIResponseException e) {
                 e.printStackTrace();
             }
-
         }
+
+        //Не очень эффективно, но работает
+        Comparator<Room> byMessagesUpdate = Comparator.comparing((Room o) -> o.getMessages().get(o.getMessages().size() - 1).getTimeCreatedLong());
+        roomList.sort(byMessagesUpdate.reversed());
         roomData.addAll(roomList);
         logger.info("MainChatController - инициализировали все комнаты");
 
         //Запускаем отдельный поток, который будет:
         // Добавлять новую комнату в RoomData, если пришло обновление по комнате, id которой нет в RoomData
         // Добавлять в определенный элемент room.addMessage() новое сообщение, которое прилетело через лонгпул
-        LongPollRunnable runnable1 = new LongPollRunnable(roomData, messageData, myAPI, app);
+        LongPollRunnable runnable1 = new LongPollRunnable(roomData, messageData, myAPI, app, this);
         Thread thread1 = new Thread(runnable1, "LongPoll thread");
         RunnableManager.threadsList.add(thread1);
         thread1.start();
@@ -216,15 +224,20 @@ public class MainChatController extends SuperFullController {
         sendMessageButton.setOpacity(1);
         newMessageText.setOpacity(1);
 
-
         //Выставляем id текущей комнаты
         messageData.clear();
         if (room != null) {
             myAPI.setCurrentRoomId(room.getId());
             messageData.addAll(room.getMessages());
+            room.setNewMessageFlag(false);
             messageTable.setItems(messageData);
         }
-        messageTable.scrollTo(messageData.get(messageData.size() - 1));
+
+        //Отчистка поля отправки сообщения
+        newMessageText.clear();
+        //Пролистываем до конца
+        if (messageData.size() > 0)
+            messageTable.scrollTo(messageData.get(messageData.size() - 1));
     }
 
     /**
@@ -235,4 +248,13 @@ public class MainChatController extends SuperFullController {
         app.showCurrentRoomUsers();
         logger.info("Нажатие на button показа пользователей комнаты");
     }
+
+    /**
+     * Метод для LongPollRunnable, чтоб при получении обновления комнат и их последующем
+     * поднимании вверх SelectionModel() сохранялся;
+     */
+    public void selectFirstSelectionModel() {
+        roomTable.getSelectionModel().select(0);
+    }
+
 }

@@ -23,6 +23,11 @@ public class MessageService {
 
     private final MessageRepository messageRepo;
 
+    /**
+     * Instantiates a new Message service.
+     *
+     * @param messageRepo the message repo
+     */
     @Autowired
     public MessageService(MessageRepository messageRepo) {
         this.messageRepo = messageRepo;
@@ -32,7 +37,7 @@ public class MessageService {
      * Отдельный метод для получения последнего сообщения пользователя по времени
      *
      * @param userId - идентификатор пользователя
-     * @return
+     * @return message db entity
      */
     public MessageDBEntity GetLastMessageByUser(String userId) {
 
@@ -51,7 +56,7 @@ public class MessageService {
      * @param userName - имя пользователя, который отправляет сообщение
      * @param text     - текст сообщения
      * @param roomId   - идентификатор комнаты, куда отправляется сообщение
-     * @return
+     * @return message db entity
      */
     public MessageDBEntity create(String userId, String userName, String text, String roomId) {
 
@@ -85,7 +90,7 @@ public class MessageService {
      *
      * @param roomsList - список комнат пользователя (предварительно вызывается в findUserRooms)
      * @param ts        - UNIX-время
-     * @return
+     * @return new messages by rooms
      */
     public List<MessageDBEntity> getNewMessagesByRooms(List<RoomDBEntity> roomsList, Long ts) {
         List<MessageDBEntity> messagesList = new ArrayList<>();
@@ -101,12 +106,13 @@ public class MessageService {
      * Получение всех сообщний по каждой комнате
      *
      * @param roomsList - список комнат пользователя (предварительно вызывается в findUserRooms)
-     * @return
+     * @return all messages by rooms
      */
     public List<MessageDBEntity> getAllMessagesByRooms(List<RoomDBEntity> roomsList) {
         List<MessageDBEntity> messagesList = new ArrayList<>();
+        Pageable pageLimit = PageRequest.of(0, Integer.MAX_VALUE, Sort.by(Sort.Direction.ASC, "time_created"));
         for (RoomDBEntity room : roomsList) {
-            messagesList.addAll(messageRepo.findAllByRoomId(room.getId()));
+            messagesList.addAll(messageRepo.findAllByRoomId(room.getId(), pageLimit));
         }
         return messagesList;
     }
@@ -115,17 +121,18 @@ public class MessageService {
      * Получение сообщений по конкретной комнате
      *
      * @param roomId - идентификатор комнаты
-     * @return
+     * @return list
      */
     public List<MessageDBEntity> findByRoom(String roomId) {
-        return messageRepo.findAllByRoomId(roomId);
+        Pageable pageLimit = PageRequest.of(0, Integer.MAX_VALUE, Sort.by(Sort.Direction.ASC, "time_created"));
+        return messageRepo.findAllByRoomId(roomId, pageLimit);
     }
 
     /**
      * Поиск сообщения по его id
      *
      * @param id - идентификатор сообщения
-     * @return
+     * @return optional
      */
     public Optional<MessageDBEntity> find(String id) {
         return messageRepo.findById(id);
@@ -143,7 +150,7 @@ public class MessageService {
     /**
      * Поиск всех сообщений
      *
-     * @return
+     * @return list
      */
     public List<MessageDBEntity> findAll() {
         return messageRepo.findAll();

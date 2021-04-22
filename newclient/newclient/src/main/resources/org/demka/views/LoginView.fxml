@@ -13,19 +13,7 @@
             fx:controller="org.demka.controllers.LoginController">
     <AnchorPane prefHeight="306.0" prefWidth="200.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="250.0"
                 AnchorPane.topAnchor="170.0">
-        <Hyperlink alignment="CENTER_RIGHT" contentDisplay="RIGHT" onAction="#forgotPasswordLinkClicked"
-                   text="Забыли пароль?" textFill="WHITE" AnchorPane.bottomAnchor="0.0"
-                   AnchorPane.rightAnchor="0.0">
-            <font>
-                <Font size="11.0"/>
-            </font>
-        </Hyperlink>
-        <Hyperlink onAction="#regLinkClicked" text="Регистрация" textFill="WHITE" AnchorPane.bottomAnchor="0.0"
-                   AnchorPane.leftAnchor="0.0">
-            <font>
-                <Font size="11.0"/>
-            </font>
-        </Hyperlink>
+
         <JFXButton onAction="#mainButtonClick" prefHeight="40.0" prefWidth="143.0" ripplerFill="#2491bf"
                    text="Войти" textFill="WHITE" AnchorPane.bottomAnchor="47.0" AnchorPane.leftAnchor="0.0"
                    AnchorPane.rightAnchor="0.0"/>
@@ -42,6 +30,12 @@
                 <Font name="Helvetica" size="13.0"/>
             </font>
         </JFXTextField>
+
+        <JFXPasswordField fx:id="passwordTextField" focusColor="WHITE" promptText="Пароль" unFocusColor="WHITE"
+                          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                          AnchorPane.topAnchor="124.0">
+        </JFXPasswordField>
+
         <JFXCheckBox fx:id="autoLoginCheckBox" alignment="CENTER" checkedColor="#2167e4" prefHeight="14.0"
                      prefWidth="88.0" text="Запомнить меня" textFill="WHITE" unCheckedColor="WHITE"
                      AnchorPane.bottomAnchor="109.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
@@ -49,9 +43,6 @@
                 <Font size="11.0"/>
             </font>
         </JFXCheckBox>
-        <JFXPasswordField fx:id="passwordTextField" focusColor="WHITE" promptText="Пароль" unFocusColor="WHITE"
-                          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-                          AnchorPane.topAnchor="124.0"/>
         <Label fx:id="wrongAuth" alignment="CENTER" contentDisplay="CENTER" opacity="0.0"
                text="Неверный логин/пароль!" textFill="WHITE" AnchorPane.leftAnchor="0.0"
                AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
@@ -59,6 +50,20 @@
                 <Font size="11.0"/>
             </font>
         </Label>
+
+        <Hyperlink alignment="CENTER_RIGHT" contentDisplay="RIGHT" onAction="#forgotPasswordLinkClicked"
+                   text="Забыли пароль?" textFill="WHITE" AnchorPane.bottomAnchor="0.0"
+                   AnchorPane.rightAnchor="0.0">
+            <font>
+                <Font size="11.0"/>
+            </font>
+        </Hyperlink>
+        <Hyperlink onAction="#regLinkClicked" text="Регистрация" textFill="WHITE" AnchorPane.bottomAnchor="0.0"
+                   AnchorPane.leftAnchor="0.0">
+            <font>
+                <Font size="11.0"/>
+            </font>
+        </Hyperlink>
     </AnchorPane>
 
 </AnchorPane>

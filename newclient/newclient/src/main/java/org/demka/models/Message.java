@@ -1,5 +1,7 @@
 package org.demka.models;
 
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.demka.utils.UNIXTimeUtil;
@@ -13,7 +15,8 @@ public class Message {
     private final StringProperty userName;
     private final StringProperty text;
     private final StringProperty roomId;
-    private final StringProperty timeCreated;
+    private final StringProperty timeCreatedString;
+    private final LongProperty timeCreatedLong;
     private final StringProperty id;
 
     /**
@@ -31,39 +34,91 @@ public class Message {
         this.userName = new SimpleStringProperty(userName);
         this.text = new SimpleStringProperty(text);
         this.roomId = new SimpleStringProperty(roomId);
-        this.timeCreated = new SimpleStringProperty(UNIXTimeUtil.convert(timeCreated));
+
+        this.timeCreatedLong = new SimpleLongProperty(timeCreated);
+        this.timeCreatedString = new SimpleStringProperty(UNIXTimeUtil.convert(timeCreated));
         this.id = new SimpleStringProperty(id);
     }
 
+    /**
+     * Gets text.
+     *
+     * @return the text
+     */
     public String getText() {
         return text.get();
     }
 
+    /**
+     * Gets user name.
+     *
+     * @return the user name
+     */
     public String getUserName() {
         return userName.get();
     }
 
+    /**
+     * Gets user name property.
+     *
+     * @return the user name property
+     */
     public StringProperty getUserNameProperty() {
         return userName;
     }
 
+    /**
+     * Gets text property.
+     *
+     * @return the text property
+     */
     public StringProperty getTextProperty() {
         return text;
     }
 
+    /**
+     * Gets time created property.
+     *
+     * @return the time created property
+     */
     public StringProperty getTimeCreatedProperty() {
-        return timeCreated;
+        return timeCreatedString;
     }
 
-    public String getTimeCreated() {
-        return timeCreated.get();
+    /**
+     * Gets time created string.
+     *
+     * @return the time created string
+     */
+    public String getTimeCreatedString() {
+        return timeCreatedString.get();
     }
 
+    /**
+     * Gets time created long.
+     *
+     * @return the time created long
+     */
+    public long getTimeCreatedLong() {
+        return timeCreatedLong.get();
+    }
+
+    /**
+     * Gets room id.
+     *
+     * @return the room id
+     */
     public String getRoomId() {
         return roomId.get();
     }
 
+    /**
+     * Gets id.
+     *
+     * @return the id
+     */
     public String getId() {
         return id.get();
     }
+
 }
