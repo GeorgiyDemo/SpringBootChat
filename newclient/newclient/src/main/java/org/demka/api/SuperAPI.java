@@ -30,7 +30,7 @@ public interface SuperAPI {
     /**
      * The constant serverURL.
      */
-    String serverURL = "http://127.0.0.1:8080";
+    String serverURL = "http://149.248.54.195:8080";
 
     /**
      * Восстановление пароля
