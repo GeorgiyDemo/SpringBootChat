@@ -39,7 +39,7 @@ public class MessageService {
      * @param userId - идентификатор пользователя
      * @return message db entity
      */
-    public MessageDBEntity GetLastMessageByUser(String userId) {
+    public MessageDBEntity getLastMessageByUser(String userId) {
 
         Pageable pageLimit = PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "time_created"));
         List<MessageDBEntity> userMessageList = messageRepo.findAllByUser(userId, pageLimit);
