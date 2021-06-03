@@ -2,9 +2,8 @@ package com.demka.demkaserver.services;
 
 import com.demka.demkaserver.entities.database.UserDBEntity;
 import com.demka.demkaserver.entities.request.UpdatePasswordEntity;
+import com.demka.demkaserver.gen.MyGenerator;
 import com.demka.demkaserver.repos.UserRepository;
-import com.demka.demkaserver.utils.UUIDUtil;
-import com.github.javafaker.Faker;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,13 +15,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@WebAppConfiguration
+/**
+ * The type User service test.
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class UserServiceTest {
@@ -35,22 +35,11 @@ public class UserServiceTest {
 
 
     /**
-     * Генерация данных пользователя системы для тестирования
-     *
-     * @return
+     * Create.
      */
-    private UserDBEntity createdUserGen() {
-        Faker faker = new Faker();
-        String login = faker.internet().emailAddress();
-        String password = UUIDUtil.newKey();
-        String username = faker.name().username();
-        String masterPassword = UUIDUtil.newKey();
-        return userService.create(login, password, username, masterPassword);
-    }
-
     @Test
     public void create() {
-        UserDBEntity testUser = createdUserGen();
+        UserDBEntity testUser = MyGenerator.createdUserGen(userService);
         Assert.assertNotNull(testUser);
         Assert.assertNotNull(testUser.getLogin());
         Assert.assertNotNull(testUser.getPassword());
@@ -61,10 +50,13 @@ public class UserServiceTest {
         Assert.assertNotNull(testUser.getId());
     }
 
+    /**
+     * Find.
+     */
     @Test
     public void find() {
 
-        UserDBEntity testUser = createdUserGen();
+        UserDBEntity testUser = MyGenerator.createdUserGen(userService);
         Optional<UserDBEntity> expected = Optional.of(testUser);
         Mockito.doReturn(expected).when(userRepository).findById(testUser.getId());
         Optional<UserDBEntity> nullUserOptional = userService.find(testUser.getId() + "1");
@@ -81,9 +73,12 @@ public class UserServiceTest {
         Assert.assertNotNull(checkUser.getId());
     }
 
+    /**
+     * Update.
+     */
     @Test
     public void update() {
-        UserDBEntity testUser = createdUserGen();
+        UserDBEntity testUser = MyGenerator.createdUserGen(userService);
 
         UpdatePasswordEntity passwordEntity = new UpdatePasswordEntity();
         String updatedPassword = testUser.getPassword() + "1";
@@ -108,9 +103,12 @@ public class UserServiceTest {
         Assert.assertNotNull(checkUser.getId());
     }
 
+    /**
+     * Find by master key and email.
+     */
     @Test
     public void findByMasterKeyAndEmail() {
-        UserDBEntity testUser = createdUserGen();
+        UserDBEntity testUser = MyGenerator.createdUserGen(userService);
         Optional<UserDBEntity> expected = Optional.of(testUser);
         Mockito.doReturn(expected).when(userRepository).findByMasterKeyAndEmail(testUser.getMasterKey(), testUser.getLogin());
         Optional<UserDBEntity> nullUserOptional = userService.findByMasterKeyAndEmail(testUser.getMasterKey() + "1", testUser.getLogin());
@@ -128,10 +126,13 @@ public class UserServiceTest {
         Assert.assertNotNull(checkUser.getId());
     }
 
+    /**
+     * Check auth by login password.
+     */
     @Test
     public void checkAuthByLoginPassword() {
 
-        UserDBEntity testUser = createdUserGen();
+        UserDBEntity testUser = MyGenerator.createdUserGen(userService);
         Optional<UserDBEntity> expected = Optional.of(testUser);
 
         Mockito.doReturn(expected).when(userRepository).checkUserAuth(testUser.getLogin(), testUser.getPassword());
@@ -148,10 +149,13 @@ public class UserServiceTest {
         Assert.assertNotNull(checkUser.getId());
     }
 
+    /**
+     * Test check auth by key.
+     */
     @Test
     public void testCheckAuthByKey() {
 
-        UserDBEntity testUser = createdUserGen();
+        UserDBEntity testUser = MyGenerator.createdUserGen(userService);
         Optional<UserDBEntity> expected = Optional.of(testUser);
 
         Mockito.doReturn(expected).when(userRepository).checkUserKey(testUser.getKey());
@@ -168,9 +172,12 @@ public class UserServiceTest {
         Assert.assertNotNull(checkUser.getId());
     }
 
+    /**
+     * Check user key.
+     */
     @Test
     public void checkUserKey() {
-        UserDBEntity testUser = createdUserGen();
+        UserDBEntity testUser = MyGenerator.createdUserGen(userService);
         Optional<UserDBEntity> expected = Optional.of(testUser);
         Mockito.doReturn(expected).when(userRepository).checkUserKey(testUser.getKey());
         boolean authFalseFlag = userService.checkUserKey(testUser.getKey() + "1");
@@ -179,9 +186,12 @@ public class UserServiceTest {
         Assert.assertTrue(authTrueFlag);
     }
 
+    /**
+     * Find by key.
+     */
     @Test
     public void findByKey() {
-        UserDBEntity testUser = createdUserGen();
+        UserDBEntity testUser = MyGenerator.createdUserGen(userService);
         Optional<UserDBEntity> expected = Optional.of(testUser);
         Mockito.doReturn(expected).when(userRepository).checkUserKey(testUser.getKey());
         Optional<UserDBEntity> nullUserOptional = userService.findByKey(testUser.getKey() + "1");
@@ -198,13 +208,16 @@ public class UserServiceTest {
         Assert.assertNotNull(checkUser.getId());
     }
 
+    /**
+     * Search all users by limit.
+     */
     @Test
     public void searchAllUsersByLimit() {
         List<UserDBEntity> testUsersList = new ArrayList<>();
         int limit = 200;
         for (int i = 0; i < limit; i++)
-            testUsersList.add(createdUserGen());
-        UserDBEntity requestUser = createdUserGen();
+            testUsersList.add(MyGenerator.createdUserGen(userService));
+        UserDBEntity requestUser = MyGenerator.createdUserGen(userService);
         Pageable pageLimit = PageRequest.of(0, limit, Sort.by(Sort.Direction.DESC, "time_created"));
         Mockito.doReturn(testUsersList).when(userRepository).findAllLimit(pageLimit);
         List<UserDBEntity> resultList = userService.searchUsers(null, limit, requestUser.getKey());
@@ -212,14 +225,17 @@ public class UserServiceTest {
         Assert.assertEquals(testUsersList, resultList);
     }
 
+    /**
+     * Search all users by name.
+     */
     @Test
     public void searchAllUsersByName() {
         List<UserDBEntity> testUsersList = new ArrayList<>();
-        UserDBEntity requestUser = createdUserGen();
+        UserDBEntity requestUser = MyGenerator.createdUserGen(userService);
         String subString = "TEST";
         int limit = 200;
         for (int i = 0; i < limit; i++) {
-            UserDBEntity bufUser = createdUserGen();
+            UserDBEntity bufUser = MyGenerator.createdUserGen(userService);
             bufUser.setName(subString + bufUser.getName());
             testUsersList.add(bufUser);
         }
@@ -230,19 +246,25 @@ public class UserServiceTest {
         Assert.assertEquals(testUsersList, resultList);
     }
 
+    /**
+     * Delete.
+     */
     @Test
     public void delete() {
-        UserDBEntity testUser = createdUserGen();
+        UserDBEntity testUser = MyGenerator.createdUserGen(userService);
         userService.delete(testUser);
         Mockito.verify(userRepository, Mockito.times(1)).delete(testUser);
     }
 
+    /**
+     * Find all.
+     */
     @Test
     public void findAll() {
         List<UserDBEntity> testUsersList = new ArrayList<>();
         int itemsCount = 3;
         for (int i = 0; i < itemsCount; i++)
-            testUsersList.add(createdUserGen());
+            testUsersList.add(MyGenerator.createdUserGen(userService));
         Mockito.doReturn(testUsersList).when(userRepository).findAll();
         List<UserDBEntity> resultList = userService.findAll();
         Assert.assertEquals(itemsCount, resultList.size());
