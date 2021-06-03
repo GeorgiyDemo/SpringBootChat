@@ -3,7 +3,7 @@ package com.demka.demkaserver.services;
 import com.demka.demkaserver.entities.database.MessageDBEntity;
 import com.demka.demkaserver.entities.database.RoomDBEntity;
 import com.demka.demkaserver.entities.database.UserDBEntity;
-import com.demka.demkaserver.gen.MyTestsGenerator;
+import com.demka.demkaserver.gen.MyDataGenerator;
 import com.demka.demkaserver.repos.MessageRepository;
 import com.demka.demkaserver.utils.TimeUtil;
 import org.junit.Assert;
@@ -23,6 +23,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Message service test.
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class MessageServiceTest {
@@ -39,9 +42,12 @@ public class MessageServiceTest {
     @MockBean
     private MessageRepository messageRepository;
 
+    /**
+     * Create.
+     */
     @Test
     public void create() {
-        MessageDBEntity testMessage = MyTestsGenerator.createdMessageGen(messageService);
+        MessageDBEntity testMessage = MyDataGenerator.createdMessageGen(messageService);
         Assert.assertNotNull(testMessage);
         Assert.assertNotNull(testMessage.getId());
         Assert.assertNotNull(testMessage.getUserName());
@@ -51,9 +57,12 @@ public class MessageServiceTest {
         Assert.assertNotNull(testMessage.getTimeCreated());
     }
 
+    /**
+     * Find.
+     */
     @Test
     public void find() {
-        MessageDBEntity testMessage = MyTestsGenerator.createdMessageGen(messageService);
+        MessageDBEntity testMessage = MyDataGenerator.createdMessageGen(messageService);
         Optional<MessageDBEntity> expected = Optional.of(testMessage);
         Mockito.doReturn(expected).when(messageRepository).findById(testMessage.getId());
 
@@ -72,42 +81,54 @@ public class MessageServiceTest {
         Assert.assertEquals(testMessage.getTimeCreated(), checkMessage.getTimeCreated());
     }
 
+    /**
+     * Find all.
+     */
     @Test
     public void findAll() {
         List<MessageDBEntity> testMessagesList = new ArrayList<>();
         int itemsCount = 10;
         for (int i = 0; i < itemsCount; i++)
-            testMessagesList.add(MyTestsGenerator.createdMessageGen(messageService));
+            testMessagesList.add(MyDataGenerator.createdMessageGen(messageService));
         Mockito.doReturn(testMessagesList).when(messageRepository).findAll();
         List<MessageDBEntity> resultList = messageService.findAll();
         Assert.assertEquals(itemsCount, resultList.size());
     }
 
+    /**
+     * Delete.
+     */
     @Test
     public void delete() {
-        MessageDBEntity testMessage = MyTestsGenerator.createdMessageGen(messageService);
+        MessageDBEntity testMessage = MyDataGenerator.createdMessageGen(messageService);
         messageService.delete(testMessage);
         Mockito.verify(messageRepository, Mockito.times(1)).delete(testMessage);
     }
 
+    /**
+     * Update.
+     */
     @Test
     public void update() {
-        MessageDBEntity oldMessage = MyTestsGenerator.createdMessageGen(messageService);
-        MessageDBEntity newMessage = MyTestsGenerator.createdMessageGen(messageService);
+        MessageDBEntity oldMessage = MyDataGenerator.createdMessageGen(messageService);
+        MessageDBEntity newMessage = MyDataGenerator.createdMessageGen(messageService);
         String testMessageId = oldMessage.getId();
         newMessage.setId(testMessageId);
         messageService.update(oldMessage, newMessage);
         Mockito.verify(messageRepository, Mockito.times(1)).delete(oldMessage);
     }
 
+    /**
+     * Gets last message by user.
+     */
     @Test
     public void getLastMessageByUser() {
 
         int limit = 10;
-        UserDBEntity testUser = MyTestsGenerator.createdUserGen(userService);
+        UserDBEntity testUser = MyDataGenerator.createdUserGen(userService);
         List<MessageDBEntity> userMessageList = new ArrayList<>();
         for (int i = 0; i < limit; i++) {
-            MessageDBEntity bufMessage = MyTestsGenerator.createdMessageGen(messageService);
+            MessageDBEntity bufMessage = MyDataGenerator.createdMessageGen(messageService);
             bufMessage.setUserId(testUser.getId());
             userMessageList.add(bufMessage);
         }
@@ -123,13 +144,16 @@ public class MessageServiceTest {
         Assert.assertEquals(expectedMessage.getId(), messageResult1.getId());
     }
 
+    /**
+     * Find by room.
+     */
     @Test
     public void findByRoom() {
-        RoomDBEntity testRoom = MyTestsGenerator.createdURoomGen(roomService);
+        RoomDBEntity testRoom = MyDataGenerator.createdURoomGen(roomService);
         List<MessageDBEntity> messagesList = new ArrayList<>();
         int limit = 10;
         for (int i = 0; i < limit; i++) {
-            MessageDBEntity bufMessage = MyTestsGenerator.createdMessageGen(messageService);
+            MessageDBEntity bufMessage = MyDataGenerator.createdMessageGen(messageService);
             bufMessage.setRoomId(testRoom.getId());
             messagesList.add(bufMessage);
         }
@@ -139,14 +163,17 @@ public class MessageServiceTest {
         Assert.assertEquals(messagesList.size(), resultList.size());
     }
 
+    /**
+     * Gets new messages by rooms.
+     */
     @Test
     public void getNewMessagesByRooms() {
 
         long myTs = TimeUtil.unixTime();
 
-        RoomDBEntity testRoom1 = MyTestsGenerator.createdURoomGen(roomService);
-        RoomDBEntity testRoom2 = MyTestsGenerator.createdURoomGen(roomService);
-        RoomDBEntity testRoom3 = MyTestsGenerator.createdURoomGen(roomService);
+        RoomDBEntity testRoom1 = MyDataGenerator.createdURoomGen(roomService);
+        RoomDBEntity testRoom2 = MyDataGenerator.createdURoomGen(roomService);
+        RoomDBEntity testRoom3 = MyDataGenerator.createdURoomGen(roomService);
         List<RoomDBEntity> roomsList = Arrays.asList(testRoom1, testRoom2, testRoom3);
 
         List<MessageDBEntity> expectedMessagesList = new ArrayList<>();
@@ -154,7 +181,7 @@ public class MessageServiceTest {
 
             List<MessageDBEntity> currentMessagesList = new ArrayList<>();
             for (int i = 0; i < 10; i++) {
-                MessageDBEntity bufMessage = MyTestsGenerator.createdMessageGen(messageService);
+                MessageDBEntity bufMessage = MyDataGenerator.createdMessageGen(messageService);
                 bufMessage.setRoomId(currentRoom.getId());
                 currentMessagesList.add(bufMessage);
                 expectedMessagesList.add(bufMessage);

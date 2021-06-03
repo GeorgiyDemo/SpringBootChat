@@ -2,7 +2,7 @@ package com.demka.demkaserver.services;
 
 import com.demka.demkaserver.entities.database.RoomDBEntity;
 import com.demka.demkaserver.entities.database.UserDBEntity;
-import com.demka.demkaserver.gen.MyTestsGenerator;
+import com.demka.demkaserver.gen.MyDataGenerator;
 import com.demka.demkaserver.repos.RoomRepository;
 import com.demka.demkaserver.utils.UUIDUtil;
 import org.junit.Assert;
@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The type Room service test.
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class RoomServiceTest {
@@ -31,9 +34,12 @@ public class RoomServiceTest {
     @MockBean
     private RoomRepository roomRepository;
 
+    /**
+     * Create.
+     */
     @Test
     public void create() {
-        RoomDBEntity testRoom = MyTestsGenerator.createdURoomGen(roomService);
+        RoomDBEntity testRoom = MyDataGenerator.createdURoomGen(roomService);
         Assert.assertNotNull(testRoom);
         Assert.assertNotNull(testRoom.getCreatorId());
         Assert.assertNotNull(testRoom.getUsers());
@@ -42,9 +48,12 @@ public class RoomServiceTest {
         Assert.assertNotNull(testRoom.getId());
     }
 
+    /**
+     * Find.
+     */
     @Test
     public void find() {
-        RoomDBEntity testRoom = MyTestsGenerator.createdURoomGen(roomService);
+        RoomDBEntity testRoom = MyDataGenerator.createdURoomGen(roomService);
         Optional<RoomDBEntity> expected = Optional.of(testRoom);
         Mockito.doReturn(expected).when(roomRepository).findById(testRoom.getId());
         Optional<RoomDBEntity> nullRoomOptional = roomService.find(testRoom.getId() + "1");
@@ -60,10 +69,13 @@ public class RoomServiceTest {
     }
 
 
+    /**
+     * Find user rooms.
+     */
     @Test
     public void findUserRooms() {
         List<RoomDBEntity> testList = new ArrayList<>();
-        testList.add(MyTestsGenerator.createdURoomGen(roomService));
+        testList.add(MyDataGenerator.createdURoomGen(roomService));
         String roomUserId = testList.get(0).getUsers().get(0);
         Mockito.doReturn(testList).when(roomRepository).findAllByUser(roomUserId);
 
@@ -73,38 +85,50 @@ public class RoomServiceTest {
         Assert.assertEquals(1, RoomsList.size());
     }
 
+    /**
+     * Update.
+     */
     @Test
     public void update() {
-        RoomDBEntity oldRoom = MyTestsGenerator.createdURoomGen(roomService);
-        RoomDBEntity newRoom = MyTestsGenerator.createdURoomGen(roomService);
+        RoomDBEntity oldRoom = MyDataGenerator.createdURoomGen(roomService);
+        RoomDBEntity newRoom = MyDataGenerator.createdURoomGen(roomService);
         String testRoomId = oldRoom.getId();
         newRoom.setId(testRoomId);
         roomService.update(oldRoom, newRoom);
         Mockito.verify(roomRepository, Mockito.times(1)).delete(oldRoom);
     }
 
+    /**
+     * Delete.
+     */
     @Test
     public void delete() {
-        RoomDBEntity testRoom = MyTestsGenerator.createdURoomGen(roomService);
+        RoomDBEntity testRoom = MyDataGenerator.createdURoomGen(roomService);
         roomService.delete(testRoom);
         Mockito.verify(roomRepository, Mockito.times(1)).delete(testRoom);
     }
 
+    /**
+     * Find all.
+     */
     @Test
     public void findAll() {
 
         List<RoomDBEntity> testRoomsList = new ArrayList<>();
         int itemsCount = 10;
         for (int i = 0; i < itemsCount; i++)
-            testRoomsList.add(MyTestsGenerator.createdURoomGen(roomService));
+            testRoomsList.add(MyDataGenerator.createdURoomGen(roomService));
         Mockito.doReturn(testRoomsList).when(roomRepository).findAll();
         List<RoomDBEntity> resultList = roomService.findAll();
         Assert.assertEquals(itemsCount, resultList.size());
     }
 
+    /**
+     * Remove user by id.
+     */
     @Test
     public void removeUserById() {
-        RoomDBEntity testRoom = MyTestsGenerator.createdURoomGen(roomService);
+        RoomDBEntity testRoom = MyDataGenerator.createdURoomGen(roomService);
         int roomUsersCount = testRoom.getUsers().size();
         String existingUserId = testRoom.getUsers().get(0);
         String nonExistentUserId = UUIDUtil.newId();
@@ -114,22 +138,28 @@ public class RoomServiceTest {
         Assert.assertEquals(roomUsersCount - 1, testRoom.getUsers().size());
     }
 
+    /**
+     * Test remove user by obj.
+     */
     @Test
     public void testRemoveUserByObj() {
-        RoomDBEntity testRoom = MyTestsGenerator.createdURoomGen(roomService);
+        RoomDBEntity testRoom = MyDataGenerator.createdURoomGen(roomService);
         int roomUsersCount = testRoom.getUsers().size();
-        UserDBEntity existingUser = MyTestsGenerator.createdUserGen(userService);
+        UserDBEntity existingUser = MyDataGenerator.createdUserGen(userService);
         existingUser.setId(testRoom.getUsers().get(0));
-        UserDBEntity nonExistentUser = MyTestsGenerator.createdUserGen(userService);
+        UserDBEntity nonExistentUser = MyDataGenerator.createdUserGen(userService);
         roomService.removeUser(testRoom, nonExistentUser);
         Assert.assertEquals(roomUsersCount, testRoom.getUsers().size());
         roomService.removeUser(testRoom, existingUser);
         Assert.assertEquals(roomUsersCount - 1, testRoom.getUsers().size());
     }
 
+    /**
+     * Add user by id.
+     */
     @Test
     public void addUserById() {
-        RoomDBEntity testRoom = MyTestsGenerator.createdURoomGen(roomService);
+        RoomDBEntity testRoom = MyDataGenerator.createdURoomGen(roomService);
         int roomUsersCount = testRoom.getUsers().size();
         //Какая жизнь, такие и тесты
         String testUserId = UUIDUtil.newId();
@@ -137,10 +167,13 @@ public class RoomServiceTest {
         Assert.assertEquals(roomUsersCount + 1, testRoom.getUsers().size());
     }
 
+    /**
+     * Add user by obj.
+     */
     @Test
     public void addUserByObj() {
-        RoomDBEntity testRoom = MyTestsGenerator.createdURoomGen(roomService);
-        UserDBEntity testUser = MyTestsGenerator.createdUserGen(userService);
+        RoomDBEntity testRoom = MyDataGenerator.createdURoomGen(roomService);
+        UserDBEntity testUser = MyDataGenerator.createdUserGen(userService);
         int roomUsersCount = testRoom.getUsers().size();
         roomService.addUser(testRoom, testUser);
         Assert.assertEquals(roomUsersCount + 1, testRoom.getUsers().size());
