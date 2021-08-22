@@ -16,8 +16,7 @@ Frontend:
 - Maven
 
 ### Main window
-<img src="https://github.com/GeorgiyDemo/SpringBootChat/blob/img/main2.png"  width="275" height="429" align="right"/>
-<img src="https://github.com/GeorgiyDemo/SpringBootChat/blob/img/main1.png"  width="666" height="429"/>
+<img src="https://github.com/GeorgiyDemo/SpringBootChat/blob/img/main.png"  width="980" height="429"/>
 
 
 ### New Chat creation
