@@ -15,11 +15,11 @@ Frontend:
 - GSON
 - Maven
 
-### Main window
+### Main form
 <img src="https://github.com/GeorgiyDemo/SpringBootChat/blob/img/main.png"  width="980" height="429"/>
 
 
-### New Chat creation
+### New сhat form
 <p align="center">
     <img src="https://github.com/GeorgiyDemo/SpringBootChat/blob/img/create.png"  width="739" height="467"/>
 </p>
