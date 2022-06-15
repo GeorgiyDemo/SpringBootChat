@@ -25,7 +25,7 @@ import java.util.Map;
 /**
  * The type My api.
  */
-public class MyAPI implements SuperAPI {
+public class MyAPI extends AbstractAPI implements SuperAPI {
 
     private final App app;
 
@@ -48,6 +48,7 @@ public class MyAPI implements SuperAPI {
      * @param app      - экземпляр главного приложения
      */
     public MyAPI(String login, String password, App app) {
+
         this.app = app;
         try {
             isAuthenticated = this.auth(login, password);
@@ -87,7 +88,7 @@ public class MyAPI implements SuperAPI {
         login = URLEncoder.encode(login, StandardCharsets.UTF_8);
         password = String2HashUtil.convert(password);
 
-        String URL = String.format("%s/user/auth?login=%s&password=%s", serverURL, login, password);
+        String URL = String.format("%s/user/auth?login=%s&password=%s", getServerUrl(), login, password);
         String response = HTTPRequest.sendGET(URL);
         if (response != null) {
             JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
@@ -119,7 +120,7 @@ public class MyAPI implements SuperAPI {
     public boolean auth(String key) throws EmptyAPIResponseException {
         key = URLEncoder.encode(key, StandardCharsets.UTF_8);
 
-        String URL = String.format("%s/user/auth?key=%s", serverURL, key);
+        String URL = String.format("%s/user/auth?key=%s", getServerUrl(), key);
         String response = HTTPRequest.sendGET(URL);
         if (response != null) {
             JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
@@ -153,7 +154,7 @@ public class MyAPI implements SuperAPI {
         List<Room> resultList = new ArrayList<>();
 
         //Запрашиваем данные по URL
-        String URL = String.format("%s/room/getByUser?key=%s", serverURL, userKey);
+        String URL = String.format("%s/room/getByUser?key=%s", getServerUrl(), userKey);
         String response = HTTPRequest.sendGET(URL);
         //Если ответ есть
         if (response != null) {
@@ -202,7 +203,7 @@ public class MyAPI implements SuperAPI {
     public Room getRoomInfo(String roomId) throws RoomNotFoundException, EmptyAPIResponseException {
 
         //Запрашиваем данные по URL
-        String URL = String.format("%s/room/get?roomId=%s&key=%s", serverURL, roomId, userKey);
+        String URL = String.format("%s/room/get?roomId=%s&key=%s", getServerUrl(), roomId, userKey);
         String response = HTTPRequest.sendGET(URL);
         //Если ответ есть
         if (response != null) {
@@ -243,7 +244,7 @@ public class MyAPI implements SuperAPI {
         List<Message> resultList = new ArrayList<>();
 
         //Запрашиваем данные по URL
-        String URL = String.format("%s/messages/get?roomId=%s&key=%s", serverURL, roomId, userKey);
+        String URL = String.format("%s/messages/get?roomId=%s&key=%s", getServerUrl(), roomId, userKey);
         String response = HTTPRequest.sendGET(URL);
         //Если ответ есть
         if (response != null) {
@@ -287,7 +288,7 @@ public class MyAPI implements SuperAPI {
     @Override
     public boolean createRoom(String roomName, String usersString) throws FalseServerFlagException, EmptyAPIResponseException {
         //Запрашиваем данные по URL
-        String URL = String.format("%s/room/create", serverURL);
+        String URL = String.format("%s/room/create", getServerUrl());
 
         Map<String, String> params = new HashMap<>();
         params.put("users", usersString);
@@ -324,10 +325,10 @@ public class MyAPI implements SuperAPI {
         List<User> resultList = new ArrayList<>();
         String URL;
         if (searchExp == null) {
-            URL = String.format("%s/user/search?key=%s", serverURL, userKey);
+            URL = String.format("%s/user/search?key=%s", getServerUrl(), userKey);
         } else {
             searchExp = URLEncoder.encode(searchExp, StandardCharsets.UTF_8);
-            URL = String.format("%s/user/search?key=%s&searchName=%s", serverURL, userKey, searchExp);
+            URL = String.format("%s/user/search?key=%s&searchName=%s", getServerUrl(), userKey, searchExp);
         }
         String response = HTTPRequest.sendGET(URL);
         //Если ответ есть
@@ -368,7 +369,7 @@ public class MyAPI implements SuperAPI {
     public List<User> getUsersByRoom(String roomId) throws FalseServerFlagException, EmptyAPIResponseException {
 
         List<User> resultList = new ArrayList<>();
-        String URL = String.format("%s/room/getUsers?key=%s&roomId=%s", serverURL, userKey, roomId);
+        String URL = String.format("%s/room/getUsers?key=%s&roomId=%s", getServerUrl(), userKey, roomId);
         String response = HTTPRequest.sendGET(URL);
         //Если ответ есть
         if (response != null) {
@@ -406,7 +407,7 @@ public class MyAPI implements SuperAPI {
     public Message writeMessage(String text) throws FalseServerFlagException, EmptyAPIResponseException {
 
         //Запрашиваем данные по URL
-        String URL = String.format("%s/messages/send", serverURL);
+        String URL = String.format("%s/messages/send", getServerUrl());
 
         Map<String, String> params = new HashMap<>();
         params.put("key", userKey);
@@ -450,7 +451,7 @@ public class MyAPI implements SuperAPI {
     @Override
     public void getLongPollServer() throws EmptyAPIResponseException, FalseServerFlagException {
         //Запрашиваем данные по URL
-        String URL = String.format("%s/longpoll/getServer?key=%s", serverURL, userKey);
+        String URL = String.format("%s/longpoll/getServer?key=%s", getServerUrl(), userKey);
         String response = HTTPRequest.sendGET(URL);
         //Если ответ есть
         if (response != null) {
@@ -493,7 +494,7 @@ public class MyAPI implements SuperAPI {
             List<Message> resultList = new ArrayList<>();
 
             //Запрашиваем данные по URL
-            String URL = String.format("%s/longpoll/updates/%s?key=%s&ts=%s", serverURL, longPollSubUrl, longPollKey, longPollTs);
+            String URL = String.format("%s/longpoll/updates/%s?key=%s&ts=%s", getServerUrl(), longPollSubUrl, longPollKey, longPollTs);
             logger.info("longPollListener - отправили запрос, ожидаем новые сообщения..");
             String response = HTTPRequest.sendGET(URL);
 

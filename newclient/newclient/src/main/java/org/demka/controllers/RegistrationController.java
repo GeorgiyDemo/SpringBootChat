@@ -5,7 +5,7 @@ import com.jfoenix.controls.JFXTextField;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import org.demka.App;
-import org.demka.api.SuperAPI;
+import org.demka.api.AbstractAPI;
 import org.demka.utils.ValidatorsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,7 +104,7 @@ public class RegistrationController extends SuperFullController {
         if (dataValidator(userName, userEmail, userPassword, masterKey)) {
             logger.info("Валидация данных со стороны клиента прошла успешно");
             //Получаем ответ от сервера
-            Map<String, Object> regResult = SuperAPI.registration(userName, userEmail, userPassword, masterKey);
+            Map<String, Object> regResult = AbstractAPI.registration(userName, userEmail, userPassword, masterKey);
 
             if ((boolean) regResult.get("result")) {
                 errorDescription.setOpacity(0.0);
