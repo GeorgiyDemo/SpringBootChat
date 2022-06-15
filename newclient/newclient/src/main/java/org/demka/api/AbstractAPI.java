@@ -20,11 +20,13 @@ public abstract class AbstractAPI implements SuperAPI {
 
     static String getServerUrl() {
         if (serverURL == null) {
+            // GitHub Pages as router
             String response = HTTPRequest.sendGET("https://georgiydemo.github.io/host.json");
             JsonObject jsonResult = JsonParser.parseString(response).getAsJsonObject();
             String hostName = jsonResult.get("site").getAsString();
             serverURL = hostName + "/SpringBootChat";
         }
+        // return "http://127.0.0.1:8080" for example
         return serverURL;
     }
 
